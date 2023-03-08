@@ -1,0 +1,398 @@
+{% load static %}
+{% load versioned_static %}
+
+<html>
+<head>
+    
+    
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/reset.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/style.css' %}">
+    
+    
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleia</title>
+    <meta property="og:title" content="Aleia"/>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    
+    <meta http-equiv="Content-Length" content="1"/>
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+    
+    
+    
+    
+    
+    
+</head>
+<body id="index_page">
+    
+    
+    {% block content %}
+    {% include 'popup.html' %}
+    {% include 'loading.html' %}
+    {% include 'menu_opciones.html' %}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div  class="div_contenedor_loadjobs" id="div_contenedor_loadjobs">
+        <form class="post-form servicio" enctype="multipart/form-data"  id="envio_vacante_form" > 
+            <div class="div_input id">
+                <input id="id_oportunidad" class="id" readonly />
+                
+            </div>
+            
+            
+            
+            
+            <input type="hidden" name="servicio" value="no"/>
+            <div id="etapa0_form" v-show="etapa == 0" class="contenedor_etapa">
+                <div class="form_etapa">
+                    <div class="steps">
+                        Paso [[etapa + 1]] de <span v-show="usuario.return == 'error'">4</span><span v-show="usuario.return != 'error'">3</span>: Datos básicos
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info" requ>
+                            <span class="required">* </span>
+                            Empresa
+                        </div>
+                        <input required  v-model="usuario.ultima_empresa" name="empresa"  placeholder="Ejemplo: Rappi" />
+                        
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info" >
+                            <span class="required">* </span>
+                            Nombre de la vacante
+                        </div>
+                        <input  name="cargo" v-model="cargo"  placeholder="Ejemplo: Gerente de cuenta" />
+                        
+                    </div>
+                    <div class="info_popup parcial"  >
+                        <div class="label_info">
+                            <span class="required">* </span>
+                            ¿La vacante es confidencial? 
+                            <button  type="button" class="opcion_question" onclick="show_message_popup(null,true,'confidencial')">
+                                <img type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                            </button>
+                        </div>
+                        <select v-model="confidencial" name="confidencial" class="input select" placeholder="Esto ocultará el nombre de la empresa">
+                            <option value="true" >Si, quiero ocultar el nombre de la empresa</option>
+                            <option value="false" selected>No, quiero que vean el nombre de la empresa</option>    
+                        </select>
+                        
+                    </div>  
+                    <div  class="info_popup parcial">
+                        <div class="label_info">
+                            Ciudad de la vacante (opcional)
+                        </div>
+                        <div>
+                            <multiselect
+                            v-model="value_citys"
+                            placeholder="Si es remoto dejalo vacio"
+                            label="name" track-by="name"
+                            :options="options_citys"
+                            :multiple="false"
+                            :close-on-select="true"
+                            :preserve-search="false"
+                            :searchable="true"
+                            ></multiselect>
+                        </div>
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info">
+                            Tipo de salario para tu publicación
+                        </div>
+                        <select v-model="selected" name="selected" class="input select" placeholder="Salario de tu vacante">
+                            <option value="" selected>Elige una opción</option>
+                            <option value="rango_salarial"> Rango salarial</option>
+                            <option value="salario_fijo"> Salario fijo </option>
+                            <option value="convenir"> A convenir </option>
+                        </select>
+                    </div>
+                    <div class="info_popup parcial2" v-if="selected == 'rango_salarial'">
+                        <div class="label_info" > Valor minimo que ofrecen </div>
+                        <input v-model="rango.rango_menor" name="rango_menor" @keypress="isNumber($event)" placeholder="0">
+                    </div>
+                    <div class="info_popup parcial2" v-show="selected == 'rango_salarial'">
+                        <div class="label_info" > Valor máximo </div>
+                        <input v-model="rango.rango_mayor" name="rango_mayor" @keypress="isNumber($event)" placeholder="0">
+                    </div>
+                    <div class="info_popup parcial2" v-if="selected == 'salario_fijo'">
+                        <div class="label_info" > Salario exacto que ofrecen </div>
+                        <input v-model="rango.rango_menor" name="rango_menor" @keypress="isNumber($event)" placeholder="0">
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info">
+                            Tipo de vacante
+                        </div>
+                        <select v-model="tipo" name="tipo" class="input select" placeholder="Tipo de relación">
+                            <option value="" selected>Elige una opción</option>
+                            <option value="presencial">Presencial</option>
+                            <option value="semipresencial">Semi presencial</option>
+                            <option value="remoto">Remoto</option>
+                            
+                        </select>
+                        
+                    </div>
+                </div>
+                
+                <div class="info_etapa desktop">
+                    
+                    <div class="subtitulo_formulario">
+                        Publica tus vacantes GRATIS aquí 
+                    </div>
+                    <div class="imagen_subtitulo_formulario">📢
+                    </div>
+                    <h2>
+                        Nuestra plataforma genera tráfico y publicidad a tus ofertas para sugerirte los primeros candidatos SIN COSTO.<br><br>
+                        Cuéntanos que necesitas y nuestra comunidad de reclutadores busca perfiles que cumplan con tus requerimientos.
+                    </h2>
+                    
+                    <div class="contenedo_botones_serv">
+                        <a href="https://calendly.com/juancamilo-aleia/1" target="_blank">
+                            <button type="button" class="redirect secundario">Quiero una reunión para conocer</button>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div id="etapa1_form" v-show="etapa == 1" class="contenedor_etapa">
+                
+                <div class="form_etapa">
+                    <div class="steps">
+                        Paso [[etapa + 1]] de <span v-show="usuario.return == 'error'">4</span><span v-show="usuario.return != 'error'">3</span>: Requerimientos
+                    </div>
+                    <div class="info_popup"  >
+                        <div class="label_info" requ>
+                            <span class="required">* </span>
+                            Cuéntanos que requerimientos tiene tu vacante, escríbelos uno por uno para brindarle mayor claridad a los candidatos (Máximo 7)
+                            
+                        </div>
+                        
+                        <div class="contenedor_requerimientos">
+                            <div class="contenedor_requerimiento" v-for="(o,i) in value_reqs">
+                                <button type="button" v-show="i > 0" class="borrar_categoria" :id="'cat_'+i"onclick="borrar_requerimiento(this)">Eliminar</button>
+                                <div class="info_popup">
+                                    <div class="label_info">
+                                        Requerimiento [[i+1]]
+                                    </div>
+                                    <input v-model="o.des"   placeholder="Ejemplo: Debe tener más de 5 años de experiencia con ventas B2C" >
+                                    
+                                </div>
+                                
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="info_etapa desktop">
+                    <div class="subtitulo_formulario">
+                        Postulaciones fáciles de revisar 
+                    </div>
+                    <div class="imagen_subtitulo_formulario">🤯
+                    </div>
+                    <h2>
+                        Debes pensar cada requerimiento para que tu candidato te diga si cumple o no cumple.<br><br>
+                        A medida que se postulen te llegará a tu tablero si tu candidato cumple con cada requerimiento y por que cumple. Así de increible es esto</h2>
+                    
+                    
+                    <div class="contenedo_botones_serv">
+                        <a href="https://calendly.com/juancamilo-aleia/1" target="_blank">
+                            <button type="button" class="redirect secundario">Quiero una reunión para conocer</button>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div id="etapa2_form" v-show="etapa == 2" class="contenedor_etapa">
+                <div class="form_etapa">
+                    <div class="steps">
+                        Paso [[etapa + 1]] de <span v-show="usuario.return == 'error'">4</span><span v-show="usuario.return != 'error'">4</span>: Oferta
+                    </div>
+                    <div class="info_popup"  >
+                        <div class="label_info" requ>
+                            <span class="required">* </span>
+                            Selecciona mínimo 2 categorias y da una descripción para que los candidatos obtengan información relevante de tu empresa
+                            
+                        </div>
+                        <div class="contenedor_requerimientos">
+                            
+                            <div class="contenedor_requerimiento" v-for="(o,i) in value_cats">
+                                <button type="button" v-show="i > 0" class="borrar_categoria" :id="'cat_'+i"onclick="borrar_categoria(this)">Eliminar</button>
+                                <div class="info_popup cat_cat">
+                                    <div class="label_info">
+                                        Categoria
+                                    </div>
+                                    <select class="input select categoria" v-model="o.tit" @change="cat_selected($event,o)">
+                                        <option v-bind:value="o.tit" v-show="o.tit != '' && o.tit !='Otro'">
+                                            [[o.tit ]] 
+                                        </option>
+                                        <option v-for="option in cat_options" v-bind:value="option.text">
+                                            [[option.text ]]
+                                        </option>
+                                    </select>
+                                    <input class="input select categoria" v-show="o.tit == 'Otro'" v-model="o.otro" placeholder="Ingresa la nueva categoria"/>
+                                </div>
+                                <div class="info_popup cat_des">
+                                    <div class="label_info">
+                                        Descripción
+                                    </div>
+                                    <textarea class="text_area_requerimiento"  v-model="o.des"   placeholder="Ingresa acá la descripción" ></textarea>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="info_etapa desktop">
+                    <div class="subtitulo_formulario">
+                        Vende tu oferta de forma increible 
+                    </div>
+                    <div class="imagen_subtitulo_formulario">😍
+                    </div>
+                    <h2>
+                        Ingresa la descripción de tu empresa y los beneficios de tu vacante.<br><br>
+                        Con la información clara y específica aumentas en un 70% la llegada de tu candidato ideal.</h2>
+                    
+                    
+                    <div class="contenedo_botones_serv">
+                        <a href="https://calendly.com/juancamilo-aleia/1" target="_blank">
+                            <button type="button" class="redirect secundario">Quiero una reunión para conocer</button>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            <div id="etapa3_form" v-show="etapa == 3" class="contenedor_etapa">
+                
+                <div class="form_etapa">
+                    <div class="steps">
+                        Paso [[etapa + 1]] de <span v-show="usuario.return == 'error'">4</span><span v-show="usuario.return != 'error'">5</span>: Acabaste!
+                    </div>
+                    <div class="info_popup parcial">
+                        
+                        <div class="label_info" ><span class="required">* </span>Tu nombre</div>
+                        <input name="nombre_contacto" v-model="nombre_contacto"  placeholder="Diligencia tu nombre completo" />
+                        
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info" ><span class="required">* </span>Tu cargo en [[usuario.ultima_empresa]]</div>
+                        <input name="cargo_contacto" v-model="cargo_contacto"  placeholder="" />
+                        
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info" ><span class="required">* </span>Tu correo</div>
+                        <input name="correo_contacto" v-model="correo_contacto"  placeholder="" />
+                        
+                    </div>
+                    <div class="info_popup parcial">
+                        <div class="label_info" ><span class="required">* </span>¿A que telefonos te podemos contactar?</div>
+                        <input name="telefono_contacto" v-model="telefono_contacto"  placeholder="" />
+                        
+                    </div>
+                    <div class="info_popup parcial" v-show="etapa == 3 && (usuario.return == 'error' || typeof usuario.return == 'undefined')">
+                        <div class="label_info" ><span class="required">* </span>Crea tu contraseña de Aleia</div>
+                        <input id="password" name="password" placeholder=""  v-model="password" />
+                    </div>
+                </div>
+                <div class="info_etapa desktop">
+                    <div class="subtitulo_formulario">
+                        Así de facil 
+                    </div>
+                    <div class="imagen_subtitulo_formulario">🤓
+                    </div>
+                    <h2>
+                        Danos tus datos para enviarte notificaciones y el cuadro de tus candidatos.<br><br>
+                        
+                    </h2>
+                    
+                    <div class="contenedo_botones_serv">
+                        <a href="https://calendly.com/juancamilo-aleia/1" target="_blank">
+                            <button type="button" class="redirect secundario">Quiero una reunión para conocer</button>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            <div id="contenedor_botones" class="sub_contenedor_popup botonera">
+                <button type="button" onclick="nueva_categoria()" v-show="etapa == 2" class="opcion_popup left">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/add.png'%}"  />
+                    Agregar otra categoria
+                </button>
+                <button type="button" onclick="nuevo_requerimiento()" v-show="etapa == 1" class="opcion_popup left">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/add.png'%}"  />
+                    Agregar otro requerimiento
+                </button>
+                <button type="button" class="opcion_popup principal" v-show=" etapa == 0 || etapa == 1 ||  etapa == 2" onclick="loadjobs_next()">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/right.png'%}"  />
+                    Siguiente
+                </button>
+                <button type="submit" class="opcion_popup like" v-show="etapa == 3">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/up.png'%}"  />
+                    Subir vacante
+                </button>
+                <button  type="button" class="opcion_popup" v-show="etapa == 1 || etapa == 2 || etapa == 3"  onclick="loadjobs_back()">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/left.png'%}"  />
+                    Atras
+                </button>
+                
+            </div>
+        </form>
+        
+    </div>
+    <div class="iframe_clientes">
+        <iframe class="div_iframe_clientes" src="https://www.aleia.app/loadjobs-portal"></iframe>
+    </div>
+    
+    
+    
+    
+    
+    
+    {% endblock %} 
+    
+    
+    
+</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<script  src="{% versioned_static 'js/global.js'%}"></script>
+
+<script  src="{% versioned_static 'js/business.js'%}"></script>
+<script  src="{% versioned_static 'js/graph.js'%}"></script>
+
+<script src="{% versioned_static 'js/viz.js' %}"></script>
+<script  src="{% versioned_static 'js/render.js'%}"></script>
+
+</html>
+

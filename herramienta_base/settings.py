@@ -20,8 +20,11 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT,'static'),
 )
-STATIC_ROOT = '/home/ec2-user/aleja_beta/herramienta_base/static/'
-#STATIC_ROOT = '/Users/alvarogonzalez/Google Drive/SELIGO/webpage/herramienta_base/aleja_beta_br_26_01_2021/herramienta_base/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+STATIC_ROOT = "/home/ec2-user/aleia_v1/herramienta_base/static"
+#STATIC_ROOT = '/Users/alvarogonzalez/Google Drive/PROYECTO_SELIGO/webpage/herramienta_base/aleja_beta_br_26_01_2021/herramienta_base/static/'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -31,9 +34,7 @@ SECRET_KEY = 'kc-ab@oh$igq*rv22!#e(n0q(lhv4=20^v9%is+vca2=72pgm8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.20.92.181','18.222.71.217','localhost','127.0.0.1',
-'172.31.25.145','test.aleja.com.co','aleja.com.co','ip-172-31-35-89.us-east-2.compute.internal','aleja.com.co','www.aleja.com.co','https://aleja.com.co',
-'aleia.app','www.aleia.app','https://aleia.app']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"

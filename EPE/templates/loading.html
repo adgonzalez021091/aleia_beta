@@ -1,0 +1,57 @@
+{% load static %}
+{% load versioned_static %}
+<!--<div id="loading" class="loading_show">
+		<img class="loading_img" src="/static/imgs/loading.svg" alt="cargando aleia" >
+		<span id="texto_loading" class="loading_text">Cargando</span>
+
+	</div>
+
+-->
+<div id="loading" class="loading_show">
+	<div class="infinityChrome">
+		<div class="inf1">
+		</div>
+		<div class="inf2">
+		</div>
+		<div class="inf3">
+		</div>
+		<div class="infc">
+		</div>
+	</div>
+
+	<!-- Safari and others -->
+	<div class="infinity">
+		<div class="inf1">
+			<span></span>
+		</div>
+		<div class="inf2">
+			<span></span>
+		</div>
+		<div class="inf3">
+			<span></span>
+		</div>
+		<div class="infc">
+			<span></span>
+		</div>
+	</div>
+
+	<!-- Stuff -->
+	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display: none;">
+		<defs>
+			<filter id="goo">
+				<feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+				<feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+				<feBlend in="SourceGraphic" in2="goo" />
+			</filter>
+		</defs>
+	</svg>
+	<span id="texto_loading" class="loading_text">Cargando</span>
+</div>
+<script type="text/javascript">
+	var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
+	if(!isChrome) {
+		document.getElementsByClassName('infinityChrome')[0].style.display = "none";
+		document.getElementsByClassName('infinity')[0].style.display = "block";
+	}
+</script>

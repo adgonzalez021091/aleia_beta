@@ -1,0 +1,110 @@
+{% load static %}
+
+{% load versioned_static %}
+<!--<div id="banner_usuario" onclick="show_acuerdo()" class="contenedor_etiqueta" v-show="(usuario.return != 'error' && usuario.convenio_busco != 'si') || usuario.return == 'error'">
+	
+	<h1 style="
+	margin-top: 13%;
+	color: #6a1e6c;
+	">
+	
+	¿Quieres un agente que te consiga tu siguiente empleo?
+</h1>	<img type="image" class="banner_agente" src="{% static 'imgs/agentes.png'%}"  />
+</div>
+
+<div id="banner_publicacion_vacantes" onclick="location.href='https://portal.aleia.app/loadjobs';" class="contenedor_etiqueta" v-show="(usuario.return != 'error' && usuario.convenio_busco != 'si') || usuario.return == 'error'">
+	
+	<h1 style="
+	margin-top: 13%;
+	color: #6a1e6c;
+	">
+	¡Publica vacantes GRATIS e ILIMITADAS aquí! 
+</h1>   <img type="image" class="banner_publicacion" src="{% static 'imgs/Recruiter.png'%}"  />
+</div>-->
+
+<div :id="'share_etiqueta_'+obj.id" onclick="share_item(this,'oportunidad',event)" class="contenedor_etiqueta" v-for="obj in lista.full_vacantes">
+	
+	<div class="botonera etiqueta">
+		
+		
+		<button :id="'add_vacante_'+obj.id" class="opcion_vacante" onclick="add_vacante(this,event)">
+			<img type="image" class="opcion_img" src="{% static 'imgs/menu/saved.png'%}"  />
+			
+		</button>
+		<button :id="'refiere_share_etiqueta_'+obj.id" class="opcion_vacante" onclick="share_item(this,'oportunidad',event)">
+			<img type="image" class="opcion_img" src="{% static 'imgs/popup/referal_c.png'%}"  />
+		</button>
+		
+		
+	</div>
+	<div class="div_etiqueta">
+		
+		<div class="etiqueta_coincidencia total"  v-show="obj.coincidencia == 100 && obj.coincidencia > 0">
+			<h3 class="coincide total" >coincidencia completa</h3>
+			
+		</div>
+		<div class="etiqueta_coincidencia parcial"  v-show="obj.coincidencia < 100 && obj.coincidencia > 0">
+			<h3 class="coincide parcial" >recomendado</h3>
+		</div>
+	</div>
+	<div class="div_contenido">
+		<div class="div_contenido_titulo_tarjeta">
+			<h2 style="width:100%;"><span class="empresa">[[obj.empresa]]</span><span v-if="usuario.id == obj.id_user">(CARGADA POR TI)</span> busca</h2>
+			<h1 class="titulo_vacante">[[obj.cargo]]</h1>
+		</div>
+		<!--<div   class="div_etiqueta_info etiqueta_tipo_servicio" :class="{color_agentes:obj.servicio != 'pago', color_reclutamiento:obj.servicio == 'pago'}">
+			
+			<h3 class="etiqueta_sin_img">[[get_texto_servicio(obj.servicio)]]</h3>
+			
+		</div>-->
+		<div class="div_etiqueta_info">
+			<img type="image" src="/static/imgs/check.png" class="img_de_etiqueta">
+			<h2 v-show = "obj.lista_reqs.length > 0" class="etiqueta_con_img">[[obj.lista_reqs.length]] requisitos especificados</h2>
+			<h2 v-show = "obj.lista_reqs.length == 0" class="etiqueta_con_img">Sin requisitos</h2>
+		</div>
+		<div  class="div_etiqueta_info">
+			<img type="image" src="/static/imgs/money2.png" class="img_de_etiqueta">
+			<div v-show="obj.rango_menor > 0 && obj.rango_mayor > 0"> 
+				<h2 class="etiqueta_con_img rango_salario"> 
+				Salario entre $[[obj.rango_menor]] y $[[obj.rango_mayor]] 
+				</h2>
+			</div>  
+			<div v-show="obj.rango_menor > 0 && obj.rango_mayor == ''"> 
+				<h2 class="etiqueta_con_img rango_salario"> 
+				Salario fijo de $[[obj.rango_menor]] 
+				</h2>
+			</div>  
+			<h2 v-show="obj.rango_menor == '' && obj.rango_mayor == ''" class="etiqueta_con_img">Salario a convenir</h2>
+			<h2 v-show="obj.rango_menor == '0' " class="etiqueta_con_img">Salario a convenir</h2>
+		</div>
+		
+		<div   class="div_etiqueta_info">
+			<img type="image" src="/static/imgs/location.png" class="img_de_etiqueta">
+			<h2 v-show="obj.ciudad != ''" class="etiqueta_con_img">[[obj.ciudad]]</h2>
+			<h2 v-show="obj.ciudad == ''" class="etiqueta_con_img">Ubicación sin especificar</h2>
+		</div>
+		<div   class="div_etiqueta_info">
+			<img type="image" src="/static/imgs/calendar.png" class="img_de_etiqueta">
+			<h2 class="etiqueta_con_img">[[obj.fecha]]</h2>
+			
+		</div>
+		<div   class="div_etiqueta_info" v-show="obj.servicio == 'pago'">
+			<img type="image" src="/static/imgs/calendar.png" class="img_de_etiqueta">
+			<h2 class="etiqueta_con_img" v-if="obj.recompensa == '' && obj.recompensa1 == ''">Sin recompensa</h2>
+			<h2 class="etiqueta_con_img" v-if="obj.recompensa == '' && obj.recompensa1 != ''">Recompensa de $[[obj.recompensa1]]</h2>
+			<h2 class="etiqueta_con_img" v-if="obj.recompensa != '' && obj.recompensa1 == ''">Recompensa de $[[obj.recompensa]]</h2>
+			<h2 class="etiqueta_con_img" v-if="obj.recompensa != '' && obj.recompensa1 != ''">Recompensa de $[[obj.recompensa1]] a $[[obj.recompensa]]</h2>
+			
+		</div>
+		<div   class="div_etiqueta_info" v-show="obj.servicio == 'no'">
+			<img type="image" src="/static/imgs/popup/link.png" class="img_de_etiqueta">
+			<h2 class="etiqueta_con_img">[[obj.link_corto]]</h2>
+			
+			
+		</div>
+		
+	</div>
+</div>
+
+<div class="ver_mas_inferior" onclick="valida_mas_items('vacantes')" v-show="indices_lista.total_full_vacantes > lista.full_vacantes.length">Ver más</div>
+</div>

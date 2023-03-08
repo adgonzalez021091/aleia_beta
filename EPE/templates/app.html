@@ -4,1447 +4,167 @@
 <html>
 <head>
 	
-
+	
 	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/reset.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/style.css' %}">
+	
+	<!-- Hotjar Tracking Code for Aleia -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3251090,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EBFSM5E6XP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-
-
+  gtag('config', 'G-EBFSM5E6XP');
+</script>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleia</title>
 	<meta property="og:title" content="Aleia"/>
 	
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-	<meta http-equiv="Transfer-Encoding" content="chunked"/>
+	
 	<meta http-equiv="Content-Length" content="1"/>
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
-
+	
 	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
-
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
-
-
-
-
+	
+	
+	
+	
 </head>
 <body id="index_page">
-	<div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
-		<div id="contenedor_popup_pregunta" class="contenedor_popup_pregunta">
-			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-			<span id="mensaje_popup_pregunta"></span>
-		</div>
-	</div>
-	<div id="div_contenedor_popup_perfil" class="div_contenedor_popup hide" style="display: none;">
+	
+	
+	{% block content %}
+	{% include 'acuerdo.html' %}
+	{% include 'loading.html' %}
+	{% include 'menu_opciones.html' %}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div id="contenedor_total">
 		
-		<div id="contenedor_popup_perfil" class="contenedor_popup_perfil">
-			<button  class="close_corner" onclick="close_popup(10)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-			<div class="mensaje_popup_perfil">
-
-				<p style="color: rgb(115, 54, 179); font-size: 30">Permite que las empresas te encuentren en Aleia</p>
-				<h1 style="color: #6d6471;">
-					Cuando un reclutador busque candidatos en Aleia te va a encontrar por los datos que diligencias acá.
-					<br><br>
-					<div class="botonera_popup_perfil">
-						
-						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('perfil_usuario')">
-							<input type="image" src="/static/imgs/play.png" class="img_contenido">
-							<div class="num_boton_contenido">Consejo #[[contenidos.perfil_usuario.numero_consejo]] de Aleia</div>
-							<div class="tit_boton_contenido">[[contenidos.perfil_usuario.titulo]]</div>
-						</button>
-						
-
-					</div>	 
-				</h1>
-				
-			</div>
-			<div class="form_popup_perfil">
-				<div class="titulo_contenedor popup_profile">
-					Tus datos básicos
-				</div>
-				<div class="contenedor_campo" style="width: 65%;">
-					<div class="label_campo" style="width: 100%;">Último cargo</div>
-					<div class="valor_campo" style="width: 90%;">
-						<input type="text" class="input_campo" id="ultimo_cargo_perfil" placeholder="Ej. Gerente de proyecto"  >
-					</div>
-				</div>
-				<div class="contenedor_campo" style="width: 35%;">
-					<div class="label_campo" style="width: 100%;">Última empresa</div>
-					<div class="valor_campo" style="width: 100%;">
-						<input type="text" class="input_campo" id="ultima_empresa_perfil"  placeholder="Ej. Rappi"> 
-					</div>
-				</div>
-				
-				<div class="div_input" style="margin-bottom: 20px;">
-
-					<div class="desde">
-						Rango salarial desde
-					</div>
-					<div class="desde2">
-						<input id="aspiracion_min_perfil" class="input" placeholder="$" />
-					</div>
-					<div class="hasta">
-						hasta
-					</div>
-					<div class="hasta2">
-						<input id="aspiracion_max_perfil" class="input" placeholder="$" />
-					</div>
-				</div>
-				<form method="POST" class="post-form" enctype="multipart/form-data" id="form_test_profile">  
-					{% csrf_token %}
-					<div class="label_campo">Hoja de vida</div>
-					{{form_cv}}
-				</form> 
-				<div class="div_input">
-					<div class="label_campo" style="width: 90%; color: red" >Si estas buscando empleo o un cambio laboral cuentanos que crees que te hace falta para lograr tu objetivo</div>
-					<textarea placeholder="Esto nos permite crear mejores soluciones para tu búsqueda de empleo." id="faltante_busqueda"></textarea>
-				</div>
-				<div class="contenedor_botones_perfil">
-
-					<button  class="boton_call2action job_resume" onclick="guarda_perfil()" >Cargar mis datos en Aleia!</button>
-				</div>
-			</div>
+		<div id="contenedor_busquedas_vacantes" class="contenedor_top left">
 			
-		</div>
-	</div>
-	<div id="loading" class="loading_show">
-		<div class="loadingio-spinner-ellipsis-cbdgjz18cd"><div class="ldio-dlo8blsimq">
-			<div></div><div></div><div></div><div></div><div></div>
-		</div></div>
-		<div class="div_texto_loading">
-			<h1 id="texto_loading">Cargando datos de Aleia</h1>
-		</div>
-	</div>
-	<div id="div_contenedor_video" class="div_contenedor_popup hide" style="display: none">
-		<button  class="close_corner video" onclick="close_popup(5)"><input type="image" class="corner_img video" src="{% static 'imgs/cancel_c.png'%}"  />
-		Cerrar video</button>
-		<div id="player"></div>
-		<div id="sorry">
-			¡Lo siento! Este consejo aun no está disponible.
-			<br><br>
-			Tenemos un equipo de Job Hackers creando los mejores consejos para que cambies tu búsqueda de empleo y tu futuro profesional.
-			<br><br>
-			A medida que lanecemos los consejos te notificaremos al correo, así que esta atento.
-		</div>
-		<div class="botonera_popup_video">
-			<div class="boton_popup_video">
-				<button class="boton_popup_video_b">Ver consejos de Aleia</button>
+			<div class="buscador_app">
+				{% include 'buscador.html' %}
 			</div>
-			
-			<div class="boton_popup_video">
-				<a href="https://www.seligo.co" target="_blank">
-					<button  class="boton_popup_video_b">Obtén créditos de Aleia</button>
-				</a>
-			</div>
-
-		</div>
-		<!--<iframe class="iframe_video_yt" :src="link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
-	</div>
-	<div id="div_contenedor_popup" class="div_contenedor_popup hide" style="display: none;">
-		<div id="contenedor_popup" class="contenedor_popup extenso">
-			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-			<div id="sub_contenedor_popup_datos" class="sub_contenedor_popup datos">
-				<div id="subpopup_superior" class="subpopup superior">
-					<div id="subpopup_superior_izq" class="imagen_popup">
-						<img :src="imagen" class="popup_img"/>
-					</div>
-					<div id="subpopup_superior_der" class="div_titulo_popup">
-						<h2 class="titulo_popup">[[titulo]]. <span style="color:grey">ID [[id]]</span></h2>
-						<h1>[[subtitulo]] en <b class="empresa">[[subtitulo2]]</b></h1>
-					</div>
-				</div>
-				<div id="subpopup_inferior" class="subpopup inferior">
-					<div id="subpopup_inferior_vac" v-show="label == 'oportunidad'" class="subpopup_data">
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Tipo de oportunidad</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly  :value="tipo_oportunidad">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Rango de sueldos</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="rango_salario">
-							</div>
-						</div>
-					</div>
-					<div id="subpopup_inferior_per"  v-show="label == 'contacto' || label == 'proceso'" class="subpopup_data">
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Aspiración salarial</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="rango_salario">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Profesión</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="profesion">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Ultima búsqueda</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="ultimo_login">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Ciudad</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="ciudad">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Sector</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="sector">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Subector</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="subsector">
-							</div>
-						</div>
-						<div class="info_popup">
-							<div class="label_info">
-								<h2>Area</h2>
-							</div>
-							<div class="data_info">
-								<input class="input_data_popup" readonly :value="area">
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<div id="sub_contenedor_popup_detalle" class="sub_contenedor_popup detalle">
-				<div id="subpopup_detalle_vac"  v-show="label == 'oportunidad'" class="subpopup_data">
-					<h1 style="color: #7837ba">[[titulo_texto1]]</h1><br>
-					<h2>[[texto1]]</h2>
-					<br><br>
-					<h1 style="color: #7837ba">[[titulo_texto2]]</h1><br>
-					<h2>[[texto2]]</h2>
-				</div>
-				<div id="subpopup_detalle_con"  v-show="label == 'contacto' || label == 'proceso' " class="subpopup_data">
-					<h1 style="color: #7837ba">Datos de contacto</h1><br>
-					<h2>[[datos_contacto]]</h2>
-					<br><br>
-					<h1 style="color: #7837ba">[[titulo_texto1]]</h1><br>
-					<h2>[[texto1]]</h2>
-					<br><br>
-					<h1 style="color: #7837ba">Logros</h1><br>
-					<h2>[[logros]]</h2>
-					<br><br>
-					<h1 style="color: #7837ba">[[titulo_texto2]]</h1><br>
-					<h2>[[texto2]]</h2>
-				</div>
-
-			</div>
-
-			<div id="sub_contenedor_popup_red" class="sub_contenedor_popup red" style="display: none">
-				<button class="cerrar_popup_red" onclick="show_detalle()">
-					Volver a la info del contacto
-				</button>
-				<div class="contenedor_red_grafico">
-					<div class="contenedor_zoom">
-						<button id="zoom_in" class="boton_zoom"><input type="image" class="img_opcion" src="{% static 'imgs/zoom-in.svg'%}"  /></button>
-						<button id="zoom_out" class="boton_zoom"><input type="image" class="img_opcion" src="{% static 'imgs/zoom-out.svg'%}"  /></button>
-					</div>					
-					<svg id="svg_network" style="width: 100%;height: 100%;" ></svg>
-				</div>
-				<div class="contenedor_red_lista">
-					<div class="contenedor_item_red" v-for="(item,index) in rutas" >
-						<h1 class="item_paso">[[index+1]]º ruta para contactar a [[pnombre]]</h1>
-						<div class="contenedor_items_ruta" v-for="(item2,index2) in item.r">
-							<h2 class="item_paso">Paso [[index2+1]]</h2>
-							<h2 class="info_item_paso">[[get_info_red(index2,item.r,item2.n).t]]</h2>
-							<div class="etiqueta_complemento ruta" :style="{background:get_info_complemento(item2.v,'contacto').color}"><h3>[[get_info_complemento(item2.v,'contacto').texto]]</h3></div>
-							<h3 class="info_item_paso_source">[[get_info_red(index2,item.r,item2.n).s]]</h3>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div id="sub_contenedor_popup_botonera" class="sub_contenedor_popup botonera">
-				<div class="sub_contenedor_botonera">
-				<!--<button  v-show="valid_url(link)" :id="link" class="opcion_popup" onclick="open_link(this)">
-					<input type="image" src="/static/imgs/popup/link.png" class="img_opcion popup" >Abrir link
-				</button>-->
-				<button :id="contenido" class="opcion_popup" onclick="open_link_teachable(this)" v-show="sesion.data.tipo != 13">
-					<input type="image" src="/static/imgs/popup/play.png" class="img_opcion popup">Ver curso online
-				</button>
-				<button class="opcion_popup" v-show="id_et == -1 &&  label == 'oportunidad'" :id="'pp_add_vacante_'+id" onclick="add_vacante(this,event)">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/save.png'%}"  />Guardar
-				</button>
-				<button class="opcion_popup principal" v-show="id_et == -1 && label == 'oportunidad' " :id="'pp_aplicar_servicio_'+id" onclick="habilitar_opciones(this,'oportunidad','crear_oportunidad',event)">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/arrow.png'%}"  />Postulate
-				</button>
-				<button class="opcion_popup" v-show="id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="popup_envio_solicitud(this,event)">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Invitar a Aleia
-				</button>
-				<button class="opcion_popup" v-show="id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="descarga_perfil_usuario()">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Descargar HV
-				</button>
-				
-				<button class="opcion_popup" v-show="id_et != -1" :id="'delete_etiqueta_'+id_et" onclick="show_message_popup(this,true,'delete_etiqueta')">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/delete.png'%}"  />Borrar
-				</button>
-				<button class="opcion_popup" v-show="id_et != -1" :id="'edit_etiqueta_'+id_et" onclick="edit_etiqueta(this,event)" >
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/edit.png'%}"  />Editar
-				</button>
-				<button class="opcion_popup" v-show="id_et == -1 && label == 'contacto' && sesion.data.tipo != 13" :id="'show_net_'+id" onclick="show_rutas(this,event)">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/location.png'%}"  />[[rutas.length]] ruta(s) para conectar
-				</button>
-				<button id="guardar_objeto" v-show="sesion.data.tipo == 13 && id_et == -1" class="opcion_popup" onclick="guardar_candidato()">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Guardar candidato
-				</button>
-				<button id="copiar_objeto" v-show="sesion.data.admin == 1 && id_et != -1 " class="opcion_popup" onclick="copiar_objeto()">
-					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/copy.png'%}"  />[[estado_copy]]
-				</button>
-
-
-
-			</div>
-			<div id="sub_contenedor_popup_comentarios" class="sub_contenedor_popup comentarios" style="display: none">
-				<div class="contenendor_comentarios">
-					<div class="contenedor_comentario"  v-for="o in comentarios">
-						<button :id = "'eliminar_comentario_'+o.id" class="eliminar_comentario" onclick="eliminar_comentario(this)"><input type="image" class="eliminar_comentario_img" src="{% static 'imgs/delete.png'%}"  />
-						</button>
-						<h3>[[o.fecha]]</h3>
-						<h2>[[o.comentario]]</h2>
-					</div>
-				</div>
-				<div class="contenedor_input_comentario">
-					<textarea class="input_comentario" placeholder="Escribe un comentario" id="input_comentario">
-
-					</textarea>
-
-					<button onclick="enviar_comentario()" class="enviar_comentario" >Subir
+			<div id="contenedor_full_vacantes" class="contenedor_etiquetas">
+				<h3 class="texto_resultados">
+					[[get_texto_resultados(lista.full_vacantes.length,indices_lista.total_full_vacantes)]]
+				</h3>
+				<div class="div_order" >
+					<button class="order_boton" :id="div+'_popup_orden_show'" onclick="show_popup_atts(this)">
+						<img type="image" class="img_filter_order" src="{% static 'imgs/sort2.png'%}"  />
+						<h3 class="desktop">Ordenar por [[order]]</h3>
 					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-</div>
-</div>
-<div id="div_contenedor_popup_servicios" class="div_contenedor_popup hide" style="display: none;">
-	<div id="contenedor_popup_servicios" class="contenedor_popup hide popup_contendor_servicios">
-		<button id = "close_contenedor_right_s" class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-		<a href="https://www.seligo.co" target="_blank">
-			<button class="call2action_recarga"><input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}" style="top: 6px;" />Obtén créditos aquí</button>
-		</a>
-		<div id="contenedor_popup_servicios_proceso"  v-show="label == 'proceso'">
-			<div id="titulo_contenedor2" class="titulo_contenedor_servicios">
-				[[titulo]]
-			</div>
-			<div class="opciones_servicios">
-				<div class="opcion_servicio"  >
-					
-					<div class="titulo_superior_servicio">
-						Contenido GRATIS
-					</div>
-					<div class="titulo_servicio">
-						Carga tu entrevista para ver el video <br><spam style="color:red">¿Cómo presentar las mejores entrevistas?</spam>
-					</div>
-					
-					<div class="call2action_servicio">
-						<button class="button_call2action_servicio" onclick="crear('proceso')">Da clic aquí</button>
-
-					</div>
-					
-				</div>
-				<div class="opcion_servicio" style="background: white;" >
-					<div class="precio_servicio">
-						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
-						1 crédito
-					</div>
-					<div class="titulo_superior_servicio">
-						Preparate para generar impacto
-					</div>
-					<div class="titulo_servicio">
-						Analiza el estilo de comunicación de tu entrevistador
-					</div>
-					
-					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('analisis_comunicacion')">
-						<input type="image" src="/static/imgs/play.png" class="img_contenido">
-						<div class="num_boton_contenido">Consejo #[[contenidos.analisis_comunicacion.numero_consejo]] de Aleia</div>
-						<div class="tit_boton_contenido">[[contenidos.analisis_comunicacion.titulo]]</div>
-					</button>					
-					<button class="button_call2action_servicio" onclick="crear('proceso')" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">Solicitar análisis</button>
-					
-					<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
-
-					
-				</div>
-				
-			</div>
-		</div>
-		<div id="contenedor_popup_servicios_asesoria" v-show="label == 'asesoria'">
-			<div id="titulo_contenedor2" class="titulo_contenedor_servicios">
-				[[titulo]]
-			</div>
-			<div class="opciones_servicios">
-				<div  class="opcion_servicio" >
-					<div class="titulo_superior_servicio">
-						¡Creamos contenidos todo el tiempo para que logres tu objetivo!
-					</div>
-					
-					
-					<div class="call2action_servicio">
-						<a href="https://www.youtube.com/channel/UClMNkFB20wVSt0IAHBo-Dig" target="_blank">
-							<input type="image" src="/static/imgs/youtube.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
-							<button class="button_call2action_servicio secundario">Ve a nuestro canal</button>
-						</a>
+					<div :id="div+'_popup_orden'" class="popup_atts hidden">
 						
-					</div>
-					
-					
-				</div>
-				<div class="opcion_servicio" style="background: white;" >
-					<div class="titulo_superior_servicio">
-						Opción 1
-					</div>
-					<div class="titulo_servicio">
-						Solicita asistencia cuando quieras
-					</div>
-					<div class="call2action_servicio">
-						<a href="https://wa.link/iz0b9s" target="_blank">
-							<input type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
-							<button class="button_call2action_servicio secundario" >Abrir chat</button>
-						</a>
-					</div>
-				</div>
-				<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo == 5" >
-					
-					<div class="titulo_superior_servicio">
-						Opción 2
-					</div>
-					<div class="titulo_servicio">
-						Llamada con un Job Hacker
-					</div>
-					
-					
-					Solicitala directo por chat
-					<div class="call2action_servicio">
-						<a href="https://wa.link/iz0b9s" target="_blank">
-							<input type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
-							<button class="button_call2action_servicio secundario" >Abrir chat</button>
-						</a>
-					</div>
-
-					
-				</div>
-				<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo != 5">
-					<div class="precio_servicio">
-						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
-						3 créditos
-					</div>
-					<div class="titulo_superior_servicio">
-						Opción 2
-					</div>
-					<div class="titulo_servicio">
-						Llamada con un Job Hacker
-					</div>
-					
-					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('job_hacker')">
-						<input type="image" src="/static/imgs/play.png" class="img_contenido">
-						<div class="num_boton_contenido">Consejo #[[contenidos.job_hacker.numero_consejo]] de Aleia</div>
-						<div class="tit_boton_contenido">[[contenidos.job_hacker.titulo]]</div>
-					</button>
-					<a href="https://www.seligo.co/job-hacker" target="_blank" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">
-						<button class="button_call2action_servicio" >Solicitar llamada</button>
-					</a>
-					<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
-
-					
-				</div>
-				
-				<div class="opcion_servicio" style="background: #3b3744;color: white;" >
-					<div class="precio_servicio">
-						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
-						Servicio VIP
-					</div>
-					<div class="titulo_superior_servicio" style="color: #f8f7fb;">
-						Opción 3
-					</div>
-					<div class="titulo_servicio" >
-						Sesión estratégica personalizada
-					</div>
-					<div style="display: none">
-						Sesiones de 2 horas con tu asesor experto asignado donde construirá el diagnóstico de tu búsqueda de empleo, las estrategias para mejorarla, te asignará retos y hará seguimiento a tu proceso.
-					</div>
-					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('asesoria_personalizada')">
-						<input type="image" src="/static/imgs/play.png" class="img_contenido">
-						<div class="num_boton_contenido">Consejo #[[contenidos.asesoria_personalizada.numero_consejo]] de Aleia</div>
-						<div class="tit_boton_contenido">[[contenidos.asesoria_personalizada.titulo]]</div>
-					</button>
-					
-					<a href="https://calendly.com/sesiones_seligo/agenda" v-show="tipo_user == 5 || tipo_user == 11" target="_blank">
-						<button  class="button_call2action_servicio">Agendar sesión ahora</button>
-					</a>
-
-					<a v-show="tipo_user != 5 && tipo_user != 11" href="https://www.seligo.co/servicios" target="_blank">
-						<button class="button_call2action_servicio" >Obtén una asesoría</button>
-					</a>
-					
-				</div>
-				
-				
-			</div>
-		</div>
-		<div id="contenedor_popup_servicios_vacante" v-show="label == 'oportunidad'">
-			
-			<div id="titulo_contenedor1" class="titulo_contenedor_servicios">
-				[[titulo]]
-			</div>
-			
-			<div class="opciones_servicios" >
-				<div  class="opcion_servicio" >
-					<div class="precio_servicio">
-						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
-						1 crédito
-					</div>
-					<div id="desc_serv_postulacion" class="contenedor_servicio">
-						
-
-						<div class="titulo_superior_servicio">
-							Antes de postularte...
+						<button :id="div+'_popup_orden_close'" class="close_corner atts" onclick="close_popup_atts(this)"><img type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+						<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_orden">
+							
+							<div class="att" v-for="att in obj">
+								<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_order(this)"><h2>[[att.texto]]</h2></button>
+							</div>
 						</div>
-						<div class="titulo_servicio">
-							<spam class="servicio_pop">Ajusta tu hoja de vida a la vacante</spam>
-						</div>
-						<!--<div >
-							Un Job Hacker analiza tu CV para esta vacante.<br><br>En menos de un día te envíamos tu probabilidad de llamar la atención y tips personalizados para aumentar esta probabilidad.
-						</div>-->
-						
-						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('analisis_postulacion')">
-							<input type="image" src="/static/imgs/play.png" class="img_contenido">
-							<div class="num_boton_contenido">Consejo #[[contenidos.analisis_postulacion.numero_consejo]] de Aleia</div>
-							<div class="tit_boton_contenido">[[contenidos.analisis_postulacion.titulo]]</div>
-						</button>
-						<button class="button_call2action_servicio" onclick="load_cv_serv(1)" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">Solicitar revisión</button>
-						<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
-					</div>
-					<div id="load_serv_postulacion" class="contenedor_upload_cv oculto" style="display: none">
-						<div class="contenedor_opcion_load_serv">
-							<form class="post-form servicio" enctype="multipart/form-data"  id="forma_test">  
-								{% csrf_token %}
-								{{formap}}
-								<button  name="anap" class="button_load_servicio principal" type="submit">Subir y enviar hoja de vida</button>  
-							</form>  
-
-						</div>
-						<div class="contenedor_opcion_load_serv" v-show="typeof usuario.id_last_cv != 'undefined'">
-							<button class="button_load_servicio terciario" onclick="descarga_perfil()">Descargar última hoja de vida</button>
-							<button class="button_load_servicio principal" onclick="loading_service_nofile('analisis')">Enviar última hoja de vida</button>
-
-						</div>
-						<button class="button_load_servicio secundario" style="color: red" onclick="load_cv_serv(2)">Cancelar</button>
-					</div>
-				</div>
-				<div class="opcion_servicio" style="background: white;">
-					
-					<div class="titulo_superior_servicio">
-						Opción 1
-					</div>
-					<div class="titulo_servicio">
-					Postulate directo por Aleia					</div>
-					
-					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('postulacion_Aleia')">
-						<input type="image" src="/static/imgs/play.png" class="img_contenido">
-						<div class="num_boton_contenido">Consejo #[[contenidos.postulacion_Aleia.numero_consejo]] de Aleia</div>
-						<div class="tit_boton_contenido">[[contenidos.postulacion_Aleia.titulo]]</div>
-					</button>
-					<button class="button_call2action_servicio" onclick="enviar_postulacion()" v-show="postulacion == 'true'">Postulate aquí</button>
-					<div class="servicio_no_disponible" v-show="postulacion != 'true'">
-						La vacante no recibe postulación directa por Aleia.
 					</div>
 				</div>
 				
-				<div class="opcion_servicio" style="background: white;" >
-					
-					<div class="titulo_superior_servicio">
-						Opción 2
-					</div>
-					<div class="titulo_servicio">
-						Postulate en un link externo
-					</div>
-					
-					<button :id="link"  onclick="open_link(this)" class="button_call2action_servicio" v-show="valid_url(link)">Abrir link</button>
-					<div class="servicio_no_disponible"  v-show="!valid_url(link)">
-						La vacante no tiene link externo
-					</div>
-				</div>
-				
-				<div class="opcion_servicio"  style="background: white;">
-					<div class="precio_servicio">
-						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
-						1 crédito
-					</div>
-					<div id="desc_serv_representacion" class="contenedor_servicio">
-						<div class="titulo_superior_servicio">
-							Opción 3
-						</div>
-						<div class="titulo_servicio">
-							Postulate con una <spam class="servicio_pop">Representación</spam>
-						</div>
-						
-						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('representacion_Aleia')">
-							<input type="image" src="/static/imgs/play.png" class="img_contenido">
-							<div class="num_boton_contenido">Consejo #[[contenidos.representacion_Aleia.numero_consejo]] de Aleia</div>
-							<div class="tit_boton_contenido">[[contenidos.representacion_Aleia.titulo]]</div>
-						</button>
-						<button class="button_call2action_servicio" onclick="load_cv_serv(3)" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">Solicitar representación</button>
-						<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
-					</div>
-					<div id="load_serv_representacion" class="contenedor_upload_cv oculto" style="display: none">
-						<div class="contenedor_opcion_load_serv">
-							<form class="post-form servicio" enctype="multipart/form-data"  id="forma_test2">  
-								{% csrf_token %}
-								{{formre}}
-								<button  name="anap" class="button_load_servicio principal" type="submit">Subir y enviar hoja de vida</button>  
-							</form>  
-
-						</div>
-						<div class="contenedor_opcion_load_serv" v-show="typeof usuario.id_last_cv != 'undefined'">
-							<button class="button_load_servicio terciario" onclick="descarga_perfil()">Descargar última hoja de vida</button>
-							<button class="button_load_servicio principal" onclick="loading_service_nofile('representacion')">Enviar última hoja de vida</button>
-
-						</div>
-						<button class="button_load_servicio secundario" style="color: red" onclick="load_cv_serv(4)">Cancelar</button>
-					</div>
-				</div>
+				{% include 'tarjeta.html' %}
 			</div>
-		</div>
-
-	</div>
-</div>
-<div id="div_contenedor_popup_share" class="div_contenedor_popup hide" style="display: none;">
-	<div id="contenedor_popup_share" class="contenedor_popup share hide">
-		<button id = "close_contenedor_right2" class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-
-		<div id="bloque1_popup" class="bloque_popup">
-			<h1 class="titulo_popup">[[titulo]]</h1>
-			<h1>[[subtitulo]]</h1>
-		</div>
-		<div id="bloque2_popup" class="bloque_popup">
-			<div class="div_buscador popup">
-				<input id="buscador_usuarios_popup" class="buscador" placeholder="Escribe lo que buscas y oprime Enter" oninput="buscar_general(1)"/>
-				<input type="image" src="/static/imgs/menu/search.png" class="opcion_img_buscador">
-
-			</div>
-			<button :id="'opcion_usuario_'+obj.id" onclick="usuario_seleccionado(this)" class="contenedor_opcion_usuario boton" v-for="obj in usuarios_filtrado">
-				<h2>[[obj.nombre]]</h2>
-			</button>
-
-		</div>
-		<div id="bloque3_popup" class="bloque_popup">
-			<div class="contenedor_opcion_usuario" v-for="obj in usuarios_seleccionados" >
-				<h2>[[obj.nombre]]</h2>
-				<button :id = "'eliminar_opcion_usuario_'+obj.id" class="close_option" onclick="eliminar_opcion_usuario(this)"><input type="image" class="close_img_popup" src="{% static 'imgs/delete.png'%}"  /></button>
-			</div>
-		</div>
-		<button v-show="usuarios_seleccionados.length > 0" id="boton_call2action_many" style="right: 25px;bottom: 25;" class="boton_call2action" onclick="call2action_many()" >Asociar datos</button>
-	</div>
-</div>
-
-
-
-
-<div id="div_contenedor_menu" class="div_menu" >
-	<!--<button class="close_corner menu" onclick="close_menu()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>-->
-	<div id="logo_aleja" >
-		<!--Aleia<h3>beta</h3>-->
-		<img src="/static/imgs/logo_aleja_2.png" class="logo_aleja_img">
-		<input v-if="tipo == 6" type="image" src="/static/imgs/menu/brand/compensar.png" class="external_brand">
-	</div>
-	<div class="titulo_contenedor">
-		[[nombre_usuario]]
-
+		</div>	
 	</div>
 	
-	<a class="link_externo_top_right desktop" href="admin" v-if="sesion.data.admin == 1">
-		<button class="opcion_menu" >
-			<input type="image" src="/static/imgs/menu/home.png" class="opcion_img_menu">
-			Administrador
-		</button>
-	</a>
-	<button id="tab_contenedor_busquedas_vacantes"  class="opcion_menu selected">
-		<input type="image" src="/static/imgs/menu/job.png" class="opcion_img_menu">
-		Vacantes
-	</button>
-	<a href="people">
-		<button id="tab_contenedor_busquedas_contactos"  onclick="cambiar_contenedor(this)" class="opcion_menu">
-			<input type="image" src="/static/imgs/menu/network.png" class="opcion_img_menu">
-			Networking
-		</button>
-	</a>
-	<a href="content">
-		<button id="tab_contenedor_contenidos" class="opcion_menu" >
-			<input type="image" src="/static/imgs/menu/play.png" class="opcion_img_menu">
-			Consejos de Aleia
-		</button>
-	</a>
-
-	<div class="contenedor_menu_inferior">
-		<a class="link_externo_top_right" href="profile">
-			<button class="opcion_menu" >
-				<input type="image" src="/static/imgs/menu/user2.png" class="opcion_img_menu">
-				Mi perfil
-			</button>
-		</a>
-		<button id="sincronizar_externos" class="opcion_menu" onclick="actualizar_integracion()" v-if="sesion.data.admin == 1">Sincronizar</button>
-
-
-		<button class="opcion_menu logout" onclick="close_session()">
-			<input type="image" src="/static/imgs/menu/logout.png" class="opcion_img_menu">
-			Cerrar sesión
-		</button>
-		<div id="brand">
-			<div style="width:100%;height: 10;position:relative;float:left;text-align: center;">
-				<h3 style="/* width: 10; *//* position: relative; *//* float: left; */">by</h3>
-			</div> 
-			<div style="width:100%;height: 10;position:relative;float:left;text-align: center;">
-				<a href="https://www.seligo.com.co/" target="_blank">
-					<img src="/static/imgs/logo_seligo.png" class="brand_img">
-				</a>
-			</div>
-		</div>
-	</div>
-
-</div>
-
-<div id="banner_servicios" class="banner_servicios" >
-
-	<div class="contenido_banner_servicios div_contenedor">
-		<div class="titulo_contenedor servicios">
-			<div class="info_tipo_servicio">
-				<input type="image" src="/static/imgs/boost.png" class="img_info_tipo_servicio" >
-				Servicios
-				<br>
-				[[servicios.length]]
-			</div>
-			<div class="info_tipo_servicio">
-				<input type="image" src="/static/imgs/coin.png" class="img_info_tipo_servicio" >	
-				Créditos
-				<br>
-				[[creditos]]
-
-			</div>
-		</div>
-		<div class="sin_servicios" v-if="servicios.length == 0 && usuario.tipo == 13">
-			Muy pronto...
-
-		</div>
-		<div class="sin_servicios" v-if="servicios.length == 0 && usuario.tipo != 13">
-			<div style="margin-bottom:20px">
-				Aún no has solicitado tu primer servicio
-			</div>
-			<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('video_general')">
-				<input type="image" src="/static/imgs/play.png" class="img_contenido">
-				<div class="num_boton_contenido">Consejo #[[contenidos.video_general.numero_consejo]] de Aleia</div>
-				<div class="tit_boton_contenido">[[contenidos.video_general.titulo]]</div>
-			</button>
-		</div>
-		<div :class="'div_servicio '+o.estatus" v-for="o in servicios" v-if="servicios.length > 0">
-			<div class="descripcion_servicio">
-				<button v-show="o.estatus == 'abierto'" :id="'delete_etiqueta_'+o.id" onclick="show_message_popup(this,true,'delete_servicio')" class="opcion servicio"><input type="image" src="/static/imgs/popup/delete.png" class="img_opcion"></button>
-				[[o.desc]]
-				<br>
-				[[o.estatus]]
-			</div>
-			<div class="etiqueta_servicio">
-				[[o.data1]]
-			</div>
-			<div class="etiqueta_servicio">
-				[[o.data2]]
-			</div>
-			<div class="etiqueta_servicio">
-				[[o.fecha_hora]]
-			</div>
-
-
-		</div>
-	</div>
-	<div class="botonera_banner_servicios">
-
-		<button  class="opcion_vacante nivel1 boton_asesoria" onclick="habilitar_opciones(this,'asesoria','',event)">
-			<input type="image" class="opcion_img_asesoria" src="{% static 'imgs/chat.png'%}"  />
-			<div class="opcion_txt_asesoria">Recibe ayuda con tu búsqueda de empleo</div>
-		</button>
-
-			<!--<button v-if="sesion.data.tipo != 13" class="opcion_vacante nivel1 boton_asesoria" onclick="crear('proceso')">
-				<input type="image" class="opcion_img_asesoria" src="{% static 'imgs/fire.png'%}"  />
-				<div class="opcion_txt_asesoria">Necesito tips para una entrevista</div>
-			</button>-->
-		</div>
-	</div>
-
-	<div id="hidden_linkedin" style="display: none">
-		<div id="sub_linkedin" class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="es_ES" data-type="horizontal" data-theme="light" ><a class="LI-simple-link" href='https://co.linkedin.com/in/alvaro-diego-gonzalez-vesga?trk=profile-badge'>Alvaro Diego Gonzalez Vesga</a></div>
-	</div>
-	<div id="contenedor_total">
-
-		<div id="contenedor_busquedas_vacantes" class="contenedor_top left">
-
-			<button id="boton_back" class="back" v-show="(sesion.data.admin == 1 && usuario.id != sesion.data.id)" onclick="regresar_vista_admin()"><input type="image" class="img_menu" src="{% static 'imgs/back.png'%}"  /></button>
-
-			<div class="contenedor_buscador busquedas">
-				<div class="div_buscador">
-					<input :id="div" onkeypress="keyword_selected(event,this)" class="buscador" placeholder="Escribe lo que buscas y oprime Enter"/>
-					<input type="image" src="/static/imgs/menu/search.png" class="opcion_img_buscador">
-					<div class="filtro_seleccionado atributo" v-show="att_tmp != ''">
-						<h2>[[att_tmp]]</h2><button :id="div+'_att_tmp'" class="borrar_filtro" onclick="borrar_att_tmp(this)"><input type="image" class="filter_img" src="{% static 'imgs/cancel_w.png'%}"  /></button>
-					</div>
-				</div>
-				<div class="div_filtro">
-					<button class="filtro" :id="div+'_popup_filtro_show'" onclick="show_popup_atts(this)"><input type="image" class="img_filter" src="{% static 'imgs/filter2.png'%}"  /><h2 class="desktop">Filtros avanzados</h2></button>
-					<div :id="div+'_popup_filtro'" class="popup_atts hidden">
-						<button :id="div+'_popup_filtro_close'" class="close_corner atts" onclick="close_popup_atts(this)"><input type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-						<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_filtro">
-
-							<div class="att" v-for="att in obj">
-								<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_att(this)"><h2>[[att.texto]]</h2></button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="filtros">
-					<!--<button class="opcion_filtro" onclick="cargar_criterios('vacante')">Cargar mis criterios</button>-->
-
-					<h3 class="titulo_filtros">[[filtros.length]] filtro(s):</h3>
-					<div class="contenedor_filtros">
-						<div class="filtro_seleccionado" v-for="(fil,index) in filtros">
-							<h2>[[fil]]</h2>
-							<button :id="'borrar_'+div+'-'+index" class="borrar_filtro" onclick="borrar_filtro(this)"><input type="image" class="filter_img" src="{% static 'imgs/cancel_w.png'%}"  /></button>
-						</div>
-
-
-						<button class="opcion_filtro" onclick="borrar_filtros('vacante')"><h3>Borrar todo</h3></button>
-					</div>
-				</div>
-			</div>
-			<div class="contenedor_listas left">
-				<div class="contenedor_opciones">
-					<button id="tab_contenedor_full_vacantes" onclick="tab_contenedor(this)" class="opcion_pestania lista selected" >Todas las vacantes</button>
-					<button id="tab_contenedor_etiquetas_vacantes" onclick="tab_contenedor(this)" class="opcion_pestania lista" >Mis vacantes guardadas ([[lista.vacantes.length]])</button>
-					<button class="boton_crear_objeto principal" onclick="crear('oportunidad')"><input type="image" class="opcion_img_objeto" src="{% static 'imgs/add.png'%}"  />Cargar vacante</button>
-
-
-				</div>
-				<div id="contenedor_etiquetas_vacantes" class="contenedor_etiquetas hide">
-					<h3 class="texto_resultados">
-						[[get_texto_resultados(lista.vacantes.length,lista.vacantes.length)]]
-					</h3>
-
-					<div v-show="lista.vacantes.length == 0">
-						<h1 class="mensaje_no_contactos texto_mensaje">
-							Al parecer no tienes ninguna vacante guardada. Acá verás las vacantes que guardes dando clic en el botón "Guardar" o en cualquiera  de las opciones que te salen al dar clic en el botón "Postulate" de Todas las vacantes.<br><br>¡Espero que encuentres el trabajo de tus sueños!
-						</h1>
-					</div>
-					<div :id="'share_etiqueta_'+obj.id" onclick="share_etiqueta(this,event)" class="contenedor_etiqueta mis_vacantes" v-for="obj in lista.vacantes" >
-
-						<div class="botonera etiqueta">
-
-							<button v-show="obj.label == 'oportunidad'" :id="'servicio_'+obj.id_objeto+'_'+obj.id" onclick="habilitar_opciones_et(this,'proceso','crear_proceso',event)" class="opcion_vacante nivel1"><input type="image" class="opcion_img" src="{% static 'imgs/fire.png'%}"  /><h2>¡Pasé a entrevista!</h2></button>
-							<button v-show="obj.label == 'oportunidad'" :id="'servicio_'+obj.id_objeto+'_'+obj.id" onclick="habilitar_opciones_et(this,'oportunidad','editar_oportunidad',event)" class="opcion_vacante nivel1"><input type="image" class="opcion_img" src="{% static 'imgs/shuttle.png'%}"  /><h2>Quiero ayuda con esta vacante</h2></button>
-							<button class="opcion" v-if="obj.label != 'observacion'" ><h2>Más info</h2></button>
-							<button class="opcion" :id="'delete_etiqueta_'+obj.id" onclick="show_message_popup(this,true,'delete_etiqueta')"><input type="image" class="img_opcion" src="{% static 'imgs/popup/delete.png'%}"  /></button>
-							<!--<button class="opcion" :id="'edit_etiqueta_'+obj.id" onclick="edit_etiqueta(this,event)" ><input type="image" class="img_opcion" src="{% static 'imgs/popup/edit.png'%}"  /></button>-->
-							<a :href="obj.link" target="_blank" id="link_etiqueta" v-show="valid_url(obj.link)"><input type="image" class="img_opcion opcion" src="{% static 'imgs/popup/link.png'%}"  /></a>
-
-						</div>
-						<div class="div_etiqueta">
-							<div class="etiqueta_fecha"><h3>[[obj.fecha]]</h3></div>
-
-							<div class="etiqueta_coincidencia" v-show="obj.coincidencia > 0"><h4 class="coincide total" v-show="obj.coincidencia == 100">coincidencia completa</h4><h4 class="coincide parcial" v-show="obj.coincidencia < 100">recomendado</h4></div>
-
-						</div>
-						<div class="div_contenido">
-							<h1 :style="{color:get_color_etiqueta(obj.label)}">[[obj.titulo]]</h1>
-							<h2 class="empresa">[[obj.valor]]</h2>
-
-							<h3>[[obj.valor2]]</h3>
-							<div class="etiqueta_oculta" v-if="obj.oculta"><h3 class="coincide oculta">Confidencial</h3></div>
-							<div class="etiqueta_complemento" v-show="obj.complemento != ''" :style="{background:get_info_complemento(obj.complemento,obj.label).color}"><h3>[[get_info_complemento(obj.complemento,obj.label).texto]]</h3></div>
-							<div class="div_etiquetas_vacante" v-if="typeof obj.data != 'undefined'">
-								<div v-id="kw != ''" v-for="kw in obj.data.lista_reqs"   class="keyword_label">[[kw]]</div>
-							</div>
-
-							<div  v-if="obj.ciudad != ''" class="div_etiqueta_info">
-								<input type="image" src="/static/imgs/location.png" class="img_de_etiqueta">
-								<h3 class="etiqueta_con_img">Cargo requerido en [[obj.valor3]]</h3>
-							</div>
-
-						</div>
-					</div>
-				</div>
-				<div id="contenedor_full_vacantes" class="contenedor_etiquetas">
-					<h3 class="texto_resultados">
-						[[get_texto_resultados(lista.full_vacantes.length,indices_lista.total_full_vacantes)]]
-					</h3>
-					<div class="div_order" >
-						<button class="order_boton" :id="div+'_popup_orden_show'" onclick="show_popup_atts(this)">
-							<input type="image" class="img_filter_order" src="{% static 'imgs/sort2.png'%}"  />
-							<h3 class="desktop">Ordenar por [[order]]</h3>
-						</button>
-						<div :id="div+'_popup_orden'" class="popup_atts hidden">
-
-							<button :id="div+'_popup_orden_close'" class="close_corner atts" onclick="close_popup_atts(this)"><input type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-							<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_orden">
-
-								<div class="att" v-for="att in obj">
-									<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_order(this)"><h2>[[att.texto]]</h2></button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div :id="'share_etiqueta_'+obj.id" onclick="share_item(this,'oportunidad',event)" class="contenedor_etiqueta" v-for="obj in lista.full_vacantes ">
-
-						<div class="botonera etiqueta">
-							<button  :id="'aplicar_servicio_'+obj.id" class="opcion_vacante nivel1" onclick="habilitar_opciones(this,'oportunidad','crear_oportunidad',event)"><input type="image" class="opcion_img" src="{% static 'imgs/arrow.png'%}"  /><h2>Postulate</h2></button>
-							<!--<button class="opcion_vacante nivel1" :id="'servicio_'+obj.id" onclick="habilitar_opciones(this,'oportunidad','crear_oportunidad',event)"><input type="image" class="opcion_img" src="{% static 'imgs/shuttle.png'%}"  /><h2>Quiero ayuda con esta vacante</h2></button>-->
-							<button class="opcion_vacante nivel2" :id="'add_vacante_'+obj.id" onclick="add_vacante(this,event)"><input type="image" class="opcion_img" src="{% static 'imgs/save.png'%}"  /><h2>Guardar</h2></button>
-
-
-						</div>
-						<div class="div_etiqueta">
-							<div class="etiqueta_fecha">
-								<h3>[[obj.fecha]]</h3>
-							</div>
-							<div class="etiqueta_coincidencia"  v-show="obj.coincidencia > 0">
-								<h4 class="coincide total" v-show="obj.coincidencia == 100">coincidencia completa</h4>
-								<h4 class="coincide parcial" v-show="obj.coincidencia < 100">recomendado</h4>
-							</div>
-						</div>
-						<div class="div_contenido">
-							<h2 style="color:gray"><span class="empresa">[[obj.empresa]]</span> buscó
-								<h1 class="titulo_vacante">[[obj.cargo]]</h1>
-								<div class="div_etiqueta_info">
-									<input type="image" src="/static/imgs/popup/star.png" class="img_de_etiqueta">
-									<h3 class="etiqueta_con_img">[[obj.lista_reqs.length]] requisitos especificados</h3>
-									<!--<div v-if="kw != ''" v-for="kw in obj.lista_reqs"  class="keyword_label">[[kw]]</div>-->
-								</div>
-
-								<div v-show="obj.rango_menor != ''" class="div_etiqueta_info">
-									<input type="image" src="/static/imgs/dollar.png" class="img_de_etiqueta">
-									<h3 class="etiqueta_con_img">Salario entre [[obj.rango_menor]] y [[obj.rango_mayor]]</h3>
-								</div>
-
-								<div  v-if="obj.ciudad != ''" class="div_etiqueta_info">
-									<input type="image" src="/static/imgs/location.png" class="img_de_etiqueta">
-									<h3 class="etiqueta_con_img">Cargo requerido en [[obj.ciudad]]</h3>
-								</div>
-
-							</div>
-						</div>
-						<div class="ver_mas_inferior" onclick="get_more_items('vacantes')" v-show="indices_lista.total_full_vacantes > lista.full_vacantes.length">Ver más</div>
-					</div>
-
-				</div>
-			</div>
-
-		</div>
-	</div>
-
-
-
-	<div id="contenedor_right" class="div_contenedor_popup hide">
-		<div id="contenedor_popup_formularios" class="contenedor_popup">
-			<h1 id="titulo_contenedor_right"></h1>
-			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-			<div id="div_mensaje_retorno" class="mensaje_retorno invisible">
-				<input id="mensaje_retorno_img" type="image" class="mensaje_retorno_img"/>
-				<h2 id="mensaje_retorno"></h2>
-				<div id = "decision_retorno" class="decision_retorno">
-					<button class="eleccion_respuesta" onclick="ocultar_mensaje()">Cancelar</button>
-					<button class="eleccion_respuesta" onclick="asociar_previo()">Asociar sin reemplazar datos</button>
-					<button class="eleccion_respuesta" onclick="reenviar_actualizar()">Reemplazar datos</button>
-				</div> 
-			</div>
-			<div id="div_crear_oportunidad" class="div_contenedor_formulario" style="display: none;">
-
-				<div class="div_input id">
-					<input id="id_oportunidad" class="id" readonly />
-
-				</div>
-				<div class="div_input">
-					<input id="empresa_oportunidad" class="input" placeholder="Empresa" />
-
-				</div>
-				<div class="div_input">
-					<input id="cargo_oportunidad" class="input" placeholder="Cargo" />
-
-				</div>
-				<div class="div_input">
-					<input id="req1" class="input" placeholder="¿Cual es el primer criterio que el cargo debe cumplir? (obligatorio)" />
-
-				</div>
-				<div class="div_input">
-					<input id="req2" class="input" placeholder="¿Cual es el segundo criterio que el cargo debe cumplir? (obligatorio)" />
-
-				</div>
-				<div class="div_input"> 
-					<input id="req3" class="input" placeholder="¿Cual es el tercer criterio que el cargo debe cumplir? (obligatorio)" />
-
-				</div>
-				<div class="div_input" >
-					<input id="req4" class="input" placeholder="¿Cual es el cuarto criterio que el cargo debe cumplir? (obligatorio)" />
-
-				</div>
-				<div class="div_input">
-					<input id="req5" class="input" placeholder="¿Cual es el quinto criterio que el cargo debe cumplir?" />
-
+	<div id="contenedor_vacantes_seleccionadas" class="contenedor_inicial">
+		<div id="seleccion_vacantes" class="seleccion_vacantes"> <!--Tienes que estar escondido cuando aprarezca el div de popup-->
+			
+			<div class="info_etapa principal">
+				<div class="decoration"></div>
+				<div class="decoration dos"></div>
+				<div class="subtitulo_formulario" style="text-align:center; bottom: 10px;">
+					Portal de empleo para Pymes y Startups en Colombia
 				</div>
 				
-				<div id="div_recompensa" class="div_input" v-show="usuario.tipo == 13 && false" style="display: none;">
-					<input id="recompensa" class="input" placeholder="¿Cuanto es tu presupuesto para pagarle al candidato?" />
+				<div style="position: relative; float: left; position: relative; text-align: justify;">
+					<h1>
+						Soy empresa:<br><br>
+						• Publica vacantes GRATIS e ILIMITADAS<br><br>
+						• Ahorra tiempo: Te generamos un link que puedes compartir con tus candidatos por cualquier medio y cuando se postulen, los recibes de manera organizada<br><br>
+						• Tus vacantes tendrán mayor alcance y llegarás a los mejores talentos<br><br>
+						Soy candidato:<br><br>
+						• Encuentra la vacante que mejor se ajuste a tu perfil, mira qué está evaluando cada compañía y responde en vacantes donde tienes más probabilidades de ser llamado
+						
+					</h1>
 				</div>
-				<div class="div_input">
-					<textarea placeholder="Escribe información extra que relevante para la vacante (opcional)" id="obs_oportunidad"></textarea>
-				</div>
-				<div class="div_input">
-					<div class="recomendaciones">
-						<button :id="'ciudad_oportunidad_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('ciudad',this)">
-							[[o]]
-						</button>
-					</div>
-					<input id="ciudad_oportunidad" onblur="remove_recom('ciudad')" onkeydown="explore_recom(event,'ciudad',this)" oninput="recomendaciones('ciudad',this)" class="input" placeholder="Ciudad" />
-
-				</div>
-				<div class="div_input">
-					<input id="link_oportunidad" class="input" placeholder="Link externo de postulación" />
-
-				</div>
-				<div class="div_input" v-show="usuario.tipo == 13">
-
-					<div class="titulo_select">Quiero que se puedan postular por Aleia</div>
-					<input type="checkbox" id="postulacion_oportunidad">
-					<button class="opcion_input" onclick="show_message_popup(this)">
-						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
-					</button>
-				</div>
-				<div class="div_input" v-show="usuario.tipo == 13">
-					<div class="titulo_select">
-						¿Quieres apoyo para encontrar candidatos?
-					</div>
-					<select id="tipo_servicio" class="input select" onchange="selecciona_tipo_servicio()">
-						<option value="empresa_ayuda">Si</option>
-						<option value="no" selected>No</option>
-						<option value="empresa_llamada">Quiero hablar con un asesor primero</option>
-					</select>
-				</div>
-				<div class="div_input">
-
-					<div class="desde">
-						Rango salarial desde
-					</div>
-					<div class="desde2">
-						<input id="rango_menor_oportunidad" class="input" placeholder="$" />
-					</div>
-					<div class="hasta">
-						hasta
-					</div>
-					<div class="hasta2">
-						<input id="rango_mayor_oportunidad" class="input" placeholder="$" />
-					</div>
-				</div>
-				<div class="div_input">
-					<div class="titulo_select">
-						Tipo de oportunidad:
-					</div>
-					<select id="tipo_oportunidad" class="input select" placeholder="Tipo de relación">
-						<option value="1">Empleado</option>
-						<option value="2">Consultoria</option>
-						<option value="4">Otro</option>
-					</select>
-
-				</div>
-				<div class="div_input" style="display: none">
-
-					<div class="titulo_select">Protegido</div>
-					<input type="checkbox" id="oportunidad_protegido">
-				</div>
-
-				<div class="div_input" style="display: none">
-					<div class="titulo_select">¿Quieres ayuda con esta vacante?</div>
-					<select id="cumplimiento_100" class="input select">
-						<option value = "" selected></option>
-						<option value = "true">Si, quiero ser representado</option>
-						<option value = "analisis">Si, quiero un análsis de postulación</option>
-						<option value = "false">No quiero</option>
-					</select>
-					<button class="opcion_input" onclick="show_message_popup(this)">
-						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
-					</button>
-				</div>
-				<div class="div_input" v-show="usuario.tipo != 13 ">
-
-					<div class="titulo_select">Vacante confidencial</div>
-					<input type="checkbox" id="oportunidad_oculto">
-				</div>
-				<div style="display: none" class="div_input" v-if="usuario.tipo != 13" v-show="usuario.representaciones == '' || typeof usuario.representaciones == 'undefined'">
-					<h2 style="color:#0c26e8">Recuerda que puedes postularte o recibir apoyo en esta vacante dando clic en Mis vacantes guardadas y luego en Quiero ayuda con esta vacante</a> </h2>
+				<div class="contenedo_botones_serv principal">
+					<!--<a href="/?id_vacante=12636" target="_blank">
+						<button type="button" class="boton_principal_opc left">Si eres candidato, postulate a la vacante que quieras</button>
+					</a>-->
+					<a href="/loadjobs" target="_self">
+						<button type="button" class="boton_principal_opc">Si eres empresa, publica tus vacantes GRATIS AQUÍ</button>
+					</a>
+					
+					
 				</div>
 			</div>
 			
-			<div id="div_crear_contacto" class="div_contenedor_formulario" style="display: none;">
-
-				<div class="div_input id">
-					<input id="id_contacto" class="id" readonly/>
-
-				</div>
-				<div class="div_input">
-					<input id="linkedin_contacto" class="input" placeholder="Linkedin"  onblur="search_inner_profile()"/>
-
-				</div>
-				<div class="div_input">
-					<input id="nombre_contacto" class="input" placeholder="Nombre" />
-
-				</div>
-				<div class="div_input">
-					<input id="cargo_contacto" class="input" placeholder="Cargo" />
-
-				</div>
-				<div class="div_input">
-					<input id="empresa_contacto" class="input" placeholder="Empresa" />
-
-				</div>
-				<div class="div_input" v-show="sesion.data.admin == 1">
-					<div class="titulo_select">
-						Perfil comunicación:
-					</div>
-					<select id="crystal_contacto" class="input select">
-						<option value="nan">No tiene</option>
-						<option value="architect">Architect</option>
-						<option value="captain">Captain</option>
-						<option value="driver">Driver</option>
-						<option value="initiator">Initiator</option>
-						<option value="encourager">Encourager</option>
-						<option value="harmonizer">Harmonizer</option>
-						<option value="influencer">Influencer</option>
-						<option value="motivator">Motivator</option>
-						<option value="analyst">Analyst</option>
-						<option value="editor">Editor</option>
-						<option value="skeptic">Skeptic</option>
-						<option value="questioner">Questioner</option>
-						<option value="counselor">Counselor</option>
-						<option value="planner">Planner</option>
-						<option value="stabilizer">Stabilizer</option>
-						<option value="supporter">Supporter</option>
-
-					</select>
-
-				</div>
-				<div class="div_input">
-					<input id="mail_contacto" class="input" placeholder="Mail" />
-
-				</div>
-				<div class="div_input">
-					<input id="telefono_contacto" class="input" placeholder="Telefono" />
-
-				</div>
-				<div class="div_input">
-					<div class="titulo_select">
-						Tipo de contacto:
-					</div>
-					<select id="tipo_contacto" class="input select" placeholder="Tipo de relación">
-						<option value="1">Desconocido</option>
-						<option value="2">Conocido</option>
-						<option value="3">Confianza</option>
-						<option value="4">Muy cercano</option>
-					</select>
-
-				</div>
-
-				<div class="div_input">
-					<div class="titulo_select">
-						¿Cual de estas descripciones se acopla más a esta persona?
-					</div>
-					<select id="personalidad_contacto" class="input select">
-						<option value="">No se</option>
-						<option value="rojo">Es orientado a los resultados, es directo al comunicarse y le gusta controlar la productividad. </option>
-						<option value="amarillo">Es altamente sociable, es muy bueno motivando y disfruta del trabajo cambiante.</option>
-						<option value="verde">Es muy bueno trabajando en equipo, escuchando a los otros y siendo amigable.</option>
-						<option value="azul">Tiene una comunicación formal, es muy bueno trabajando en la sistematización de procesos y en la atención al detalle.</option>
-					</select>
-
-				</div>
-				<div class="div_input">
-
-					<div class="titulo_select">
-						Quiero que verifique que es mi contacto
-					</div>
-					<input type="checkbox" id="verificacion_contacto">
-					<button class="opcion_input" onclick="show_message_popup(this)">
-						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+			
+			<div id="redes" class="redes">
+				<a href="https://www.linkedin.com/company/aleiabyseligo" target="_blank">
+					<button class="red"><img src="/static/imgs/menu/icon_linkedin.png" class="logo_red">
+						aleia by seligo
 					</button>
-				</div>
-				<div class="div_input">
-
-					<div class="titulo_select">Oculto</div>
-					<input type="checkbox" id="contacto_oculto">
-					<button class="opcion_input" onclick="show_message_popup(this)">
-						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+				</a>
+				<a href="https://www.youtube.com/channel/UClMNkFB20wVSt0IAHBo-Dig" target="_blank">
+					<button class="red"><img src="/static/imgs/menu/icon_youtube.png" class="logo_red">
+						aleia by seligo
 					</button>
-				</div>
-				<div class="div_input">
-					<textarea placeholder="Si enviaste la verificación de contacto escribele un mensaje acá o describe la relación que tienen. Esta información es privada para ti." id="obs_contacto"></textarea>
-				</div>
+				</a>
 			</div>
-			<div id="div_crear_contacto_perfil" class="div_contenedor_formulario" style="display: none;">
-
-				<div class="div_input id">
-					<input id="id_contacto_perfil" class="id" readonly/>
-
-				</div>
-				<div class="div_input">
-					<input id="linkedin_contacto_perfil" class="input" placeholder="Linkedin"/>
-
-				</div>
-				<div class="div_input">
-					<input id="mail_contacto_perfil" class="input" placeholder="Mail" />
-
-				</div>
-				<div class="div_input">
-					<input id="telefono_contacto_perfil" class="input" placeholder="Telefono" />
-
-				</div>
-				<div class="div_input">
-					<div class="titulo_select">
-						Tipo de contacto:
-					</div>
-					<select id="tipo_contacto_perfil" class="input select" placeholder="Tipo de relación">
-						<option value="1">Desconocido</option>
-						<option value="2">Conocido</option>
-						<option value="3">Confianza</option>
-						<option value="4">Muy cercano</option>
-					</select>
-
-				</div>
-
-				<div class="div_input">
-					<div class="titulo_select">
-						¿Cual de estas descripciones se acopla más a esta persona?
-					</div>
-					<select id="personalidad_contacto_perfil" class="input select">
-						<option value="">No se</option>
-						<option value="rojo">Es orientado a los resultados, es directo al comunicarse y le gusta controlar la productividad. </option>
-						<option value="amarillo">Es altamente sociable, es muy bueno motivando y disfruta del trabajo cambiante.</option>
-						<option value="verde">Es muy bueno trabajando en equipo, escuchando a los otros y siendo amigable.</option>
-						<option value="azul">Tiene una comunicación formal, es muy bueno trabajando en la sistematización de procesos y en la atención al detalle.</option>
-					</select>
-
-				</div>
-				<div class="div_input">
-
-					<div class="titulo_select">Quiero que verifique que es mi contacto</div>
-					<input type="checkbox" id="verificacion_contacto_perfil">
-					<button class="opcion_input" onclick="show_message_popup(this)">
-						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
-					</button>
-				</div>
-				<div class="div_input">
-
-					<div class="titulo_select">Oculto</div>
-					<input type="checkbox" id="contacto_oculto_perfil">
-					<button class="opcion_input" onclick="show_message_popup(this)">
-						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
-					</button>
-				</div>
-				<div class="div_input">
-					<textarea placeholder="Si enviaste la verificación de contacto escribele un mensaje acá o describe la relación que tienen. Esta información es privada para ti." id="obs_contacto_perfil"></textarea>
-				</div>
-			</div>
-			<div id="div_crear_proceso" class="div_contenedor_formulario proceso"  style="display: none;">
-				<div class="div_input id">
-					<input id="id_contacto_proceso" class="id" readonly/><input id="id_vacante_proceso" class="id" readonly/>
-
-				</div>
-
-				<div class="contenedor_datos_proceso left">
-					<div class="titulo_contenedor_datos_proceso">
-						Información de la entrevista
-					</div>
-					<div class="div_input">
-						<div class="recomendaciones">
-							<button :id="'cargo_procesoANDDempresa_contacto_proceso_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('vacantes',this)">
-								[[o]]
-							</button>
-						</div>
-						<input id="cargo_proceso" onblur="remove_recom('vacantes')" onkeydown="explore_recom(event,'vacantes',this)" oninput="recomendaciones('vacantes',this)" class="input" placeholder="Cargo al que aplicas" />
-
-					</div>
-					<div class="div_input">
-						<input id="empresa_contacto_proceso" class="input" placeholder="Empresa" />
-
-					</div>
-					<div class="div_input" >
-						<div class="titulo_select">
-							Fecha de la entrevista:
-						</div>
-						<input type="datetime-local" id="fecha_proceso">
-					</div>
-					<div class="div_input" v-show="usuario.representaciones != '' && typeof usuario.representaciones != 'undefined'">
-						<div class="titulo_select">
-							¿Quieres ayuda con esta entrevista?
-						</div>
-						<select id="servicio_proceso" class="input select" placeholder="Tipo de proceso">
-
-							<option value="analisis">Si, quiero un análisis del estilo de comunicación</option>
-							<option value="simulacion" v-show="sesion.data.tipo == 5">Si, quiero una simulación de entrevista</option>
-							<option value="no">No</option>
-
-						</select>
-
-					</div>
-					<div class="div_input">
-						<div class="titulo_select">
-							Nivel de avance en el proceso:
-						</div>
-						<select id="tipo_proceso" class="input select" placeholder="Tipo de proceso">
-							<option value="1">Entrevista con equipo de selección</option>
-							<option value="2">Entrevista con gerente de RRHH</option>
-							<option value="3">Entrevista con jefe directo</option>
-							<option value="4">Entrevista con Director, CEO o Gerente general</option>
-							<option value="7">Contratado!</option>
-							<option value="5">Postulación de Séligo</option>
-							<option value="6">Vacante cerrada</option>
-						</select>
-
-					</div>
-					<div class="div_input">
-						<textarea placeholder="¿Tienes alguna observación?" id="obs_proceso"></textarea>
-					</div>
-				</div>
-				<div class="contenedor_datos_proceso">
-					<div class="titulo_contenedor_datos_proceso">
-						Información del entrevistador
-					</div>
-					<div class="div_input">
-						<input id="linkedin_contacto_proceso" class="input" placeholder="Linkedin de contacto u entrevistador" onblur="search_profile('contacto_proceso')"/>
-
-					</div>
-					<div class="div_input">
-						<input id="nombre_contacto_proceso" class="input" placeholder="Nombre de contacto u entrevistador" />
-
-					</div>
-					<div class="div_input">
-						<input id="cargo_contacto_proceso" class="input" placeholder="Cargo de contacto u entrevistador" />
-
-					</div>
-
-					<div class="div_input" v-show="sesion.data.admin == 1">
-						<div class="titulo_select">
-							Perfil de comunicación:
-						</div>
-						<select id="crystal_contacto_proceso" class="input select">
-							<option value="nan">No tiene</option>
-							<option value="architect">Architect</option>
-							<option value="captain">Captain</option>
-							<option value="driver">Driver</option>
-							<option value="initiator">Initiator</option>
-							<option value="encourager">Encourager</option>
-							<option value="harmonizer">Harmonizer</option>
-							<option value="influencer">Influencer</option>
-							<option value="motivator">Motivator</option>
-							<option value="analyst">Analyst</option>
-							<option value="editor">Editor</option>
-							<option value="skeptic">Skeptic</option>
-							<option value="questioner">Questioner</option>
-							<option value="counselor">Counselor</option>
-							<option value="planner">Planner</option>
-							<option value="stabilizer">Stabilizer</option>
-							<option value="supporter">Supporter</option>
-
-						</select>
-
-					</div>
-					<div class="div_input">
-						<input id="mail_contacto_proceso" class="input" placeholder="Mail de contacto u entrevistador" />
-
-					</div>
-					<div class="div_input">
-						<input id="telefono_proceso" class="input" placeholder="Telefono de contacto u entrevistador" />
-
-					</div>
-				</div>
-
-
-
-			</div>
-
-			<button id="boton_call2action" class="boton_call2action" onclick="call2action()" ></button>
 		</div>
+		{% include 'popup.html' %} 
 	</div>
 </div>
-<div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+
+{% endblock %} 
 
 
-<!--<div id="banner_opciones_desktop" class="banner_opciones_desktop">
 
-	<button v-show="(sesion.data.admin == 1 && usuario.id != sesion.data.id)"  class="boton_crear_objeto secundario" onclick="crear('sesion')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}"  />Cargar sesion</button>
-	<button  class="boton_crear_objeto secundario" onclick="crear('proceso')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}" />Cargar entrevista</button>
-
-	<button class="boton_crear_objeto secundario" onclick="crear('oportunidad')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}"  />Cargar vacante</button>
-	<button class="boton_crear_objeto secundario" onclick="crear('contacto')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}"  />Cargar persona</button>
-	<div id="opciones_cargar_contacto" class="opciones_cargar_contacto" style="display: none;">
-		<button class="boton_crear_objeto subopcion" onclick="crear('contacto')">Evaluar perfil del contacto</button>
-		<button class="boton_crear_objeto subopcion" onclick="crear('contacto')">Cargue rapido</button>
-		<button class="boton_crear_objeto subopcion" onclick="crear('contacto_masivo')" style="display: none;">Cargue CSV</button>
-	</div>
-</div>-->
-<div id="banner_opciones_mobile" class="banner_opciones mobile" style="display: none">
-
-	<div class="opcion_banner" onclick="cambiar('menu')">
-		<input type="image" class="menu_img" src="{% static 'imgs/menu.png'%}"  />
-		<div class="texto_opcion_mobile">
-			Menú
-		</div>
-	</div>
-
-	<div class="opcion_banner" onclick="cambiar('inicio')">
-		<input type="image" class="menu_img" src="{% static 'imgs/inicio.png'%}"  />
-		<div class="texto_opcion_mobile">
-			Inicio
-		</div>
-	</div>
-	<div class="opcion_banner" onclick="cambiar('servicios')">
-		<input type="image" class="menu_img" src="{% static 'imgs/services.png'%}"  />
-		<div class="texto_opcion_mobile">
-			Servicios
-		</div>
-	</div>
-
-</div>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
 <script  src="{% versioned_static 'js/fuzzball_lite.umd.min.js'%}"></script>
 <script  src="{% versioned_static 'js/global.js'%}"></script>
 
@@ -1468,11 +188,25 @@
 	};
 	trans = getParams(window.location.href);
 	console.log("punto controladoooo....",trans)
+	if(trans.hasOwnProperty("q")){
+		
+		console.log(trans["q"])
+		document.getElementById("buscador_index").value = trans["q"]; 
+		
+		
+		
+		
+	}
 	if(trans.hasOwnProperty("id_vacante")){
-
+		
 		console.log(trans["id_vacante"])
-		share_item_fijo(trans["id_vacante"])
-
+		//share_item_fijo(trans["id_vacante"])
+		item = {"id":"share_etiqueta_"+trans["id_vacante"],"fijo_param":"true"}
+		share_item(item,"oportunidad",null)
+		
+	}
+	if(trans.hasOwnProperty("acuerdo")){
+		show_acuerdo();
 	}
 </script>
 </html>

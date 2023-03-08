@@ -1,3 +1,7 @@
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+import email
 from pymongo import MongoClient
 import pymongo
 import json
@@ -15,7 +19,7 @@ from EPE.business.integracion_sheets import *
 from fuzzywuzzy import fuzz
 stop_words_regex = r"(\bvacante\b|\bde\b|\bun\b|\buna\b|\bunas\b|\bunos\b|\buno\b|\bsobre\b|\btodo\b|\btambién\b|\btras\b|\botro\b|\balgún\b|\balguno\b|\balguna\b|\balgunos\b|\balgunas\b|\bser\b|\bes\b|\bsoy\b|\beres\b|\bsomos\b|\bsois\b|\bestoy\b|\besta\b|\bestamos\b|\bestais\b|\bestan\b|\bcomo\b|\ben\b|\bpara\b|\batras\b|\bporque\b|\bpor qué\b|\bestado\b|\bestaba\b|\bante\b|\bantes\b|\bsiendo\b|\bambos\b|\bpero\b|\bpor\b|\bpoder\b|\bpuede\b|\bpuedo\b|\bpodemos\b|\bpodeis\b|\bpueden\b|\bfui\b|\bfue\b|\bfuimos\b|\bfueron\b|\bhacer\b|\bhago\b|\bhace\b|\bhacemos\b|\bhaceis\b|\bhacen\b|\bcada\b|\bfin\b|\bincluso\b|\bprimero\b|\bdesde\b|\bconseguir\b|\bconsigo\b|\bconsigue\b|\bconsigues\b|\bconseguimos\b|\bconsiguen\b|\bir\b|\bvoy\b|\bva\b|\bvamos\b|\bvais\b|\bvan\b|\bvaya\b|\bgueno\b|\bha\b|\btener\b|\btengo\b|\btiene\b|\btenemos\b|\bteneis\b|\btienen\b|\bel\b|\bla\b|\blo\b|\blas\b|\blos\b|\bsu\b|\baqui\b|\bmio\b|\btuyo\b|\bellos\b|\bellas\b|\bnos\b|\bnosotros\b|\bvosotros\b|\bvosotras\b|\bsi\b|\bdentro\b|\bsolo\b|\bsolamente\b|\bsaber\b|\bsabes\b|\bsabe\b|\bsabemos\b|\bsabeis\b|\bsaben\b|\bultimo\b|\blargo\b|\bbastante\b|\bhaces\b|\bmuchos\b|\baquellos\b|\baquellas\b|\bsus\b|\bentonces\b|\btiempo\b|\bverdad\b|\bverdadero\b|\bverdadera\b|\bcierto\b|\bciertos\b|\bcierta\b|\bciertas\b|\bintentar\b|\bintento\b|\bintenta\b|\bintentas\b|\bintentamos\b|\bintentais\b|\bintentan\b|\bdos\b|\bbajo\b|\barriba\b|\bencima\b|\busar\b|\buso\b|\busas\b|\busa\b|\busamos\b|\busais\b|\busan\b|\bemplear\b|\bempleo\b|\bempleas\b|\bemplean\b|\bampleamos\b|\bempleais\b|\bvalor\b|\bmuy\b|\bera\b|\beras\b|\beramos\b|\beran\b|\bmodo\b|\bbien\b|\bcual\b|\bcuando\b|\bdonde\b|\bmientras\b|\bquien\b|\bcon\b|\bentre\b|\bsin\b|\btrabajo\b|\btrabajar\b|\btrabajas\b|\btrabaja\b|\btrabajamos\b|\btrabajais\b|\btrabajan\b|\bpodria\b|\bpodrias\b|\bpodriamos\b|\bpodrian\b|\bpodriais\b|\byo\b|\baquel\b)"
 stop_text_link = r"(https:|http:|www.|\/$|\/\/)"
-crystal_styles ={
+"""crystal_styles ={
 1:{'code':'Dc','name':'Architect','color':1,'advise':'-Es un rojo asi que  el tiende a dirigir a otros y monitorear de cerca su avance, si tienes experiencias haciendo esto ponlas sobre la mesa ya que vas a generar una empatía a nivel profesional. Cuéntale alguna experiencia monitoreando equipos y obteniendo resultados positivos por medio de esto.<br> -Cuestiona practicas ineficientes y no dudes en criticar un producto que no te parezca bueno.<br> -Es de comunicación rápida así que llega al punto ágilmente y se conciso. Puedes llegar a perder su atención si divagas o contextualizas mucho así que si te hace una pregunta responde específicamente lo que preguntó.<br> - Es muy orientado a resultados así que háblale de que puedes mejorar en su empresa o de qué forma puedes catapultar sus objetivos. <br> <br> Recuerda muy bien que debes leer su dolor, que es lo que necesita para estar buscando un cargo, más allá de los requerimientos que tengan en la persona es que dolor tienen en la empresa para estar buscando a alguien con tu perfil y pon sobre la mesa alternativas para aliviar ese dolor, el lo va a tomar muy positivamente ya que su comunicación abierta nos permite ser propositivos.'},
 2:{'code':'D','name':'Captain','color':1,'advise':'-Es un rojo asi que se directo y lógico al comunicarte <br> - Demuestra seguridad y rapidez en tu comunicación. <br> - Identifica experiencias que resalten los resultados finales siendo concreto. <br> - Si ves alguna oportunidad debate y refuta sus argumentos, él va a tomar ese reto positivamente.- Habla de una situación de adaptación al cambio y de trabajo rápido.'},
 3:{'code':'Di','name':'Driver','color':1,'advise':'-Es un rojo asi que tiende a ser muy directo en tu comunicación<br> - Evita estar callado, toma la iniciativa y habla apasionadamente de tus ideas.<br> - Habla en términos de un objetivo que tuviste y de forma muy rápida como lograste el resultado.<br> - Proyecta mucha confianza y asertividad.'},
@@ -37,6 +41,7 @@ crystal_styles ={
 16:{'code':'S','name':'Supporter','color':4,'advise':'- Es un verde asi que con él hay que ser cálidos y hacer varias preguntas<br> - No le gusta llamar la atención y le gusta escuchar, valora mucho la lealtad con la compañía y valora también la confianza a largo plazo. Háblale de esto. <br> - Debes proyectar respeto, nunca lo interrumpas, siempre espera a que acabe su idea para decir la tuya .<br> - Te recomiendo preguntarle por los retos que están llevando en la empresa, por sus preocupaciones, enfatiza en tu experiencia y en tus títulos y cuando hablen de algún producto enfócate en la estabilidad y seguridad del mismo.'},
 17:{'code':'NaN','name':'NaN','color':5,'advise':'Recuerda que debes generar un contacto asertivo, si es por correo que sea muy corto y que le deje claro la forma en que le puedes facilitar la vida'}
 }
+"""
 permisos_usuario_micros = [4,8,9]
 permisos_usuario_seguimiento = [5,6,11]
 permisos_usuario_admin = [0,1,2,9]
@@ -167,21 +172,7 @@ def test_textract_comp():
             load_mongo_client().procesos_sin_vacante.insert_one({"id_data":o,"id_usuario":o.split(".")[0],"id_vacante":o.split(".")[1]})
           
     
-    """PRIMER DESARROLLO PRUEBA LECTURA
-    lista = load_mongo_client().cvs.find()
-    for o in lista:
-        obj = get_file(o["id_file"])
-        with open(os.path.join("/home/ec2-user/temp_downloads/",obj["name"]), 'wb') as f:
-        #for data in file_size_request.iter_content(block_size):         
-            f.write(obj["file"])     
-            f.close()
-        
-        print("archivo cargados en el servidor")
-        
-        text = textract.process(os.path.join("/home/ec2-user/temp_downloads/",obj["name"]),method="pdfminer").decode("utf-8", "strict")  
-        os.remove(os.path.join("/home/ec2-user/temp_downloads/",obj["name"]))
-        print("ok.....",text[0:20])
-    """
+    
 def request_pass(mail):
 
     obj = load_mongo_client().personas.find_one({"usuario":str(mail.strip())})
@@ -205,7 +196,7 @@ def envio_respuesta_verificacion(id,idt,nivel):
             break
         max_id = max_id +1
     if encontrado == True:
-        load_mongo_client().personas.update({"id":int(id)},{"$set":{"etiquetas."+str(max_id) : tmp}})
+        load_mongo_client().personas.update_one({"id":int(id)},{"$set":{"etiquetas."+str(max_id) : tmp}})
     tmp_per2 = load_mongo_client().personas.find_one({"id":int(idt)})
 
     if tmp_per2 != None:
@@ -221,7 +212,7 @@ def envio_respuesta_verificacion(id,idt,nivel):
                 break
             max_id = max_id +1
         if encontrado == True:
-            load_mongo_client().personas.update({"id":int(idt)},{"$set":{"etiquetas."+str(max_id) : tmp}})
+            load_mongo_client().personas.update_one({"id":int(idt)},{"$set":{"etiquetas."+str(max_id) : tmp}})
         else:
             max_id = 0
             
@@ -239,7 +230,7 @@ def envio_respuesta_verificacion(id,idt,nivel):
             "nivel":int(nivel),
             "obs":"Creado por verificación de usuario"
             }
-            load_mongo_client().personas.update({"id":int(idt)},{"$push":{"etiquetas" : tmp}})
+            load_mongo_client().personas.update_one({"id":int(idt)},{"$push":{"etiquetas" : tmp}})
 def descuenta_devuelve_credito(id_user,descuenta):
     t = load_mongo_client().personas.find_one({"id":int(id_user)})
     r = 0
@@ -267,7 +258,32 @@ def descuenta_devuelve_credito(id_user,descuenta):
 def get_last_id_cv(id):
     
     return load_mongo_client().personas.find_one({"id":int(id)})["id_last_cv"]
+def extraccion_atributos_en_objeto(obj):
     
+    res = {}
+    for o in obj:
+        if ".json" in o:
+            print(o)
+            res[o.split(".json")[0].strip()]  = json.loads(obj[o])
+        elif "[]" in o:
+            lista = obj.getlist(o, [])
+            if len(lista) == 1 and lista[0].strip() == '':
+                lista = []
+            nwlista = []
+            for j in lista:
+                try:
+                    nwlista.append(json.loads(j))
+                except:
+                    nwlista.append(j.strip())
+            res[o.split("[]")[0].strip()] = nwlista
+        else:
+            if o == "id" and obj[o]== "null":
+                res[o] = ""
+            else:
+                res[o.strip()] = obj[o].strip()
+    
+    res["fecha"] = datetime.datetime.now().strftime("%Y-%m-%d")
+    return res
 def activacion_usuario(id):
     #try:
     pass_tmp = load_mongo_client().personas.find_one({"id":int(id)})["password_tmp"]
@@ -276,15 +292,76 @@ def activacion_usuario(id):
     return {"retorno":"ok"}
     #except:
     #    return {"retorno":"error"}
-def envio_correo(plantilla,id_user,data,destinatario):
+class notificaciones():
+    def __init__(self,destino,obj):
+        self.destino = destino
+        self.obj = obj
+class mail(notificaciones):
+     def __init__(self,destino,obj):
+        self.message = Mail()
+        
+    def mail_registro():
+        self.message
+    relacion_templates ={
+        "registro":"d-9ab59ce1221c4b018b9f3edd53655714",
+        "postulacion":"",
+        "autenticacion":"",
+        "recuperacion_password":"",
+        "pregunta":"",
+        "respuesta":""
+    }
+    def mail_registro(obj):
+        message = Mail(
+            from_email='comunicaciones@aleia.app',
+            to_emails=destinatario,
+            )
+        message.dynamic_template_data = obj
+        message.template_id = ""
+        #try:
+        sg = SendGridAPIClient('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')
+        
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+        #except Exception as e:
+        #    print(e)
+        return "ok"
+    
+def envio_correo_old(plantilla,id_user,data,destinatario):
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.ehlo()
     s.starttls()
     s.login(MY_ADDRESS, PASSWORD)
     msg = MIMEMultipart()       # create a message
-    msg['From']="Equipo de Aleja <"+MY_ADDRESS+">"
+    msg['From']="Equipo de Aleia <"+MY_ADDRESS+">"
     msg['To']=destinatario
     print(id_user,data,destinatario)
+    if plantilla == "actualizacion_convenio":
+        msg['Subject']=""+data["nombre"].split(" ")[0]+", hemos actualizado tu cuenta"
+        html = """\
+        <html>
+        <head></head>
+        <body>
+        <div style="font-family: verdana;width: 80%;color: #525252;">
+        <p>Hola """+data["nombre"]+"""!<br><br>
+        Tu cuenta de Aleia se ha sido activada y te hemos generado el acceso al curso online.
+        <br><br>
+        Ten acceso a la plataforma para gestionar tu búsqueda de empleo ingresando a <a href="http://portal.aleia.app/login">aleia.app</a> y a tu curso online en el mismo link que te enviamos en el correo anterior.
+        <br>
+        Accede a ambos servicios con los siguientes datos<br>
+        <br>
+        Usuario: """+data["usuario"]+"""<br>
+        Contraseña: """+str(data["password"])+"""
+        <br><br><br>
+        Álvaro González
+        <br>
+        CTO / co-founder de Séligo
+        </p>
+        </div>
+        </body>
+        </html>
+        """
     if plantilla == "alerta_usuario_compensar":
         msg['Subject']=""+data["nombre"].split(" ")[0]+", pregunta lo que quieras sobre tu búsqueda de empleo a un experto GRATIS."
         html = """\
@@ -295,17 +372,17 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <p>Hola """+data["nombre"].split(" ")[0]+"""!<br><br>
         Espero te encuentres muy bien. 
         <br><br>
-        Queremos recordarte que gracias al programa <b>Empleabilidad estratégica Compensar</b>, no solo tienes acceso a las capacitaciones en búsqueda de empleo con Leonardo Modera, experto en empleabilidad y COO de Séligo, sino que también tienes acceso a la plataforma <b>Aleja</b> donde podrás gestionar tu búsqueda de empleo y encontrar vacantes de todos los portales de empleo.
+        Queremos recordarte que gracias al programa <b>Empleabilidad estratégica Compensar</b>, no solo tienes acceso a las capacitaciones en búsqueda de empleo con Leonardo Modera, experto en empleabilidad y COO de Séligo, sino que también tienes acceso a la plataforma <b>Aleia</b> donde podrás gestionar tu búsqueda de empleo y encontrar vacantes de todos los portales de empleo.
         <br><br>
-        <p style="color:#611f61">A final de mes estamos haciendo una reunión con Leonardo Modera, exclusiva para las personas que usen activamente Aleja, en la cual resolverá todas tus dudas sobre tu búsqueda de empleo y te enseñará formas para hacer networking efectivo y llegar a ese cargo con el que sueñas.
+        <p style="color:#611f61">A final de mes estamos haciendo una reunión con Leonardo Modera, exclusiva para las personas que usen activamente Aleia, en la cual resolverá todas tus dudas sobre tu búsqueda de empleo y te enseñará formas para hacer networking efectivo y llegar a ese cargo con el que sueñas.
         </p><br><br>
-        Ingresa a <a href="aleia.app/login">aleia.app</a> con los siguientes datos de acceso, y en la parte inferior izquierda encontrarás la opción "Manual Aleja", donde podrás ver todas las herramientas que tendrás en la plataforma para acelerar tu búsqueda de empleo. 
+        Ingresa a <a href="aleia.app/login">aleia.app</a> con los siguientes datos de acceso, y en la parte inferior izquierda encontrarás la opción "Manual Aleia", donde podrás ver todas las herramientas que tendrás en la plataforma para acelerar tu búsqueda de empleo. 
         <br><br>
         Usuario: """+data["usuario"]+"""
         <br>
         Contraseña: """+data["pass"]+"""
         <br><br>
-        Esperamos verte pronto en Aleja y que puedas conseguir el empleo que sueñas, y si tienes alguna duda sobre el contenido de este correo no dudes en escribirnos.
+        Esperamos verte pronto en Aleia y que puedas conseguir el empleo que sueñas, y si tienes alguna duda sobre el contenido de este correo no dudes en escribirnos.
         <br><br>
         Álvaro González
         <br>
@@ -370,7 +447,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <body>
         <div style="font-family: verdana;width: 80%;color: #525252;">
         <p>Hola """+data["nombre"]+"""!<br><br>
-        Espero te encuentres muy bien, dando seguimiento a la vacante de """+data["cargo"]+""" en """+data["empresa"]+"""que asociaste en Aleja,
+        Espero te encuentres muy bien, dando seguimiento a la vacante de """+data["cargo"]+""" en """+data["empresa"]+"""que asociaste en Aleia,
         te compartimos el estilo de comunicación de un contacto estratégico, junto con sus datos de contacto para que, si quieres, te comuniques con el o ella en frio y abras un nuevo canal de comunicación
         que te haga resaltar sobre los otros candidatos.
         <br><br>
@@ -384,7 +461,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <br>
         """+crystal_style+"""
         <br><br>
-        Este contacto esta cargado en tus contactos en Aleja, esperamos esta información te sea muy util.
+        Este contacto esta cargado en tus contactos en Aleia, esperamos esta información te sea muy util.
 
 
         <br><br>
@@ -400,7 +477,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         msg['Subject']=data["nombre"].split(" ")[0]+", "+data["nombrec"]+" quiere que colaboren en algo distinto!";
         texto = ""
         if data["comentario"].strip() == "":
-            texto = """La verificación de estos datos permite a """+data["nombrec"].split(" ")[0]+""" y a todos los usuarios de Aleja acceder a una red mas efectiva y segura para hacer networking."""
+            texto = """La verificación de estos datos permite a """+data["nombrec"].split(" ")[0]+""" y a todos los usuarios de Aleia acceder a una red mas efectiva y segura para hacer networking."""
         else:
             texto = data["nombrec"].split(" ")[0]+""" te envió el siguiente mensaje.<br><div style="width:97%;
         margin-left:3%;
@@ -422,12 +499,12 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <br><br>
         """+texto+"""
         <br><br>
-        Para tu tranquilidad te invitamos a confirmar directamente con """+data["nombrec"].split(" ")[0]+""" la veracidad de esta solicitud. Una vez la confirmes podrás verificar en Aleja su relación dando clic en el siguiente botón.
+        Para tu tranquilidad te invitamos a confirmar directamente con """+data["nombrec"].split(" ")[0]+""" la veracidad de esta solicitud. Una vez la confirmes podrás verificar en Aleia su relación dando clic en el siguiente botón.
         <br><br>
         <div style="width:100%; position:relative; float:left">
         
         
-        <a href="https://aleia.app/verificacion?n1="""+data["nombre"].split(" ")[0]+"""&n2="""+data["nombrec"].split(" ")[0]+"""&type=ok&idt="""+str(data["id_contacto"])+"""&ids="""+str(id_user)+"""">
+        <a href="https://portal.aleia.app/verificacion?n1="""+data["nombre"].split(" ")[0]+"""&n2="""+data["nombrec"].split(" ")[0]+"""&type=ok&idt="""+str(data["id_contacto"])+"""&ids="""+str(id_user)+"""">
         <button style="padding: 10px 20px;
         cursor: pointer;
         border-radius: 25px;
@@ -440,7 +517,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         font-size: 13px;
         margin-right: 20px;
         margin-bottom: 20px;" class="mainbutton">¡Quiero verificar mi relación con """+data["nombrec"].split(" ")[0]+"""!</button></a>
-        <a href="https://aleia.app/verificacion?n1="""+data["nombre"].split(" ")[0]+"""&n2="""+data["nombrec"].split(" ")[0]+"""&type=notok&idt="""+str(data["id_contacto"])+"""&ids="""+str(id_user)+"""">
+        <a href="https://portal.aleia.app/verificacion?n1="""+data["nombre"].split(" ")[0]+"""&n2="""+data["nombrec"].split(" ")[0]+"""&type=notok&idt="""+str(data["id_contacto"])+"""&ids="""+str(id_user)+"""">
         <button style="padding: 10px 20px;
         cursor: pointer;
         border-radius: 25px;
@@ -455,7 +532,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         margin-bottom: 20px;" >No conozco a """+data["nombrec"].split(" ")[0]+"""</button>
         </a>
         </div>
-        Aleja es una plataforma creada por Séligo, pensada para quienes quieren aumentar su red de networking y creen que conectar en el mundo real es la mejor forma de hacerlo. Si quieres saber más sobre Aleja o Séligo te invitamos a seguirnos en redes o entrar a nuestra página web.
+        Aleia es una plataforma creada por Séligo, pensada para quienes quieren aumentar su red de networking y creen que conectar en el mundo real es la mejor forma de hacerlo. Si quieres saber más sobre Aleia o Séligo te invitamos a seguirnos en redes o entrar a nuestra página web.
         <br><br>
         <a href="https://www.linkedin.com/in/juan-diego-hernandez-chavez" style="color:#076eac">Nuestro CEO, juan-diego-hernandez-chavez en Linkedin</a>
         <br><br>
@@ -465,7 +542,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <br><br>
         <a href="https://seligo.co" style="color:#458a8e">seligo.co</a>
         <br><br>
-        <a href="https://aleia.app" style="color:#7c458e">aleia.app</a>
+        <a href="https://portal.aleia.app" style="color:#7c458e">aleia.app</a>
         <br><br>
         Esperamos puedas ayudar a tu contacto a mejorar su relacionamiento.
         <br><br><br><br>
@@ -479,7 +556,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
         </html>
         """
     if plantilla == "representado":
-        msg['Subject']="¡Aleja tiene noticias de tu vacante en "+data["empresa"]+"!"
+        msg['Subject']="¡Aleia tiene noticias de tu vacante en "+data["empresa"]+"!"
         html = """\
         <html>
         <head></head>
@@ -534,14 +611,14 @@ def envio_correo(plantilla,id_user,data,destinatario):
         </html>
         """
     if plantilla == "password":
-        msg['Subject']="Recuperación de contraseña de Aleja"
+        msg['Subject']="Recuperación de contraseña de Aleia"
         html = """\
         <html>
         <head></head>
         <body>
         <div style="font-family: verdana;width: 80%;color: #525252;">
         <p>Hola """+data["nombre"]+"""!<br><br>
-        Tu contraseña de Aleja es """+id_user+"""
+        Tu contraseña de Aleia es """+id_user+"""
         <br><br>
         Te recomendamos eliminar este correo para que tu contraseña no quede expuesta.
         <br><br>
@@ -557,7 +634,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
     if plantilla == "registro":
         # set up the SMTP server
         
-        msg['Subject']="Activación cuenta de Aleja"
+        msg['Subject']="Activación cuenta de Aleia"
         
         # add in the message body
         html = """\
@@ -566,11 +643,11 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <body>
         <div style="font-family: verdana;width: 80%;color: #525252;">
         <p>Hola """+data["nombre"]+"""!<br><br>
-        Te queremos dar la bienvenida a Aleja, la plataforma para gestionar tu networking y tu búsqueda de empleo.
+        Te queremos dar la bienvenida a Aleia, la plataforma para gestionar tu networking y tu búsqueda de empleo.
         <br><br>
         Nos hace muy felices que hagas parte del cambio y de esta comunidad.
         <br><br>
-        Para activar tu cuenta en Aleja debes dar clic <a href="http://aleia.app/activacion?id="""+str(id_user)+"""">aquí</a><br><br><br><br>
+        Para activar tu cuenta en Aleia debes dar clic <a href="http://portal.aleia.app/activacion?id="""+str(id_user)+"""">aquí</a><br><br><br><br>
         Álvaro González
         <br>
         CTO / co-founder de Séligo
@@ -582,7 +659,7 @@ def envio_correo(plantilla,id_user,data,destinatario):
     if plantilla == "creacion_usuario":
         # set up the SMTP server
         
-        msg['Subject']=data["nombre"]+", te damos la bienvenida a Aleja"
+        msg['Subject']=data["nombre"]+", te damos la bienvenida a Aleia"
         if data["tipo"] == 8:
             msg_tipo = """Ten acceso a los cursos virtuales para búsqueda de empleo ingresando <a href="https://sso.teachable.com/secure/417888/users/sign_in?clean_login=true&reset_purchase_session=1">aquí</a>. Una vez ingreses tu usuario y contraseña elige la opción "Crear cuenta MyTeachable".
             <br><br>
@@ -596,9 +673,9 @@ def envio_correo(plantilla,id_user,data,destinatario):
         <body>
         <div style="font-family: verdana;width: 80%;color: #525252;">
         <p>Hola """+data["nombre"]+"""!<br><br>
-        Tu cuenta de Aleja se ha sido activada y ya puedes empezar a sacar el mayor provecho a todas las funcionalidades que construimos para tu búsqueda de empleo.
+        Tu cuenta de Aleia se ha sido activada y ya puedes empezar a sacar el mayor provecho a todas las funcionalidades que construimos para tu búsqueda de empleo.
         <br><br>
-        Ten acceso a la plataforma para gestionar tu búsqueda de empleo ingresando a <a href="http://aleia.app/login">aleia.app</a>.
+        Ten acceso a la plataforma para gestionar tu búsqueda de empleo ingresando a <a href="http://portal.aleia.app/login">aleia.app</a>.
         <br><br>
         """+msg_tipo+"""
         <br>
@@ -661,33 +738,45 @@ def load_mongo_client():
 
 def solicitud_index(n,e,c,o,f):
     load_mongo_client().solicitudes.insert_one({"empresa":e,"nombre":n,"cargo":c,"comentarios":o,"fecha":f})
+from jsonmerge import merge
 def get_full_user_info(id_user):
     persona = json.loads(dumps(load_mongo_client().personas.find({"id":int(id_user)})))
-    persona = process_data_json(persona,"profile")[0]
-
-    for o in persona["etiquetas"]:
-        if o["label"] == "contacto":
-            tmp = json.loads(dumps(load_mongo_client().personas.find({"id":int(o["id_objeto"])})))
-            if len(tmp) > 0:
-                o["data"] = process_data_json(tmp)[0]
-            
-        if o["label"] == "oportunidad":
-            tmp = json.loads(dumps(load_mongo_client().vacantes.find({"id":int(o["id_objeto"])})))
-            if len(tmp) > 0:
-                o["data"] = process_data_json(tmp)[0]
-            else:
-                o["data"] = process_data_json([{"oculto":"","cargo":"Vacante eliminada","empresa":"","ciudad":"","keywords":"","link":""}])[0]
-        if o["label"] == "proceso":
-            tmp = json.loads(dumps(load_mongo_client().vacantes.find({"id":int(o["id_objeto"])})))
-            if len(tmp) > 0:
-                o["data_vacante"] = process_data_json(tmp)[0]
-            
-            tmp2 = json.loads(dumps(load_mongo_client().personas.find({"id":int(o["id_persona"])})))
-            if len(tmp) > 0:
-                o["data_persona"] = process_data_json(tmp2)[0]
-           
-        
-    return persona
+    print(len(persona))
+    if len(persona) > 0:
+        persona = process_data_json(persona,"profile")[0]
+        lista_etiquetas = []
+        for o in persona["etiquetas"]:
+            if o["label"] == "contacto":
+                tmp = json.loads(dumps(load_mongo_client().personas.find({"id":int(o["id_objeto"])})))
+                if len(tmp) > 0:
+                    o["data"] = process_data_json(tmp)[0]
+                
+            if o["label"] == "oportunidad":
+                tmp = json.loads(dumps(load_mongo_client().vacantes.find({"id":int(o["id_objeto"])})))
+                if len(tmp) > 0:
+                    print(o)
+                    o = merge(o, process_data_json(tmp,"vacante")[0])
+                    print(o)
+                    #o["data"] = process_data_json(tmp,"vacante")[0]
+                else:
+                    o = merge(o, process_data_json([{"lista_reqs":[],"oculto":"","cargo":"Vacante eliminada","empresa":"","ciudad":"","keywords":"","link":""}])[0])
+                    #o["data"] = process_data_json([{"lista_reqs":[],"oculto":"","cargo":"Vacante eliminada","empresa":"","ciudad":"","keywords":"","link":""}])[0]
+                lista_etiquetas.append(o)
+            if o["label"] == "proceso":
+                tmp = json.loads(dumps(load_mongo_client().vacantes.find({"id":int(o["id_objeto"])})))
+                if len(tmp) > 0:
+                    o["data"] = process_data_json(tmp,"vacante")[0]
+                
+                tmp2 = json.loads(dumps(load_mongo_client().personas.find({"id":int(o["id_persona"])})))
+                if len(tmp) > 0:
+                    o["data_persona"] = process_data_json(tmp2)[0]
+        persona["etiquetas"] = lista_etiquetas
+        print("PTOCONTROLALVARO.....",persona)    
+        serv = load_mongo_client().servicios.count_documents({"id_usuario":int(id_user)})
+        persona["servicios"] = serv
+        return persona
+    else:
+        return "error"
 def iniciales(obj):
     return str(obj["nombre"]+"---"+obj["ultimo_cargo"]);
     """tmp = texto.split(" ")
@@ -985,7 +1074,7 @@ def buscar_grafo(links_indxd,nodes_indxd,ady,s,arr_temp):
 
 atts_return = {"contacto":["id","nombre","ultimo_cargo","ultima_empresa","linkedin","tipo","job_hacker","nivel_red","cargos_aplica"
 ,"fecha_sesion","calificacion_sesion","fecha_programa","atencion_programa","informacion_programa","calificacion_programa","tiempo_inicio","vacantes_semana","vacantes_semana_internas","ultimo_dato","dias_ultimo_dato","estado"],
-"vacante":["req","lista_reqs","show","oculta","id_user","fecha","id","cargo","empresa","ciudad","rango_mayor","rango_menor"]}
+"vacante":["lista_reqs","show","oculta","id_user","fecha","id","cargo","empresa","ciudad","rango_mayor","rango_menor"]}
 def prepare_item_json(o,tipo=""):
     #consolidado = ""
     salida = []
@@ -1000,49 +1089,21 @@ def prepare_item_json(o,tipo=""):
                 salida.append(u)
             
         elif tipo == "profile":
-            if u == "_id":
+            if u == "_id": 
                 salida.append(u)
         else:
-            if u not in atts_return[tipo] and (u in bloque or ("'list'" in str(type(o[u])))):
-                salida.append(o)
-            
-    
+            if u not in atts_return[tipo] and (u in bloque or ("'dict'" in str(type(o[u])))):
+                salida.append(u)
     return salida
 def process_item_json(o,json_structure,tipo=""):
     #consolidado = ""
     
     for u in json_structure:
+        
         o.pop(u,None)
+        
     tmp = copy.deepcopy(o)
-    """y = json.dumps(tmp, ensure_ascii=False)
-    y = re.sub(', "'," ]] [[ ",y)
-    y = re.sub('": '," || ",y)
-    y = re.sub('{"',"[[ ",y)
-    y = re.sub('}'," ]]",y)
-    y = re.sub('"','',y)
-    o['consolidado']= y
-
     
-    keys = copy.deepcopy(list(o.keys()))
-    bloque = ["_id","password"]
-    for u in keys:
-        if tipo == "":
-
-            if (u in bloque or ("'list'" in str(type(o[u])))):
-                o.pop(u, None)
-            else: #u != "etiquetas":
-                
-                consolidado= consolidado + "[[ "+normalize_text(str(u))+" || "+normalize_text(str(o[u]))+" ]]";
-        elif tipo == "profile":
-            if u == "_id":
-                o.pop(u, None)
-        else:
-            if u not in atts_return[tipo] and (u in bloque or ("'list'" in str(type(o[u])))):
-                o.pop(u, None)
-            elif "'list'" not in str(type(o[u])): #u != "etiquetas":
-                consolidado= consolidado + "[[ "+normalize_text(str(u))+" || "+normalize_text(str(o[u]))+" ]]";
-    o['consolidado']= consolidado
-    """
     return o
 
 def process_data_json(objeto,tipo = ""):
@@ -1073,61 +1134,68 @@ def tiempo_desde_fecha(fecha):
 def process_data_ciudades(ciudades):
     retorno = []
     for o in ciudades:
-        retorno.append(o["ciudad"])
+        retorno.append({"ciudad":o["ciudad"],"pais":o["pais"]})
     return retorno
+import validators
 def process_data_vacante(objeto,id_sesion):
     arr_tmp_sesion = []
     if id_sesion != 'null' and id_sesion != '':
         ets_sesion = load_mongo_client().personas.find_one({"id":int(id_sesion)})
-        """
-        ciudades = load_mongo_client().ciudades.find()
-        for o in ciudades:
-            if o["ciudad"] not in ciudades_tmp:
-                ciudades_tmp.append(o["ciudad"])
-            if o["pais"] not in paises_tmp:
-                paises_tmp.append(o["pais"])
-        personas = load_mongo_client().personas.find()
-        for o in personas:
-            if "sector" in o:
-                if o["sector"] not in sectores_tmp and o["sector"].strip() != "":
-                    sectores_tmp.append(o["sector"])  
-            if "ultimo_cargo" in o:
-                if o["ultimo_cargo"] not in cargos_tmp and o["ultimo_cargo"].strip() != "":
-                    cargos_tmp.append(o["ultimo_cargo"])
-        for o in objeto:
-            if o["cargo"] not in cargos_tmp and o["cargo"].strip() != "":
-                cargos_tmp.append(o["cargo"])
-        """
         
         for o in ets_sesion["etiquetas"]:
             if o["label"] == "oportunidad":
                 arr_tmp_sesion.append(o["id_objeto"])
     else:
-        ets_sesion = {"tipo":permisos_usuario_admin[0]}
+        ets_sesion = {"tipo":permisos_usuario_micros[0]}
     retorno = []
     retorno2 = []
     json_structure = []
     index = 0
     prevDate = datetime.date.today() + datetime.timedelta(days=-90)
     for o in objeto:
+        if "servicio" in o:
+            #if o["servicio"] == "no" and (validators.url(o["link"]) != True and validators.email(o["link"]) != True):
+            #    continue
+            #LINEA TEMPORAL MIENTRAS QUE SE ALIENA AGENTES CON LA PLATAFORMA
+            if o["servicio"] == "gratuito":
+                continue
+        elif validators.url(o["link"]) != True:
+            continue
+        if "link" in o and o["link"] != "" :
+            if len(o["link"]) > 30:
+                o["link_corto"] = o["link"][0:30]+"..."
+            else:
+                o["link_corto"] = o["link"]
+            if "@" in o["link"]:
+                o["tipo_link"] = "mail"
+            else:
+                o["tipo_link"] = "enlace"
+        
+
         if index == 0:
-            json_structure = prepare_item_json(o)
+            json_structure = prepare_item_json(o,"vacante")
             index = 1
-        if "req" in o:
+        """if "req" in o:
             tmp_list = []
-            tmp_req = o["req"].split(".")
+            tmp_req = o["req"].split(",")
             for tmp_o in tmp_req:
                 if tmp_o.strip() != "":
                     tmp_list.append(tmp_o)
             o["lista_reqs"] = tmp_list
         else:
-            o["lista_reqs"] = []
-        if int(ets_sesion["tipo"]) in permisos_usuario_seguimiento or int(ets_sesion["tipo"]) in permisos_usuario_micros:
+            o["lista_reqs"] = []"""
+        #if int(ets_sesion["tipo"]) in permisos_usuario_seguimiento or int(ets_sesion["tipo"]) in permisos_usuario_micros:
+        if int(ets_sesion["tipo"]) not in permisos_usuario_admin:
             tmp_fec = datetime.datetime.strptime(o["fecha"], '%Y-%m-%d').date()
             #if tmp_fec >= prevDate or o["id"] in arr_tmp_sesion:
             o["show"] = True
+            if "confidencial" in o and o["confidencial"] == "true":
+                o["empresa"] = "Empresa confidencial"
+            if  "servicio" in o and o["servicio"] == "pago":
+                o["empresa"] = "Reclutadores de Aleia"
+
             if "oculta" in o:
-                if o["oculta"] == True and int(o["id_user"]) != int(id_sesion) :
+                if o["oculta"] == True and str(o["id_user"]) != str(id_sesion) :
                     o["show"] = False 
             #o["keywords"] = rake_evaluator(o["obs"])
             #if len(o["keywords"]) < 2 and o["link"].strip() == "":
@@ -1135,7 +1203,7 @@ def process_data_vacante(objeto,id_sesion):
             #    o["show"] = False
             if o["id"] not in arr_tmp_sesion and o["show"]:
                 retorno.append(process_item_json(o,json_structure))
-        elif int(ets_sesion["tipo"]) in permisos_usuario_admin:
+        else:#if int(ets_sesion["tipo"]) in permisos_usuario_admin:
 
             o["show"] = True 
             
@@ -1534,6 +1602,7 @@ def process_file(file_content):
     # Remove punctuation and spanish stopwords
     file_content = remove_punctuation(file_content)
     file_content = remove_stop_words(file_content)
+    print("VACANTE PROCESADA...",file_content)
     return file_content
 from string import punctuation
 from nltk.corpus import stopwords
@@ -1543,14 +1612,55 @@ import fitz
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics.pairwise import polynomial_kernel
+from sklearn.metrics.pairwise import sigmoid_kernel
+from sklearn.metrics.pairwise import rbf_kernel
+from sklearn.metrics.pairwise import laplacian_kernel
+from Levenshtein import distance
 
 language_stopwords = stopwords.words('spanish')
 non_words = list(punctuation)
-def get_recoms(vac):
-    lista = load_mongo_client().cvs.find({"$or": [{ "contenido": { "$exists": True }}]})
+max_res = 10
+
+def get_recoms_lev(seq1):
+
+    lista = load_mongo_client().cvs.find({"$and": [{ "contenido": { "$exists": True }}]})
+    salida = []
+    
+    for o in lista:
+        if  o["contenido"].strip() != "":
+            seq2 = o["contenido"]
+            u = {}
+            edit_dist = distance(seq1, seq2)
+            ratio = 1-(edit_dist/len(seq2))
+            p = load_mongo_client().personas.find_one({"id":int(o["id_user"])})
+            if p != None:
+                
+                u["usuario"] = p["usuario"]
+                u["cargo"] = p["ultimo_cargo"]
+                u["empresa"] = p["ultima_empresa"]
+                u["nombre"] = p["nombre"]
+                u["telefono"] = p["telefono"]
+                u["mail"] = p["mail"]
+                u["mail"] = p["mail"]
+                u["id"] = o["id_user"]
+                u["sim"] = float(ratio)
+                u["id_file"] = o["id_file"]
+                salida.append(u)
+    resdef = sorted(salida, key=lambda x: x["sim"],reverse=False)
+    return resdef[0:max_res]
+def get_recoms(vac,testing = False,sim="linear_kernel"):
+    if testing:
+        lista = load_mongo_client().cvs.find({"$and": [{ "contenido": { "$exists": True }},{ "ontest": "si"}]})
+    else:
+        lista = load_mongo_client().cvs.find({"$and": [{ "contenido": { "$exists": True }}]})
     count = 0
     res = []
-    tf = TfidfVectorizer(analyzer='word', ngram_range=(1, 3), min_df=0)
+    palabras_stop = stopwords.words("spanish")
+    palabras_stop.append("profesional")
+    palabras_stop.append("si")
+    tf = TfidfVectorizer(analyzer='word', ngram_range=(1, 4), min_df=0)
     ds =  pd.DataFrame(list(lista))
     del ds['_id']
     del ds["id"]
@@ -1558,15 +1668,27 @@ def get_recoms(vac):
     del ds["hora"]
     del ds["original_name"]
     del ds["name"]
-    
     ds2 = pd.DataFrame([{"id_file":"","id_user": -1 ,"contenido":process_file(vac)}])
     #ds = ds2.apply(lambda x: process_file(x) if x.name == 'contenido' else x)
 
-    ds=ds.append(ds2, ignore_index = True)
+    ds=ds.append(ds2, ignore_index = True, sort=False)
     ds=ds.iloc[:, [1,0,2]]
     tfidf_matrix = tf.fit_transform(ds['contenido'])
     results = []
-    similarity_matrix = linear_kernel(tfidf_matrix, tfidf_matrix)
+    if sim == "linear_kernel":
+        similarity_matrix = linear_kernel(tfidf_matrix, tfidf_matrix)
+    if sim == "cosine_similarity":
+        similarity_matrix = cosine_similarity(tfidf_matrix, tfidf_matrix)
+    if sim == "polynomial_kernel":
+        similarity_matrix = polynomial_kernel(tfidf_matrix, tfidf_matrix)
+    if sim == "sigmoid_kernel":
+        similarity_matrix = sigmoid_kernel(tfidf_matrix, tfidf_matrix)
+    if sim == "rbf_kernel":
+        similarity_matrix = rbf_kernel(tfidf_matrix, tfidf_matrix) 
+    if sim == "laplacian_kernel":
+        similarity_matrix = laplacian_kernel(tfidf_matrix, tfidf_matrix)
+        
+        
     for idx, row in ds.iterrows():
         if row["id_user"] == -1:
             similar_indices = similarity_matrix[idx].argsort()[:-100:-1]
@@ -1606,65 +1728,101 @@ def get_recoms(vac):
                 resdef.append(u)
                 usrs_ret.append(o[1])
 
-        if count  == 5:
+        if count  == max_res:
             break
     return resdef
-def test_textract():
-    lista = load_mongo_client().cvs.find({"$or": [{ "contenido": { "$exists": False }},{ "contenido": {  "$eq": ''  }}]})
-    count = 1
-    jd = process_file(vac)
-    for o in lista:
-        status = 'ok'
-        #print(count)
-        obj = get_file(o["id_file"])
-        text =''
-        _, ext = os.path.splitext(obj["name"])
-        ext = ext.lower()
-        #print(ext)
-        if (ext==".docx" or ext==".rtf"):
-            try:
-                
-
-                text = textract.process(obj["dir"],method='pdfminer',).decode("utf-8", "strict")  
-            except:
-                print("No se pudo leer el archivo:"+obj["name"])
-                status = 'fail'
-        elif ext==".pdf":
-            try:
-                text = ""
-                fFileObj = fitz.open(obj["pathname"])
-                #print("Número de páginas: ", fFileObj.pageCount)
-                #print("Metadatos: ", fFileObj.metadata)
-                for page in fFileObj:
-                    #fPageObj = fFileObj.load_page(0)
-                    text = text + page.get_text("text")
-                    #fFileObj.close()
-            except:
-                print("No se pudo leer el archivo:"+obj["name"])
-                status = 'fail'
-        else:
-            #print("extensión de archivo no disponible para procesar...")
-            print("formato no soportado",obj["name"])
+def extraer_contenido_archivo(id_file):
+    obj = get_file(id_file)
+    text ='Sin resultados'
+    _, ext = os.path.splitext(obj["name"])
+    ext = ext.lower()
+    #print(ext)
+    if (ext==".docx" or ext==".rtf"):
         try:
-            os.remove(obj["dir"])
+            
+
+            text = textract.process(obj["dir"],method='pdfminer',).decode("utf-8", "strict")  
         except:
-            print("No se pudo borrar el archivo:"+obj["dir"] )
+            print("No se pudo leer el archivo:"+obj["name"])
+            status = 'fail'
+    elif ext==".pdf":
+        try:
+            text = ""
+            fFileObj = fitz.open(obj["pathname"])
+            #print("Número de páginas: ", fFileObj.pageCount)
+            #print("Metadatos: ", fFileObj.metadata)
+            for page in fFileObj:
+                #fPageObj = fFileObj.load_page(0)
+                text = text + page.get_text("text")
+                #fFileObj.close()
+        except:
+            print("No se pudo leer el archivo:"+obj["name"])
+            status = 'fail'
+    else:
+        #print("extensión de archivo no disponible para procesar...")
+        print("formato no soportado",obj["name"])
+    try:
+        os.remove(obj["dir"])
+    except:
+        print("No se pudo borrar el archivo:"+obj["dir"] )
+    if text != "Sin resultados":
+        text_proc = process_file(text)
+    else:
+        text_proc = ""
+    load_mongo_client().cvs.update_one({"id":id_file},{"$set":{"contenido":text,"contenido_proc":text_proc}})
+    return {"contenido":text,"contenido_proc":text_proc}
+"""
+from sklearn.metrics import recall_score
+from pymongo import MongoClient
+import urllib.parse
+def testing():
 
-        #TF-IDF
-        text = process_file(text)
-        
-        
-        #print('Similarity')
-        #print(similarity_matrix[0][1])
-        #if count == totalf:
-            #break
-        count = count + 1
-        print(count,".................................",text[0:10])
-        load_mongo_client().cvs.update_one(
-                    {"id":o["id"]},
-                    {"$set":{"contenido":text}
-                    })
-    #return df
-        
+    username = urllib.parse.quote_plus('aleja_user')
+    password = urllib.parse.quote_plus('02-10-91aldigovE')
 
+    #mongo_client = MongoClient('mongodb://%s:%s@18.218.58.145' % (username, password)) #PROD
+    mongo_client = MongoClient(str("mongodb://%s:%s@3.136.136.6") % (username, password))#TEST
 
+    lista = mongo_client.aleja_bd.data_previa.find({"$and":[{"pasa_entrevista":1},{"cv":{"$not":{"$eq":"no_tiene"}}},{"info_vac":{"$not":{"$eq":"no_tiene"}}}]})
+    
+    ds = list(lista)
+    dr = []
+    for o in ds:
+        if len(o["info_vac"].split(" ")) > 10:
+            dr.append(o)
+
+    y_true = []
+    y_pred = []
+    print("iniciando prubeas!!")
+    arr = []
+    strats =[
+    "linear_kernel",     
+    #"cosine_similarity",
+    "polynomial_kernel"#,
+    #"sigmoid_kernel"#,
+    
+
+    #"rbf_kernel",
+    #"laplacian_kernel",
+    ]
+    for s in strats:
+        for o in dr:
+            rec = get_recoms(o["info_vac"],True,s)
+            pred = 0
+            for u in rec:
+                if o["cv"] == u["id_file"]:
+                    pred = 1
+
+            if o["pasa_entrevista"] != pred:
+                
+                arr.append({"pred":rec[0]["id_file"],"real":o["cv"],"id":o["id_vacante"]})
+            y_true.append(o["pasa_entrevista"])
+            y_pred.append(pred)
+
+        #for o in arr:
+        #    print(o["pred"]+";"+o["real"]+";"+str(o["id"]))
+        print(y_true,y_pred)
+        x = recall_score(y_true, y_pred)
+        print(s,"RECALL!!!....",x)
+
+"""

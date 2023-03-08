@@ -8,12 +8,24 @@ from . import views
 urlpatterns = [
 path('', views.index, name='index'),
 
+url(r'^/enviar_pregunta', csrf_exempt(views.logic_preguntas.enviar_pregunta), name = 'enviar_pregunta'),
+url(r'^/enviar_respuesta', csrf_exempt(views.logic_preguntas.enviar_respuesta), name = 'enviar_respuesta'),
+
 
 url(r'^/get_more_items', csrf_exempt(views.get_more_items), name = 'get_more_items'),
+url(r'^/script', csrf_exempt(views.script), name = 'script'),
 
+
+url(r'^/read_postulaciones_usuario', csrf_exempt(views.read_postulaciones_usuario), name = 'read_postulaciones_usuario'),
+
+url(r'^/acepta_acuerdo', csrf_exempt(views.acepta_acuerdo), name = 'acepta_acuerdo'),
+url(r'^/registro_usuario', csrf_exempt(views.registro_usuario), name = 'registro_usuario'),
+url(r'^/envia_vacante', csrf_exempt(views.envia_vacante), name = 'envia_vacante'),
+url(r'^/actualiza_vacante_monday', csrf_exempt(views.actualiza_vacante_monday), name = 'actualiza_vacante_monday'),
 
 url(r'^/test_textract', csrf_exempt(views.test_textract), name = 'test_textract'),
-
+url(r'^/get_recoms', csrf_exempt(views.get_recoms), name = 'get_recoms'),
+url(r'^/postulacion', csrf_exempt(views.postulacion), name = 'postulacion'),
 
 url(r'^/validate_session', csrf_exempt(views.validate_session), name = 'validate_session'),
 url(r'^/order_array_items', csrf_exempt(views.order_array_items), name = 'order_array_items'),
@@ -30,7 +42,7 @@ url(r'^/solicitud_index', csrf_exempt(views.solicitud_index), name = 'solicitud_
 
 url(r'^/activacion_usuario', csrf_exempt(views.activacion_usuario), name = 'activacion_usuario'),
 url(r'^/request_pass', csrf_exempt(views.request_pass), name = 'request_pass'),
-url(r'^/guarda_datos_perfil', csrf_exempt(views.guarda_datos_perfil), name = 'guarda_datos_perfil'),
+url(r'^/enviar_datos_perfil', csrf_exempt(views.guarda_datos_perfil), name = 'guarda_datos_perfil'),
 url(r'^/envio_respuesta_verificacion', csrf_exempt(views.envio_respuesta_verificacion), name = 'envio_respuesta_verificacion'),
 
 url(r'^/satisfaccion_sesiones', csrf_exempt(views.satisfaccion_sesiones), name = 'satisfaccion_sesiones'),

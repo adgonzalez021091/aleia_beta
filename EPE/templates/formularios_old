@@ -1,0 +1,293 @@
+<!--
+<div id="contenedor_right" class="div_contenedor_popup hide">
+        
+        <div id="div_crear_contacto" class="div_contenedor_formulario" style="display: none;">
+            
+            <div class="div_input id">
+                <input id="id_contacto" class="id" readonly/>
+                
+            </div>
+            <div class="div_input">
+                <input id="linkedin_contacto" class="input" placeholder="Linkedin"  onblur="search_inner_profile()"/>
+                
+            </div>
+            <div class="div_input">
+                <input id="nombre_contacto" class="input" placeholder="Nombre" />
+                
+            </div>
+            <div class="div_input">
+                <input id="cargo_contacto" class="input" placeholder="Cargo" />
+                
+            </div>
+            <div class="div_input">
+                <input id="empresa_contacto" class="input" placeholder="Empresa" />
+                
+            </div>
+            <div class="div_input" v-show="sesion.data.admin == 1">
+                <div class="titulo_select">
+                    Perfil comunicación:
+                </div>
+                <select id="crystal_contacto" class="input select">
+                    <option value="nan">No tiene</option>
+                    <option value="architect">Architect</option>
+                    <option value="captain">Captain</option>
+                    <option value="driver">Driver</option>
+                    <option value="initiator">Initiator</option>
+                    <option value="encourager">Encourager</option>
+                    <option value="harmonizer">Harmonizer</option>
+                    <option value="influencer">Influencer</option>
+                    <option value="motivator">Motivator</option>
+                    <option value="analyst">Analyst</option>
+                    <option value="editor">Editor</option>
+                    <option value="skeptic">Skeptic</option>
+                    <option value="questioner">Questioner</option>
+                    <option value="counselor">Counselor</option>
+                    <option value="planner">Planner</option>
+                    <option value="stabilizer">Stabilizer</option>
+                    <option value="supporter">Supporter</option>
+                    
+                </select>
+                
+            </div>
+            <div class="div_input">
+                <input id="mail_contacto" class="input" placeholder="Mail" />
+                
+            </div>
+            <div class="div_input">
+                <input id="telefono_contacto" class="input" placeholder="Telefono" />
+                
+            </div>
+            <div class="div_input">
+                <div class="titulo_select">
+                    Tipo de contacto:
+                </div>
+                <select id="tipo_contacto" class="input select" placeholder="Tipo de relación">
+                    <option value="1">Desconocido</option>
+                    <option value="2">Conocido</option>
+                    <option value="3">Confianza</option>
+                    <option value="4">Muy cercano</option>
+                </select>
+                
+            </div>
+            
+            <div class="div_input">
+                <div class="titulo_select">
+                    ¿Cual de estas descripciones se acopla más a esta persona?
+                </div>
+                <select id="personalidad_contacto" class="input select">
+                    <option value="">No se</option>
+                    <option value="rojo">Es orientado a los resultados, es directo al comunicarse y le gusta controlar la productividad. </option>
+                    <option value="amarillo">Es altamente sociable, es muy bueno motivando y disfruta del trabajo cambiante.</option>
+                    <option value="verde">Es muy bueno trabajando en equipo, escuchando a los otros y siendo amigable.</option>
+                    <option value="azul">Tiene una comunicación formal, es muy bueno trabajando en la sistematización de procesos y en la atención al detalle.</option>
+                </select>
+                
+            </div>
+            <div class="div_input">
+                
+                <div class="titulo_select">
+                    Quiero que verifique que es mi contacto
+                </div>
+                <input type="checkbox" id="verificacion_contacto">
+                <button class="opcion_input" onclick="show_message_popup(this)">
+                    <img type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                </button>
+            </div>
+            <div class="div_input">
+                
+                <div class="titulo_select">Oculto</div>
+                <input type="checkbox" id="contacto_oculto">
+                <button class="opcion_input" onclick="show_message_popup(this)">
+                    <img type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                </button>
+            </div>
+            <div class="div_input">
+                <textarea placeholder="Si enviaste la verificación de contacto escribele un mensaje acá o describe la relación que tienen. Esta información es privada para ti." id="obs_contacto"></textarea>
+            </div>
+        </div>
+        <div id="div_crear_contacto_perfil" class="div_contenedor_formulario" style="display: none;">
+            
+            <div class="div_input id">
+                <input id="id_contacto_perfil" class="id" readonly/>
+                
+            </div>
+            <div class="div_input">
+                <input id="linkedin_contacto_perfil" class="input" placeholder="Linkedin"/>
+                
+            </div>
+            <div class="div_input">
+                <input id="mail_contacto_perfil" class="input" placeholder="Mail" />
+                
+            </div>
+            <div class="div_input">
+                <input id="telefono_contacto_perfil" class="input" placeholder="Telefono" />
+                
+            </div>
+            <div class="div_input">
+                <div class="titulo_select">
+                    Tipo de contacto:
+                </div>
+                <select id="tipo_contacto_perfil" class="input select" placeholder="Tipo de relación">
+                    <option value="1">Desconocido</option>
+                    <option value="2">Conocido</option>
+                    <option value="3">Confianza</option>
+                    <option value="4">Muy cercano</option>
+                </select>
+                
+            </div>
+            
+            <div class="div_input">
+                <div class="titulo_select">
+                    ¿Cual de estas descripciones se acopla más a esta persona?
+                </div>
+                <select id="personalidad_contacto_perfil" class="input select">
+                    <option value="">No se</option>
+                    <option value="rojo">Es orientado a los resultados, es directo al comunicarse y le gusta controlar la productividad. </option>
+                    <option value="amarillo">Es altamente sociable, es muy bueno motivando y disfruta del trabajo cambiante.</option>
+                    <option value="verde">Es muy bueno trabajando en equipo, escuchando a los otros y siendo amigable.</option>
+                    <option value="azul">Tiene una comunicación formal, es muy bueno trabajando en la sistematización de procesos y en la atención al detalle.</option>
+                </select>
+                
+            </div>
+            <div class="div_input">
+                
+                <div class="titulo_select">Quiero que verifique que es mi contacto</div>
+                <input type="checkbox" id="verificacion_contacto_perfil">
+                <button class="opcion_input" onclick="show_message_popup(this)">
+                    <img type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                </button>
+            </div>
+            <div class="div_input">
+                
+                <div class="titulo_select">Oculto</div>
+                <input type="checkbox" id="contacto_oculto_perfil">
+                <button class="opcion_input" onclick="show_message_popup(this)">
+                    <img type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                </button>
+            </div>
+            <div class="div_input">
+                <textarea placeholder="Si enviaste la verificación de contacto escribele un mensaje acá o describe la relación que tienen. Esta información es privada para ti." id="obs_contacto_perfil"></textarea>
+            </div>
+        </div>
+        <div id="div_crear_proceso" class="div_contenedor_formulario proceso"  style="display: none;">
+            <div class="div_input id">
+                <input id="id_contacto_proceso" class="id" readonly/><input id="id_vacante_proceso" class="id" readonly/>
+                
+            </div>
+            
+            <div class="contenedor_datos_proceso left">
+                <div class="titulo_contenedor_datos_proceso">
+                    Información de la entrevista
+                </div>
+                <div class="div_input">
+                    <div class="recomendaciones">
+                        <button :id="'cargo_procesoANDDempresa_contacto_proceso_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('vacantes',this)">
+                            [[o]]
+                        </button>
+                    </div>
+                    <input id="cargo_proceso" onblur="remove_recom('vacantes')" onkeydown="explore_recom(event,'vacantes',this)" oninput="recomendaciones('vacantes',this)" class="input" placeholder="Cargo al que aplicas" />
+                    
+                </div>
+                <div class="div_input">
+                    <input id="empresa_contacto_proceso" class="input" placeholder="Empresa" />
+                    
+                </div>
+                <div class="div_input" >
+                    <div class="titulo_select">
+                        Fecha de la entrevista:
+                    </div>
+                    <input type="datetime-local" id="fecha_proceso">
+                </div>
+                <div class="div_input" v-show="usuario.representaciones != '' && typeof usuario.representaciones != 'undefined'">
+                    <div class="titulo_select">
+                        ¿Quieres ayuda con esta entrevista?
+                    </div>
+                    <select id="servicio_proceso" class="input select" placeholder="Tipo de proceso">
+                        
+                        <option value="analisis">Si, quiero un análisis del estilo de comunicación</option>
+                        <option value="simulacion" v-show="sesion.data.tipo == 5">Si, quiero una simulación de entrevista</option>
+                        <option value="no">No</option>
+                        
+                    </select>
+                    
+                </div>
+                <div class="div_input">
+                    <div class="titulo_select">
+                        Nivel de avance en el proceso:
+                    </div>
+                    <select id="tipo_proceso" class="input select" placeholder="Tipo de proceso">
+                        <option value="1">Entrevista con equipo de selección</option>
+                        <option value="2">Entrevista con gerente de RRHH</option>
+                        <option value="3">Entrevista con jefe directo</option>
+                        <option value="4">Entrevista con Director, CEO o Gerente general</option>
+                        <option value="7">Contratado!</option>
+                        <option value="5">Postulación de Séligo</option>
+                        <option value="6">Vacante cerrada</option>
+                    </select>
+                    
+                </div>
+                <div class="div_input">
+                    <textarea placeholder="¿Tienes alguna observación?" id="obs_proceso"></textarea>
+                </div>
+            </div>
+            <div class="contenedor_datos_proceso">
+                <div class="titulo_contenedor_datos_proceso">
+                    Información del entrevistador
+                </div>
+                <div class="div_input">
+                    <input id="linkedin_contacto_proceso" class="input" placeholder="Linkedin de contacto u entrevistador" onblur="search_profile('contacto_proceso')"/>
+                    
+                </div>
+                <div class="div_input">
+                    <input id="nombre_contacto_proceso" class="input" placeholder="Nombre de contacto u entrevistador" />
+                    
+                </div>
+                <div class="div_input">
+                    <input id="cargo_contacto_proceso" class="input" placeholder="Cargo de contacto u entrevistador" />
+                    
+                </div>
+                
+                <div class="div_input" v-show="sesion.data.admin == 1">
+                    <div class="titulo_select">
+                        Perfil de comunicación:
+                    </div>
+                    <select id="crystal_contacto_proceso" class="input select">
+                        <option value="nan">No tiene</option>
+                        <option value="architect">Architect</option>
+                        <option value="captain">Captain</option>
+                        <option value="driver">Driver</option>
+                        <option value="initiator">Initiator</option>
+                        <option value="encourager">Encourager</option>
+                        <option value="harmonizer">Harmonizer</option>
+                        <option value="influencer">Influencer</option>
+                        <option value="motivator">Motivator</option>
+                        <option value="analyst">Analyst</option>
+                        <option value="editor">Editor</option>
+                        <option value="skeptic">Skeptic</option>
+                        <option value="questioner">Questioner</option>
+                        <option value="counselor">Counselor</option>
+                        <option value="planner">Planner</option>
+                        <option value="stabilizer">Stabilizer</option>
+                        <option value="supporter">Supporter</option>
+                        
+                    </select>
+                    
+                </div>
+                <div class="div_input">
+                    <input id="mail_contacto_proceso" class="input" placeholder="Mail de contacto u entrevistador" />
+                    
+                </div>
+                <div class="div_input">
+                    <input id="telefono_proceso" class="input" placeholder="Telefono de contacto u entrevistador" />
+                    
+                </div>
+            </div>
+            
+            
+            
+        </div>
+        
+        <button id="boton_call2action" class="boton_call2action" onclick="call2action()" ></button>
+    </div>
+</div>
+-->

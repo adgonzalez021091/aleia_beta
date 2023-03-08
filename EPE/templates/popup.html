@@ -1,0 +1,627 @@
+{% load static %}
+
+{% load versioned_static %}
+
+
+<div id="div_contenedor_popup" class="div_contenedor_popup hide" style="display: none;"> 
+	<div id="contenedor_popup" class="contenedor_popup extenso">
+		<button  class="close_corner" onclick="close_popup(this)"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+		<div id="sub_contenedor_popup_datos" class="sub_contenedor_popup datos">
+			<div id="subpopup_superior" class="subpopup superior">
+				<span class="id_popup" style="display: none;">ID [[id]]</span>
+				<div id="subpopup_superior_izq" class="imagen_popup" style="display: none;">
+					<img :src="imagen" class="popup_img"/>
+				</div>
+				<div id="subpopup_superior_der" class="div_titulo_popup">
+					
+					
+					<h1 class="titulo_popup">[[titulo]]<span class="id_popup"> ID [[id]]</span></h1>
+				</div>
+			</div>
+			<div id="subpopup_inferior" class="subpopup inferior">
+				<div id="subpopup_inferior_vac" v-show="label == 'oportunidad'" class="subpopup_data">
+					
+					
+				</div>
+				<div id="subpopup_inferior_per"  v-show="label == 'contacto' || label == 'proceso'" class="subpopup_data">
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Aspiración salarial</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="rango_salario">
+						</div>
+					</div>
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Profesión</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="profesion">
+						</div>
+					</div>
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Ultima búsqueda</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="ultimo_login">
+						</div>
+					</div>
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Ciudad</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="ciudad">
+						</div>
+					</div>
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Sector</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="sector">
+						</div>
+					</div>
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Subector</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="subsector">
+						</div>
+					</div>
+					<div class="info_popup">
+						<div class="label_info">
+							<h2>Area</h2>
+						</div>
+						<div class="data_info">
+							<input class="input_data_popup" readonly :value="area">
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Acá se encuentra la descripción de la vacante  -->
+		<div id="sub_contenedor_popup_detalle" class="sub_contenedor_popup detalle">
+			<!--<div class="pestanas_button">
+				<button class="pestana_detalle" v-bind:class="{ selected: pestana=='info' }" type="button" @click="cambia_pestana('info')" >Información de la vacante</button>
+				<button class="pestana_detalle" v-bind:class="{ selected: pestana=='preg' }" type="button" @click="cambia_pestana('preg')">Preguntas y respuestas</button>
+			</div>-->
+			<div v-show="pestana == 'info'">
+				<div class="contenedor_categoria">
+					<div class="div_etiqueta_info popup empresa">
+						<h2 class="etiqueta_con_img">[[subtitulo2]]</h2>
+						
+					</div>
+					<div class="div_etiqueta_info popup">
+						<img type="image" src="/static/imgs/contract.png" class="img_de_etiqueta popup">
+						<h2 v-show="tipo_oportunidad != ''" class="etiqueta_con_img">[[tipo_oportunidad]]</h2>
+						<h2 v-show="tipo_oportunidad == ''" class="etiqueta_con_img">Tipo de oportunidad sin especificar</h2>
+						
+					</div>
+					<div   class="div_etiqueta_info popup">
+						<img type="image" src="/static/imgs/location.png" class="img_de_etiqueta popup">
+						<h2 v-show="ciudad != ''" class="etiqueta_con_img">[[ciudad]]</h2>
+						<h2 v-show="ciudad == ''" class="etiqueta_con_img">Ubicación sin especificar</h2>
+					</div>
+					
+					<div   class="div_etiqueta_info popup">
+						<img type="image" src="/static/imgs/calendar.png" class="img_de_etiqueta popup">
+						<h2 class="etiqueta_con_img">[[fecha]]</h2>
+						
+					</div>
+
+					<div  class="div_etiqueta_info popup">
+						<img type="image" src="/static/imgs/money2.png" class="img_de_etiqueta popup">
+						<div v-show="rango_menor > 0 && rango_mayor > 0"> 
+							<h2 class="etiqueta_con_img rango_salario"> 
+							Salario de $[[rango_menor]] a $[[rango_mayor]] 
+							</h2>
+						</div>  
+						<div v-show="rango_menor > 0 && rango_mayor == ''"> 
+							<h2 class="etiqueta_con_img rango_salario"> 
+							Salario de $[[rango_menor]] 
+							</h2>
+						</div>  
+						<h2 v-show="rango_menor == '' && rango_mayor == ''" class="etiqueta_con_img">Salario a convenir</h2>
+						<h2 v-show="rango_menor == '0' " class="etiqueta_con_img">Salario a convenir</h2>
+					</div>
+						
+					
+					<div   class="div_etiqueta_info popup" v-show ="servicio == 'no'">
+						<img type="image" src="/static/imgs/popup/link.png" class="img_de_etiqueta popup">
+						<h2 v-show="valid_url(link) && link.includes('@')" class="etiqueta_con_img">[[link]]</h2>
+						<h2 v-show="valid_url(link) && !link.includes('@')" class="etiqueta_con_img"><a :href="link" target="_blank">Abrir link externo</a></h2>
+						<h2 v-show="!valid_url(link)" class="etiqueta_con_img">Sin link externo</h2>
+						
+						
+					</div>
+				</div>
+				<div class="contenedor_categoria" v-show ="servicio == 'pago' && (recompensa1 != '0' || recompensa != '0') ">
+					<h1 style="color: #7837ba">Recompensa</h1>
+					<h2 v-show ="servicio == 'pago' && recompensa1 != '0'">Recompensa por entrevisa: $ [[recompensa1]]</h2><br>
+					<h2 v-show ="servicio == 'pago' && recompensa != '0'">Recompensa por contratación: $ [[recompensa]]</h2>
+				</div>
+				
+				<div class="contenedor_texto_detalle" v-show="lista_categorias.length > 0 ">
+					<div class="contenedor_categoria" v-for="cat in lista_categorias">
+						<h1 style="color: #7837ba">[[cat.tit]]</h1>
+						<h2>[[cat.des]]</h2>
+					</div>
+				</div>
+				<div class="contenedor_texto_detalle" v-show="lista_categorias.length == 0 ">
+					<h1 style="color: #7837ba">[[titulo_texto2]]</h1>
+					<h2>[[texto2]]</h2>
+				</div>
+				<div class="contenedor_texto_detalle" v-show=" false">
+					<div class="contenendor_comentarios">
+						<div class="contenedor_comentario"  v-for="o in comentarios">
+							<button :id = "'eliminar_comentario_'+o.id" class="eliminar_comentario" onclick="eliminar_comentario(this)"><img type="image" class="eliminar_comentario_img" src="{% static 'imgs/delete.png'%}"  />
+							</button>
+							<h3>[[o.fecha]]</h3>
+							<br></br>
+							<h2>[[o.comentario]]</h2>
+						</div>
+					</div>
+					<div class="contenedor_input_comentario">
+						<textarea class="input_comentario" placeholder="Escribe un comentario" id="input_comentario">
+							
+						</textarea>
+						
+						<button onclick="enviar_comentario()" class="enviar_pregunta" >
+							<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/send.png'%}"  />
+							Enviar
+						</button>
+					</div>
+				</div>
+			<!--</div>
+			<div v-show="pestana == 'preg'">-->
+				
+				<div class="contenedor_categoria">
+					<h1 style="color: #7837ba">Pregunta lo que quieras sobre la vacante</h1>
+					<div class="contenedor_pregunta">
+						<textarea class="input_pregunta" v-model="pregunta" placeholder="Escribe tu pregunta..." >
+							
+						</textarea>
+						
+						<button type="button" @click="enviar_pregunta" class="enviar_pregunta" >
+							Preguntar
+						</button>
+					</div>
+				</div>
+				<div class="contenedor_categoria">
+					<div class="contenedor_pregunta">
+						<h1 style="color: #7837ba">Últimas preguntas realizadas</h1>
+						<div class="pregunta_respuesta" v-for="p in lista_preguntas">
+							<div class="pregunta">
+								[[p.pregunta]]<span class="fecha_pregunta">[[p.fecha_pregunta]]</span>
+							</div>
+							<div class="img_respuesta"></div>
+							<div v-if="typeof p.respuesta != 'undefined'" class="respuesta">
+								[[p.respuesta]]<span class="fecha_pregunta">[[p.fecha_respuesta]]</span>
+							</div>
+							<div v-if="typeof p.respuesta == 'undefined' && usuario.id != id_user" class="respuesta">
+								Respuesta pendiente...
+							</div>
+							<div v-if="typeof p.respuesta == 'undefined' && usuario.id == id_user" class="contenedor_pregunta respuesta">
+								<textarea class="input_pregunta" v-model="p.respuesta_nueva" placeholder="Escribe tu pregunta..." >
+							
+								</textarea>
+								
+								<button type="button" @click="enviar_respuesta(p)" class="enviar_pregunta" >
+									Responder
+								</button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div id="sub_contenedor_popup_red" class="sub_contenedor_popup detalle" style="display: none">
+			<button class="cerrar_popup_red" onclick="show_detalle()">
+				Volver a la info del contacto
+			</button>
+			<div class="contenedor_red_grafico">
+				<div class="contenedor_zoom">
+					<button id="zoom_in" class="boton_zoom"><img type="image" class="img_opcion" src="{% static 'imgs/zoom-in.svg'%}"  /></button>
+					<button id="zoom_out" class="boton_zoom"><img type="image" class="img_opcion" src="{% static 'imgs/zoom-out.svg'%}"  /></button>
+				</div>					
+				<svg id="svg_network" style="width: 100%;height: 100%;" ></svg>
+			</div>
+			<div class="contenedor_red_lista">
+				<div class="contenedor_item_red" v-for="(item,index) in rutas" >
+					<h1 class="item_paso">[[index+1]]º ruta para contactar a [[pnombre]]</h1>
+					<div class="contenedor_items_ruta" v-for="(item2,index2) in item.r">
+						<h2 class="item_paso">Paso [[index2+1]]</h2>
+						<h2 class="info_item_paso">[[get_info_red(index2,item.r,item2.n).t]]</h2>
+						<div class="etiqueta_complemento ruta" :style="{background:get_info_complemento(item2.v,'contacto').color}"><h3>[[get_info_complemento(item2.v,'contacto').texto]]</h3></div>
+						<h3 class="info_item_paso_source">[[get_info_red(index2,item.r,item2.n).s]]</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="sub_contenedor_popup_postula" class="sub_contenedor_popup detalle envio_postulacion" style="display: none">
+			
+			
+			<div id="contenedor_popup_postula_externa" class="contenedor_popup_postula_externa">
+				<div id="mensaje_redirecciona" v-show="link != ''">
+					<img type="image" class="img_externa" src="{% static 'imgs/ilustraciones/externa.png'%}"  />
+					<h1>
+						<span id="mensaje_actualizado_redirecciona" class="mensaje_actualizado_redirecciona"></span>
+					</h1>
+					<br>
+					<span v-show="tipo_link == 'enlace'" class="mensaje_alterno_redirecciona">Si no te abrió la página puedes dar clic <a :href="link" target="_blank">aquí</a></span>
+				</div>
+				<!---Cuentanos si te gustó esta vacante para poder recomendarte mejores opciones.
+					<div class="contenedor_botones_calificacion_vacante">
+						<button class="boton_calificacion_vacante like">Me gustó</button>
+						<button class="boton_calificacion_vacante nolike">No me aplicaba</button>
+						<button class="boton_calificacion_vacante closed">Esta cerrada o deshabilitada</button>
+					</div>
+				-->
+			</div>
+			
+			<!-- Acá se encuentra la ventana que le sigue a los requerimientos de postulación -->
+			<!-- Acá se encuentran los requisitos de la vacante -->
+			<div id="requisitos" class="contenedor_popup_postula_intera" v-show="servicio != 'no' || (servicio == 'no' && texto1 != 'No esta especificado')">
+				<h1 style="color: #7837ba">[[titulo_texto1]]</h1>
+				<h2 v-show="texto1 != ''"><br>[[texto1]]</h2>
+				<div class="contenedor_reqs" v-show="texto1 == ''" >
+					<div  v-for="(r,i) in reqs" class="valida_requerimiento">
+						<span class="texto_valida_requerimiento">[[i+1]]. [[r.req]]</span>
+						<div class="contenedor_valida_requerimiento">
+							<button :id="'cumple_'+r.id_req" class="califica_requerimiento cumple" :class="{selected:r.cumple == true}" onclick="cumplimiento_req(this)">Cumplo</button>
+							<button :id="'nocumple_'+r.id_req" class="califica_requerimiento nocumple" :class="{selected:r.cumple == false}" onclick="cumplimiento_req(this)">No cumplo</button>
+						</div>
+						<div class="div_motivo_requerimiento" v-show="r.cumple">
+							<textarea v-model="r.motivo" class="motivo_requerimiento" :id="'motivo_'+r.id_req" placeholder="Cuentame la experiencia por la que cumples el requisito"></textarea>
+						</div>
+					</div>
+				</div>
+				<br><br>
+			</div>
+			
+			<div id="contenedor_popup_postula_intera">
+				<div class="contenedor_mensaje_bloqueo" v-show="servicio == 'gratuito' && usuario.convenio_busco != 'si'">
+					<div class="mensaje_bloqueo_postulacion_convenio">
+						<h1>Esta vacante solo está disponible para usuarios con convenio de Agentes de talento.</h1>
+						<button class="convenio_agentes" onclick="show_acuerdo()"><h1>¿De que se trata este convenio?</h1></button>
+						
+					</div>
+					
+					
+				</div>
+				
+				<div class="contenedor_mensaje_bloqueo" v-show="!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago'">
+					<h1 v-show="referido != 'referido'">Confirma tu información para enviar tu postulación</h1><br>
+					<h1 v-show="referido == 'referido'">Confirma la información para enviar tu referido</h1><br>
+					<form class="post-form servicio" enctype="multipart/form-data"  id="envio_postulacion_form"> 
+						{% csrf_token %}
+						<input class="input_data_popup"  id="id_postulacion" name="id" v-model="usuario.id" style="display: none;">
+						<input class="input_data_popup"  id="tipo_envio" name="tipo_envio" v-model="tipo_envio" style="display: none;">
+						<input class="input_data_popup"  id="id_etiqueta" name="id_etiqueta" v-model="id_et" style="display: none;">
+						<div class="info_popup parcial">
+							<div class="label_info">
+								<h2><span class="required">* </span>Nombre completo del candidato</h2>
+							</div>
+							<div class="data_info">
+								<input id="nombre_postulacion" name="nombre" class="input_data_popup"   v-model="usuario.nombre">
+							</div>
+						</div>
+						<div class="info_popup parcial" v-show="referido == 'referido' && label == 'oportunidad'">
+							<div class="label_info">
+								<h2><span class="required">* </span>¿Cual es tu nombre?</h2>
+							</div>
+							<div class="data_info">
+								<input id="nombre_referido" name="nombre_referido" class="input_data_popup" v-model="contacto_nombre_referido">
+							</div>
+						</div>
+						<div class="info_popup parcial">
+							<div class="label_info">
+								<h2><span v-show="referido != 'referido'" class="required">* </span>Telefono<span v-show="referido == 'referido'"> de tu referido (opcional)</span></h2>
+							</div>
+							<div class="data_info">
+								<input id="telefono_postulacion" name="telefono" class="input_data_popup"  v-model="usuario.telefono">
+							</div>
+						</div>
+						<div class="info_popup parcial">
+							<div class="label_info">
+								<h2><span v-show="referido != 'referido'" class="required">* </span>Correo<span v-show="referido == 'referido'"> de tu referido (opcional)</span></h2>
+							</div>
+							<div class="data_info">
+								<input id="mail_postulacion" name="mail" class="input_data_popup" :readonly="usuario.return != 'error' && typeof usuario.return != 'undefined'" :class="{readonly:usuario.return != 'error' && typeof usuario.return != 'undefined'}"  v-model="usuario.mail">
+							</div>
+						</div>
+						<!--<div  class="info_popup parcial" v-show="(!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago') && label == 'oportunidad'">
+							<div class="label_info">
+								<span class="required">* </span>Selecciona en que rango esta tu aspiración salarial
+							</div>
+							<div>
+								<multiselect
+								v-model="value_sueldo"
+								placeholder="Selecciona un rango"
+								
+								label="name" track-by="name"
+								:options="options_sueldo"
+								:multiple="true"
+								:close-on-select="false"
+								:preserve-search="false"
+								:searchable="true"
+								:max="3"
+								></multiselect>
+							</div>
+						</div>
+						<div class="info_popup parcial">
+							<div class="label_info">
+								<h2>Aspiración salarial</h2>
+							</div>
+							<div class="data_info">
+								<input id="aspmax_postulacion" name="aspmax_postulacion" class="input_data_popup" v-model="usuario.aspiracion_max">
+							</div>
+						</div>-->
+						<div class="info_popup parcial" v-show="referido != 'referido' && (!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago') && label == 'oportunidad'">
+							<div class="label_info">
+								<h2><span class="required">* </span>¿Cual es tu aspiración salarial?</h2>
+							</div>
+							<div class="data_info">
+								<input @keypress="isNumber($event)" id="aspmax_postulacion" name="aspiracion_max" class="input_data_popup" v-model="usuario.aspiracion_max">
+							</div>
+						</div>
+						<div class="info_popup parcial" v-show="referido != 'referido' && (!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago') && label == 'oportunidad'">
+							<div class="label_info">
+								<h2><span class="required">* </span>¿Cual es tu salario actual?</h2>
+							</div>
+							<div class="data_info">
+								<input @keypress="isNumber($event)" id="aspmin_postulacion" name="aspiracion_min" class="input_data_popup" v-model="usuario.aspiracion_min">
+							</div>
+						</div>
+						
+						<div class="info_popup parcial" v-show="referido != 'referido' && (usuario.return == 'error' || typeof usuario.return == 'undefined')">
+							<div class="label_info">
+								<h2><span class="required">* </span>Crea tu contraseña para Aleia</h2>
+							</div>
+							<div class="data_info">
+								<input id="pass" name="pass" class="input_data_popup" v-model="usuario.pass">
+							</div>
+						</div>
+						
+						<div class="info_popup parcial" v-show="!check_last_cv">
+							<div class="label_info">
+								<h2><span class="required">* </span>Hoja de vida</h2>
+							</div>
+							
+							
+							
+							<div class="flex w-full h-screen items-center justify-center text-center" id="app">
+								<div id="loader_postulacion" class="load_file gray" @dragover="dragover" @dragleave="dragleave" @drop="drop">
+									<input type="file" multiple name="file_postulacion" id="file_postulacion" 
+									class="w-px h-px opacity-0 overflow-hidden absolute" @change="onChange" ref="file" accept=".pdf,.jpg,.jpeg,.png" />
+									
+									<label v-show="filelist.length == 0" for="file_postulacion" class="block cursor-pointer">
+										<div class="div_name_file" id="name_file_drag">
+											Arrastra un archivo acá o
+											<span class="underline">da clic aquí</span> para subir la hoja de vida
+										</div>
+										<div class="div_name_file" id="name_file_drop" style="display:none;">
+											Suelta el archivo aquí.
+										</div>
+									</label>
+									
+									<div  v-for="file in filelist">
+										<div class="name_file">
+											[[file.file_name]]
+										</div>
+										<button class="ml-2" type="button" @click="remove(filelist.indexOf(file))" title="Remove file">Borrar</button>
+									</div>
+									
+								</div>
+							</div>
+							
+							
+							
+						</div>
+						<div class="info_popup parcial" style="width: 97%;" v-show="typeof usuario.id_last_cv != 'undefined' && usuario.id_last_cv != ''">
+							
+							<input type="checkbox" v-model="check_last_cv" id="check_last_cv_postulacion" name="check_last_cv_postulacion">
+							<div class="check_postula">Enviar mi ultima hoja de vida</div>
+						</div>
+						<button class="descarga_cv_postulacion" onclick="descarga_perfil()" v-show="typeof usuario.id_last_cv != 'undefined' && usuario.id_last_cv != ''">Descargar mi ultima hoja de vida</button>
+						
+						<h3 v-show="usuario.return != 'error'">Los cambios en esta información se verán reflejados en tu perfil de usuario</h3>
+						<!--<div class="contenedor_referidos" v-show="(!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago') && label == 'oportunidad'">
+							<div class="info_popup parcial">
+								<div class="label_info">
+									<h2>¿Eres referido o refieres a alguien?</h2>
+								</div>
+								<div class="data_info">
+									<select v-model="referido" name="referido" class="input select">
+										<option value="">Ninguna de las dos</option>
+										<option value="referido">Soy referido de alguien</option>
+										<option value="referente">Estoy refiriendo a alguien para la vacante</option>
+									</select>
+								</div>
+							</div>
+							<div class="info_popup parcial" v-show="referido != ''">
+								<div class="label_info">
+									<h2  v-show="referido == 'referido'">¿Cual es el nombre de la persona que te refirió?</h2>
+									<h2  v-show="referido == 'referente'">¿Cual es tu nombre?</h2>
+								</div>
+								<div class="data_info">
+									<input id="contacto_nombre_referido" name="nombre_referido" class="input_data_popup" v-model="contacto_nombre_referido">
+								</div>
+							</div>
+							<div class="info_popup parcial" v-show="referido != ''">
+								<div class="label_info">
+									<h2  v-show="referido == 'referido'">¿Cual es el correo de la persona que te refirió?</h2>
+									<h2  v-show="referido == 'referente'">¿Cual es tu correo?</h2>
+								</div>
+								<div class="data_info">
+									<input id="contacto_mail_referido" name="mail_referido" class="input_data_popup" v-model="contacto_mail_referido">
+								</div>
+							</div>
+							<div class="info_popup parcial" v-show="referido != ''">
+								<div class="label_info">
+									<h2  v-show="referido == 'referido'">¿Cual es el celular de la persona que te refirió?</h2>
+									<h2  v-show="referido == 'referente'">¿Cual es tu celular?</h2>
+								</div>
+								<div class="data_info">
+									<input id="contacto_telefono_referido" name="telefono_referido" class="input_data_popup" v-model="contacto_telefono_referido">
+								</div>
+							</div>
+						</div>
+						<div id="sub_contenedor_popup_botonera_pst" class="sub_contenedor_popup botonera envia_postulacion">
+							<div class="sub_contenedor_botonera">
+								<div id="contenedor_botones_postulacion" v-show="postulando == 1">
+									
+									<button type="submit" class="opcion_popup  like" v-show="(!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago') && label == 'oportunidad'" id="enviar_postulacion" >
+										<img type="image" class="img_opcion popup" src="{% static 'imgs/upload.png'%}" />Enviar postulación
+									</button>
+								</div>
+								<div id="contenedor_botones_postulacion" v-show="referido == 'referido'">
+									
+									<button type="submit" class="opcion_popup  like" v-show="label == 'oportunidad'" id="enviar_postulacion" >
+										<img type="image" class="img_opcion popup" src="{% static 'imgs/upload.png'%}"  />Enviar referido
+									</button>
+								</div>
+								<div id="contenedor_botones_represnetacion" v-show="representando == 1">
+									
+									<button type="submit" class="opcion_popup  like" v-show="!(servicio == 'gratuito' && usuario.convenio_busco != 'si') && label == 'oportunidad'" id="enviar_representacion" >
+										<img type="image" class="img_opcion popup" src="{% static 'imgs/upload.png'%}"  />Enviar representación
+									</button>
+								</div>
+							</div>
+						</div>-->
+					</form>
+				</div>
+				
+			</div>
+			
+		</div>
+		<div id="sub_contenedor_popup_comentario" style="display:none;"></div>
+		<!--
+			<div id="sub_contenedor_popup_comentario" class="sub_contenedor_popup detalle" style="display: none;background: #f8f8f9;">
+				<button class="volver_detalle" onclick="show_detalle()">
+					<img type="image" class="img_volver_detalle" src="{% static 'imgs/back.png'%}"  />
+				</button>
+				<div class="contenendor_comentarios">
+					<div class="contenedor_comentario"  v-for="o in comentarios">
+						<button :id = "'eliminar_comentario_'+o.id" class="eliminar_comentario" onclick="eliminar_comentario(this)"><img type="image" class="eliminar_comentario_img" src="{% static 'imgs/delete.png'%}"  />
+						</button>
+						<h3>[[o.fecha]]</h3>
+						<br></br>
+						<h2>[[o.comentario]]</h2>
+					</div>
+				</div>
+				<div class="contenedor_input_comentario">
+					<textarea class="input_comentario" placeholder="Escribe un comentario" id="input_comentario">
+						
+					</textarea>
+					
+					<button onclick="enviar_comentario()" class="opcion_popup enviar_comentario" >
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/send.png'%}"  />
+						Enviar
+					</button>
+				</div>
+			</div>
+		-->
+		<div id="sub_contenedor_popup_botonera" class="sub_contenedor_popup botonera vacante">
+			<div class="sub_contenedor_botonera">
+				
+				
+				
+				<!-- Acá se afecta el boton de postulación -->
+				<div class="sub_contenedor_botonera" v-show="postulando == 1 || referido == 'referido' || representando == 1 || postulando == 2">
+					
+					<div id="contenedor_botones_postulacion" v-show="postulando == 1">
+						
+						<button onclick="envio_popup()" class="opcion_popup  like" v-show="(!(servicio == 'gratuito' && usuario.convenio_busco != 'si') || servicio == 'pago') && label == 'oportunidad'" id="enviar_postulacion" >
+							<img type="image" class="img_opcion popup" src="{% static 'imgs/upload.png'%}" />Enviar postulación
+						</button>
+					</div>
+					<div id="contenedor_botones_postulacion" v-show="referido == 'referido'">
+						
+						<button onclick="envio_popup()" class="opcion_popup  like" v-show="label == 'oportunidad'" id="enviar_postulacion" >
+							<img type="image" class="img_opcion popup" src="{% static 'imgs/upload.png'%}"  />Enviar referido
+						</button>
+					</div>
+					<div id="contenedor_botones_represnetacion" v-show="representando == 1">
+						
+						<button onclick="envio_popup()" class="opcion_popup  like" v-show="!(servicio == 'gratuito' && usuario.convenio_busco != 'si') && label == 'oportunidad'" id="enviar_representacion" >
+							<img type="image" class="img_opcion popup" src="{% static 'imgs/upload.png'%}"  />Enviar representación
+						</button>
+					</div>
+					<button class="opcion_popup atras" onclick="show_detalle()">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/back.png'%}"  />Atras
+					</button>
+				</div>
+				<div id="contenedor_botones_normal" v-show="postulando == 0 && representando == 0 && referido != 'referido'">
+					<button class="opcion_popup principal" v-show="label == 'oportunidad' && hide == false" :id="'postulame_share_etiqueta_'+id" onclick="share_item(this,'oportunidad',event)" >
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/w_arrow.png'%}"  />
+						Postulate
+					</button>
+					<button class="opcion_popup principal" v-show="usuario.return != 'error' && (usuario.tipo == 5 || (Number.isInteger(usuario.representaciones) && usuario.representaciones >= 0))  && label == 'oportunidad'" :id="'repre_postulame_share_etiqueta_'+id" onclick="share_item(this,'oportunidad',event)">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/n_rocket2.png'%}"  />
+						Hackear vacante
+					</button>
+					<button class="opcion_popup principal" v-show="label == 'oportunidad'" :id="'refiere_share_etiqueta_'+id" onclick="share_item(this,'oportunidad',event)">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/referal_w.png'%}"  />
+						Refiere a alguien
+					</button>
+					<button v-show="id_et == -1" :id="'pp_add_vacante_'+id" class="opcion_popup" onclick="add_vacante(this,event)">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/menu/saved.png'%}"  />
+						Revisala luego
+					</button>
+					<button type="button" v-show="id_et == -1" :id="'pp_share_vacante_'+id" class="opcion_popup" onclick="popup_share_vacante()">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />
+						Compartir
+					</button>
+					<a href="https://payco.link/1714980" target="_blank" v-show="hide == true && id_user == usuario.id">
+						<button class="opcion_popup_p">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/promocion.png'%}" />
+						Promociona tu vacante<br>para llegar a mas candidatos
+						</button>
+					</a>
+					<button class="opcion_popup" v-show="id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="popup_envio_solicitud(this,event)">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Invitar a Aleia
+					</button>
+					<button class="opcion_popup" v-show="usuario.tipo == 13 && id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="descarga_perfil_usuario()">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/dfile.png'%}"  />Descargar HV
+					</button>
+					
+					
+					<button class="opcion_popup" v-show="id_et == -1 && label == 'contacto' && sesion.data.tipo != 13" :id="'show_net_'+id" onclick="show_rutas(this,event)">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/location.png'%}"  />[[rutas.length]] ruta(s) para conectar
+					</button>
+					<button id="guardar_objeto" v-show="sesion.data.tipo == 13 && id_et == -1" class="opcion_popup" onclick="guardar_candidato()">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Guardar candidato
+					</button>
+					<button id="copiar_objeto" v-show="sesion.data.admin == 1 && id_et != -1 " class="opcion_popup" onclick="copiar_objeto()">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/copy.png'%}"  />[[estado_copy]]
+					</button>
+					<button class="opcion_popup" v-show="id_et != -1 && label == 'oportunidad'" :id="'delete_etiqueta_'+id_et" onclick="show_message_popup(this,true,'delete_etiqueta')">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/delete.png'%}"  />Borrar
+					</button>
+					<!--<button class="opcion_popup" v-show="id_et != -1"  onclick="show_comentario()">
+						<img type="image" class="img_opcion popup" src="{% static 'imgs/popup/comment.png'%}"  />Comentarios ([[comentarios.length]])
+					</button>
+				-->
+				
+			</div>
+			
+			
+			
+			
+		</div>
+		
+	</div>
+</div>
+
+</div>

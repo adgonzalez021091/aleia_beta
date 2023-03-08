@@ -1,0 +1,13 @@
+{% load static %}
+
+{% load versioned_static %}
+
+<div class="div_buscador_inicio">
+			
+			<input id="buscador_index" class="searcher index" onkeypress="busqueda_index(event)" placeholder="¿Cómo es el trabajo de tus sueños?" >
+			
+			<button class="call2action primario buscar" onclick="busqueda_index()">
+				<img  src="/static/imgs/menu/search_w.png" class="lupa_buscador">
+				Buscar</button>
+			<!--<button class="call2action primario opcion_index mobile" onclick="busqueda_index()">Busco candidatos</button>-->
+		</div>

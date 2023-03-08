@@ -2,10 +2,16 @@ var busqueda = "";
 var imagenes_popup = {"contacto":"static/imgs/menu/user2.png","oportunidad":"static/imgs/menu/job.png","proceso":"static/imgs/menu/interview.png"}
 
 var alerta = true;
+
+
+
+
+
+
 async function alerta_func(){
   if(document.getElementById("alerta_manual_aleja") != null){
     while(alerta){
-
+      
       await sleep(1000);
       if(document.getElementById("alerta_manual_aleja").className.includes("show")){
         document.getElementById("alerta_manual_aleja").classList.add("hide");  
@@ -14,19 +20,19 @@ async function alerta_func(){
         document.getElementById("alerta_manual_aleja").classList.add("show");  
         document.getElementById("alerta_manual_aleja").classList.remove("hide");
       }
-
+      
     }
   }
 }
 async function visualiza_hv(o){
   var id_file= o.id.split("____")[0]
   popup_recom.id = o.id.split("____")[1]
-$( '#iframe_hv' ).attr( 'src', function ( i, val ) { return 'https://drive.google.com/file/d/'+id_file+'/preview'; });
-document.getElementById("div_contenedor_iframe_hv").style.display="block";
+  $( '#iframe_hv' ).attr( 'src', function ( i, val ) { return 'https://drive.google.com/file/d/'+id_file+'/preview'; });
+  document.getElementById("div_contenedor_iframe_hv").style.display="block";
   await sleep(100);
   document.getElementById("div_contenedor_iframe_hv").classList.remove("hide");
   document.getElementById("div_contenedor_iframe_hv").classList.add("show");
- 
+  
 }
 function guardar_eliminar_candidato_popup(o,accion){
   if(accion == "eliminar"){
@@ -99,7 +105,7 @@ async function habilitar_opciones_et(o,label,accion_data,event){
   close_popup(1);
   
   
-
+  
 }
 async function habilitar_opciones(o,label,accion_data,event){
   event.stopPropagation();
@@ -136,12 +142,12 @@ async function habilitar_opciones(o,label,accion_data,event){
   
   
   popup_servicios.label = label;
-
+  
   popup_servicios.tipo_user = app.usuario.tipo; 
   close_popup(1);
   tmp_etiqueta = 0;
   popup_servicios.id_et = tmp_etiqueta;
-
+  
 }
 
 function carga_perfil_usuario(){
@@ -159,6 +165,7 @@ function carga_perfil_usuario(){
   document.getElementById("subsector_perfil").value=(profile.subsector  == "undefined")?"":profile.subsector;
   document.getElementById("cargos_aplica").value=(typeof profile.cargos_aplica  == "undefined")?"":profile.cargos_aplica;
   document.getElementById("logros_perfil").value=(profile.logros  == "undefined")?"":profile.logros;
+
 }
 function cargar_criterios(o){
   switch(o){
@@ -179,7 +186,7 @@ function cargar_criterios(o){
         }
       }
       filtrar_listas(conlis_objetos_vac.filtros,conlis_objetos_vac.server_identifier,conlis_objetos_vac.order,conlis_objetos_vac.asc)
-
+      
     }
     break;
     case "contactos":
@@ -199,7 +206,7 @@ function cargar_criterios(o){
         }
       }
       filtrar_listas(conlis_objetos_con.filtros,conlis_objetos_con.server_identifier,conlis_objetos_con.order,conlis_objetos_con.asc)
-
+      
     }
     break;
   }
@@ -229,7 +236,7 @@ function borrar_filtros(o){
   }
 }
 async function descarga_perfil_usuario(){
-
+  
   var data = get_persona_cb(parseInt(popup.id))
   if(typeof data.id_last_cv != "undefined"){
     window.open('EPE/get_last_cv?id='+popup.id, '_blank');
@@ -245,9 +252,8 @@ async function descarga_perfil(){
     show_message_popup(null,true,"Este usuario aun no ha subido su hoja de vida.")
   }
 }
-async function guarda_perfil(){
 
-  await show_loading(true,"Cargando Job Resume");
+/*async function guarda_perfil(){
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0'); 
@@ -275,21 +281,22 @@ async function guarda_perfil(){
     "]]ciudad[["+document.getElementById("ciudad_perfil").value+
     "]]sector[["+document.getElementById("sector_perfil").value+
     "]]subsector[["+document.getElementById("subsector_perfil").value;
-
+    
   }catch(e){
     parametro +="incompleto[[]]"
   }
   if(typeof app != "undefined")
-    guarda_datos_perfil(app.usuario.id,parametro);
+  guarda_datos_perfil(app.usuario.id,parametro);
   else
-    guarda_datos_perfil(profile.id,parametro);
-}
+  guarda_datos_perfil(profile.id,parametro);
+}*/
+
 function reenviar_actualizar(){
   accion = "editar_"+accion.split("_")[1]
-
+  
   document.getElementById("id_"+accion.split("_")[1]).value = tmp_id;
   call2action();
-
+  
 }
 async function abrir_networking(){
   await show_loading(true,"Cargando red");
@@ -328,7 +335,7 @@ function reset_form(a){
     document.getElementById("rango_mayor_oportunidad").value = "";
     document.getElementById("tipo_oportunidad").value = "";
     document.getElementById("obs_oportunidad").value = "";
-
+    
     
     //document.getElementById("req_oportunidad").value = "";
     document.getElementById("cumplimiento_100").value = "";
@@ -338,8 +345,8 @@ function reset_form(a){
     }catch(e){
       console.log("no es usuario admin")
     }
-
-
+    
+    
   }else if (a.includes("proceso")){
     document.getElementById("id_vacante_proceso").value ="";
     document.getElementById("id_contacto_proceso").value ="";
@@ -354,7 +361,7 @@ function reset_form(a){
     document.getElementById("telefono_proceso").value ="";
     document.getElementById("tipo_proceso").value =0;
     document.getElementById("obs_proceso").value="";
-
+    
   }else if (a.includes("usuario_index")){
     document.getElementById("empresa_oportunidad").value= "";
     document.getElementById("cargo_oportunidad").value= "";
@@ -365,22 +372,22 @@ function reset_form(a){
     document.getElementById("tipo_servicio").value= "true";
     document.getElementById("rango_menor_oportunidad").value= "";
     document.getElementById("rango_mayor_oportunidad").value= "";
-
+    
     document.getElementById("req1").value = "";
     document.getElementById("req2").value = "";
     document.getElementById("req3").value = "";
     document.getElementById("req4").value = "";
     document.getElementById("req5").value = "";
     
-
+    
     document.getElementById("nombre_usuario").value= ""
     document.getElementById("correo_usuario").value= ""
     document.getElementById("telefono_usuario").value= ""
-
-
-
-
-
+    
+    
+    
+    
+    
   }else if (a.includes("job_hacker")){
     document.getElementById("id_job_hacker").value= ""
     document.getElementById("linkedin_job_hacker").value= ""
@@ -390,36 +397,42 @@ function reset_form(a){
     document.getElementById("mail_job_hacker").value= ""
     document.getElementById("telefono_job_hacker").value= ""
     document.getElementById("crystal_job_hacker").value= ""
-
+    
   }
-
+  
 }
 
 function asociar_previo(repre = false){
+  if(app.usuario.return=="error" && id_session == null){
+    //mostrar_mensaje_flotante("error","Esta acción solo se puede hacer si estas logueado");
+    show_message_popup(null,true,"mensaje_1")
+    return false;
+  }
+  
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0'); 
   var yyyy = today.getFullYear();
-
+  
   today = yyyy + '-' + mm + '-' + dd;
   var label = accion.split("_")[1].trim();
   var parametro = "label[["+label+"]]id[["+tmp_id+"]]fecha[["+today+"]]";
   if(label == "contacto"){
     if(popup_servicios.postulacion == "true"){
       parametro+="verificacion_contacto[[false]]nivel[[1]]obs[[Quiero aplicar a la vacante de "+popup_servicios.titulo+"]]";
-
+      
     }else{
       if(document.getElementById("tipo_contacto").value.trim() != ""){
         parametro+="verificacion_contacto[["+document.getElementById("verificacion_contacto").checked+"]]nivel[["+document.getElementById("tipo_contacto").value+"]]obs[["+document.getElementById("obs_contacto").value+"]]";
-
+        
       }else{
         parametro+="verificacion_contacto[["+document.getElementById("verificacion_contacto").checked+"]]nivel[[1]]obs[["+document.getElementById("obs_contacto").value+"]]";
-
+        
       }
     }
   }
   if(label == "oportunidad"){
-
+    
     
     if(app.usuario.tipo == 6){
       parametro+="cumple[[contacto]]";
@@ -430,9 +443,9 @@ function asociar_previo(repre = false){
   if(label == "proceso"){
     parametro+="servicio[[analisis]]";
   }
-
-
-
+  
+  
+  
   conector_crear_actualizar_etiqueta(parametro,tmp_etiqueta,id_session,label)
 }
 
@@ -440,24 +453,26 @@ async function mostrar_mensaje_flotante(tipo,texto){
   await show_loading(false,"");
   switch(tipo){
     case "ok":
-    document.getElementById("texto_mensaje_flotante").innerHTML = texto;
-    document.getElementById("mensaje_flotante").classList.remove("hide");
-    await sleep(2000);
-    document.getElementById("mensaje_flotante").classList.add("hide");
+    document.getElementById("mensaje_flotante").classList.remove("nolike");
+    document.getElementById("mensaje_flotante").classList.add("like");
     break;
     case "error":
-    document.getElementById("texto_mensaje_flotante").innerHTML = texto;
-    document.getElementById("mensaje_flotante").classList.remove("hide");
-    await sleep(2000);
-    document.getElementById("mensaje_flotante").classList.add("hide");
+    document.getElementById("mensaje_flotante").classList.remove("like");
+    document.getElementById("mensaje_flotante").classList.add("nolike");
     break;
+    default:
+    document.getElementById("mensaje_flotante").classList.remove("like");
+    document.getElementById("mensaje_flotante").classList.remove("nolike");
   }
+  document.getElementById("texto_mensaje_flotante").innerHTML = texto;
+  document.getElementById("mensaje_flotante").classList.remove("hide");
+  await sleep(5000);
+  document.getElementById("mensaje_flotante").classList.add("hide");
   if(tipo == "ok"){
     accion = "";
-    await sleep(5000);
-    document.getElementById("mensaje_flotante").classList.add("hide");
-  //close_contenedor("contenedor_right");
-}
+    
+    //close_contenedor("contenedor_right");
+  }
 }
 
 async function mostrar_mensaje(tipo,texto){
@@ -491,7 +506,7 @@ async function mostrar_mensaje(tipo,texto){
     ocultar_mensaje();
     close_popup(3);
   }
-
+  
 }
 function add_usuario(){
   document.getElementById("div_crear_usuario").style.display = "block";
@@ -525,9 +540,9 @@ function cambiar_contenedor(ob){
         node_tmp= parent[o].getElementsByTagName("input")[0];
         img_tmp = node_tmp.src.split("/");
         //if(!img_tmp[img_tmp.length-1].includes("_w")){
-          //name_img = img_tmp[img_tmp.length-1].split(".")[0]+"_w.png";
+        //name_img = img_tmp[img_tmp.length-1].split(".")[0]+"_w.png";
         //}else{
-          name_img = img_tmp[img_tmp.length-1];
+        name_img = img_tmp[img_tmp.length-1];
         //}
         node_tmp.src = "static/imgs/menu/"+name_img;
         if(id == "contenedor_inicio"){
@@ -541,84 +556,65 @@ function cambiar_contenedor(ob){
           }
           document.getElementById(id).classList.remove("hidden");    
         }
-
+        
       }else{
         parent[o].classList.remove("selected");
         node_tmp= parent[o].getElementsByTagName("input")[0];
         img_tmp = node_tmp.src.split("/");
         //if(img_tmp[img_tmp.length-1].includes("_w")){
-         //name_img = img_tmp[img_tmp.length-1].split("_w")[0]+".png";
-         //node_tmp.src = "static/imgs/menu/"+name_img;
-       //}
-       if(id == "contenedor_inicio"){
-        if(app.sesion.data.admin == 1){
-          document.getElementById("contenedor_left_admin").classList.add("hidden");    
-          document.getElementById("contenedor_info_usuario").classList.add("hidden");    
+        //name_img = img_tmp[img_tmp.length-1].split("_w")[0]+".png";
+        //node_tmp.src = "static/imgs/menu/"+name_img;
+        //}
+        if(id == "contenedor_inicio"){
+          if(app.sesion.data.admin == 1){
+            document.getElementById("contenedor_left_admin").classList.add("hidden");    
+            document.getElementById("contenedor_info_usuario").classList.add("hidden");    
+          }
+        }else {
+          document.getElementById(id).classList.add("hidden");    
         }
-      }else {
-        document.getElementById(id).classList.add("hidden");    
       }
+      
     }
-
+    
+    
   }
   
-
-}
-
-
-
-
-
+  
+  
+  
+  
 }
 function close_menu(){
   document.getElementById("div_contenedor_menu").style.display = "none";
 }
-function cambiar(i){
-  switch(i){
-    case "menu":
-    document.getElementById("banner_servicios").style.display = "none";
-    document.getElementById("div_contenedor_menu").style.display = "block";
-    document.getElementById("contenedor_total").style.display = "none";
-    break;
-    case "inicio":
-    document.getElementById("banner_servicios").style.display = "none";
-    document.getElementById("div_contenedor_menu").style.display = "none";
-    document.getElementById("contenedor_total").style.display = "block";
-    break;
-    case "servicios":
-    document.getElementById("banner_servicios").style.display = "block";
-    document.getElementById("div_contenedor_menu").style.display = "none";
-    document.getElementById("contenedor_total").style.display = "none";
-    
-    
-    
-    break;
-  }
-  /*
-  if(i == "vacantes"){
-    var arr = document.getElementsByClassName("contenedor_listas right");
-    for(var o in arr){
-      console.log(arr[o]);
-      if(typeof arr[o].id != "undefined" ){
-        arr[o].style.display = "block";
-      }
-    }
 
-    var arr = document.getElementsByClassName("contenedor_listas left");
-    for(var o in arr){
-      if(typeof arr[o].id != "undefined" ){
-        arr[o].style.display = "none";
-      }
-    }
 
-  }else if(i == "contactos"){
-   var arr = document.getElementsByClassName("contenedor_listas left");
-   for(var o in arr){
+/*
+if(i == "vacantes"){
+  var arr = document.getElementsByClassName("contenedor_listas right");
+  for(var o in arr){
+    console.log(arr[o]);
     if(typeof arr[o].id != "undefined" ){
       arr[o].style.display = "block";
     }
   }
-
+  
+  var arr = document.getElementsByClassName("contenedor_listas left");
+  for(var o in arr){
+    if(typeof arr[o].id != "undefined" ){
+      arr[o].style.display = "none";
+    }
+  }
+  
+}else if(i == "contactos"){
+  var arr = document.getElementsByClassName("contenedor_listas left");
+  for(var o in arr){
+    if(typeof arr[o].id != "undefined" ){
+      arr[o].style.display = "block";
+    }
+  }
+  
   var arr = document.getElementsByClassName("contenedor_listas right");
   for(var o in arr){
     if(typeof arr[o].id != "undefined" ){
@@ -629,6 +625,45 @@ function cambiar(i){
   document.getElementById("div_contenedor_menu").style.display = "block";
 }
 */
+
+function valida_perfil_completo(){
+  if((""+app.usuario.ultimo_cargo).trim() == "" || 
+  (""+app.usuario.ultima_empresa).trim() == "" || 
+  (""+app.usuario.aspiracion_min).trim() == "" || 
+  (""+app.usuario.aspiracion_max).trim() == "" ||  
+  typeof app.usuario.ultimo_cargo == "undefined" || 
+  typeof app.usuario.ultima_empresa == "undefined" ||  
+  typeof app.usuario.aspiracion_min == "undefined" || 
+  typeof app.usuario.aspiracion_max == "undefined" || 
+  typeof app.usuario.aspiracion_max == "undefined" || 
+  typeof app.usuario.id_last_cv == "undefined" ){
+    return false;
+  }
+  return true;
+}
+function acuerdo_next(){
+  popup_conveio.etapa = 2;
+}
+function acuerdo_back(){
+  popup_conveio.etapa = 1;
+}
+function loadjobs_next(){
+  if(validar_formulario("vacante")){
+    
+    formulario_vacante.etapa++;
+  }
+  if(formulario_vacante.etapa == 3){
+    formulario_vacante.nombre_contacto = app.usuario.nombre
+    formulario_vacante.correo_contacto = app.usuario.mail
+    formulario_vacante.telefono_contacto = app.usuario.telefono
+    formulario_vacante.cargo_contacto = app.usuario.ultimo_cargo
+    
+    
+  }
+  
+}
+function loadjobs_back(){
+  formulario_vacante.etapa--;
 }
 function regresar_vista_admin(){
   try{
@@ -641,26 +676,24 @@ function regresar_vista_admin(){
   //get_full_user_info();
 }
 async function show_message_perfil(){
-  document.getElementById("div_contenedor_popup_perfil").style.display="block";
+  //document.getElementById("div_contenedor_popup_perfil").style.display="block";
+  adm.data_pendiente = "true";
   await sleep(100);
-  document.getElementById("div_contenedor_popup_perfil").classList.remove("hide");
-  document.getElementById("div_contenedor_popup_perfil").classList.add("show");
-  document.getElementById("ultimo_cargo_perfil").value = app.usuario.ultimo_cargo;
-  document.getElementById("faltante_busqueda").value = (typeof app.usuario.faltante_busqueda == "undefined")?"":app.usuario.faltante_busqueda;
-  document.getElementById("ultima_empresa_perfil").value = app.usuario.ultima_empresa;
-  //document.getElementById("linkedin_perfil").value = app.usuario.linkedin;
-  //document.getElementById("cargos_aplica").value = (app.usuario.cargos_aplica  == "undefined")?"":app.usuario.cargos_aplica;
-  //document.getElementById("logros_perfil").value = app.usuario.logros;
-  document.getElementById("aspiracion_min_perfil").value = app.usuario.aspiracion_min;
-  document.getElementById("aspiracion_max_perfil").value = app.usuario.aspiracion_max;
+  
 }
 async function show_message_popup(o,fix=false,msj=""){
-
+  
   if(fix){
     try{
       event.stopPropagation();
     }catch(e){
       console.log("no tiene ")
+    }
+    if(msj == "vacante_creada"){
+      msj="¡Felicitaciones!<br><br>Tu vacante ya se encuentra en Aleia. Revisa tu correo para activar tu cuenta y poder continuar con el proceso." 
+    }
+    if(msj == "confidencial"){
+      msj="Si seleccionas esta opción, no saldrá el nombre de tu empresa para las personas que vean tu vacante en Aleia"
     }
     if(msj == "mensaje_1"){
       msj = "En Aleia puedes guardar las vacantes a las que te has postulado en otros portales y agregar comentarios a cada vacante para que nunca pierdas información sobre tu búsqueda de empleo.<br><br>Para poder guardar una vacante debes iniciar sesión o crear una cuenta en Aleia<br><br><a href='login?type=registro'><button class='opcion_popup_pregunta'>Registrate GRATIS</button></a><br><br><a href='login'><button class='login'>Iniciar sesión</button></a>"
@@ -669,32 +702,32 @@ async function show_message_popup(o,fix=false,msj=""){
       msj = "En Aleia puedes postularte de varías formas en cada vacante, aumentando la probabilidad de que te contaten.<br><br>Para poder aplicar a una vacante debes iniciar sesión o crear una cuenta en Aleia<br><br><a href='login?type=registro'><button class='opcion_popup_pregunta'>Registrate GRATIS</button></a><br><br><a href='login'><button>Iniciar sesión</button></a>"
     }
     if(msj == "delete_etiqueta"){
-
-      msj = "<span style='color:red'>¿Confirmas que deseas eliminar esta vacante?</span> <br><br>Recuerda que solo se eliminará de 'Mis vacantes guardadas' y eliminará todos los servicios solicitados para esta vacante.<br><br><button onclick='close_popup(12)'>Cancelar</button><br><br><button onclick='delete_etiqueta("+parseInt(o.id.split("etiqueta_")[1])+")' class='boton_eliminar'>Eliminar</button>"
+      
+      msj = "<span style='color:red'>¿Confirmas que deseas borrar esta vacante?</span> <br><br>Recuerda que solo se eliminará de 'Mis vacantes guardadas' y eliminará todos los servicios solicitados para esta vacante.<br><br><button onclick='close_popup(12)'>Cancelar</button><br><br><button onclick='delete_etiqueta("+parseInt(o.id.split("etiqueta_")[1])+")' class='boton_eliminar'>Borrar</button>"
     }
     if(msj == "delete_contacto"){
-
+      
       msj = "<span style='color:red'>¿Confirmas que deseas eliminar este contacto?</span> <br><br><button onclick='close_popup(12)'>Cancelar</button><br><br><button onclick='delete_etiqueta("+parseInt(o.id.split("etiqueta_")[1])+")' class='boton_eliminar'>Eliminar</button>"
     }
     if(msj == "delete_servicio"){
-
+      
       id_s = '"'+o.id.split("etiqueta_")[1]+'"'
       msj = "<span style='color:red'>¿Confirmas que deseas cancelar este servicio?</span> <br><br>Una vez lo canceles se te devolverá el crédito.<br><br><button onclick='close_popup(12)'>Mejor no</button><br><br><button onclick='delete_servicio("+id_s+")' class='boton_eliminar'>Cancelar servicio</button>"
-
+      
     }
     document.getElementById("mensaje_popup_pregunta").innerHTML = msj;
   }
   else{
     var id = o.parentNode.getElementsByTagName("input")[0].id;
     if (id == ""){
-     id = o.parentNode.getElementsByTagName("select")[0].id;
-   }
-   document.getElementById("mensaje_popup_pregunta").innerHTML = mensajes[id];   
- }
- document.getElementById("div_contenedor_popup_pregunta").style.display="block";
- await sleep(100);
- document.getElementById("div_contenedor_popup_pregunta").classList.remove("hide");
- document.getElementById("div_contenedor_popup_pregunta").classList.add("show");
+      id = o.parentNode.getElementsByTagName("select")[0].id;
+    }
+    document.getElementById("mensaje_popup_pregunta").innerHTML = mensajes[id];   
+  }
+  document.getElementById("div_contenedor_popup_pregunta").style.display="block";
+  await sleep(100);
+  document.getElementById("div_contenedor_popup_pregunta").classList.remove("hide");
+  document.getElementById("div_contenedor_popup_pregunta").classList.add("show");
 }
 async function close_popup(i){
   var div = "";
@@ -702,7 +735,7 @@ async function close_popup(i){
     switch(i){
       case 1:
       div = "div_contenedor_popup";
-      show_detalle();
+      
       break;
       case 2:
       div = "div_contenedor_popup_share";
@@ -732,8 +765,11 @@ async function close_popup(i){
       case 13:
       div = "div_contenedor_iframe_hv";
       break;
-
-
+      case 14:
+      div = "div_popup_convenio";
+      break;
+      
+      
     }
   }else{
     var tmp = i.parentNode.parentNode;
@@ -747,6 +783,7 @@ async function close_popup(i){
     load_cv_serv(2)
     load_cv_serv(4)
   }
+  
   if(div == "contenedor_right"){
     div = "contenedor_right";
     try{
@@ -766,11 +803,15 @@ async function close_popup(i){
     await sleep(500);
     document.getElementById(div).style.display="none";
   }
-  if(div != "div_contenedor_popup_pregunta"){
+  //if(div != "div_contenedor_popup_pregunta"){
+  //  popup.id=-1;
+  //  popup.id_et =-1;
+  //}
+  if(div == "div_contenedor_popup"){
     popup.id=-1;
     popup.id_et =-1;
-  }
-  if(div == "div_contenedor_popup"){
+    popup.recompensa = "";
+    popup.recompensa1 = "";
     popup.titulo="";
     popup.subtitulo="";
     popup.subtitulo2="";
@@ -782,6 +823,10 @@ async function close_popup(i){
     popup.texto3="";
     popup.link="";
     popup.estado_copy = "Copiar";
+    if(window.mobileCheck()){
+    document.getElementById("contenedor_vacantes_seleccionadas").style.display="none";
+    }
+    show_detalle();
     
   }else if(div == "div_contenedor_popup_share"){
     popup_many.label = "";
@@ -792,24 +837,24 @@ async function close_popup(i){
   }
 }
 function vuelve_inicio(){
-  if(window.location.href.includes("/app")){
+  if(esta_en_index()){
     close_popup(12);
     close_popup(10);
   }else if(window.location.href.includes("/profile")){
-    location.href="app";
+    location.href="/";
   }
 }
 function buscar_general(i){
   switch(i){
-
+    
     case 1:
     popup_many.usuarios_filtrado = buscar_items(popup_many.usuarios,popup_many.usuarios_filtrado,"buscador_usuarios_popup");
     break;
-
+    
   }
 }
 function buscar_items(arr_base,arr_filt,div){
-
+  
   var txt = document.getElementById(div).value;
   var imte = 0;
   if(txt.trim() == ""){
@@ -824,7 +869,7 @@ function buscar_items(arr_base,arr_filt,div){
       for(var o in arr_base[i]){
         var tmp = (""+arr_base[i][o]).toLowerCase();
         var txt_arr = txt.split(" ");
-
+        
         for(var w in txt_arr){
           if(tmp.includes(txt_arr[w].toLowerCase())){
             imte++;
@@ -875,7 +920,7 @@ function edit_usuario(o){
       var data = app.personas[i];
       add_usuario();
       show_menu();
-
+      
       document.getElementById("id_usuario").value = data.id;
       document.getElementById("linkedin_usuario").value= data.linkedin;
       document.getElementById("nombre_usuario").value= data.nombre;
@@ -893,58 +938,58 @@ function edit_usuario(o){
       break;
     }
   }
-
+  
 }
 function load_cv_serv(i){
-
- if(i == 1){
-  document.getElementById("load_serv_postulacion").style.display = "block";
-  document.getElementById("desc_serv_postulacion").style.display = "none";
   
-  document.getElementById("tipo_serv_ap").value = "analisis";
-  popup_servicios.tipo_serv = "analisis";
-
-  document.getElementById("tipo_etiq_ap").value = popup_servicios.label; 
-  document.getElementById("id_vac_serv_ap").value = popup_servicios.id;
-  document.getElementById("id_etiq_ap").value = popup_servicios.id_et;
-
-  load_cv_serv(4);
-
-  
-}else if(i == 3){
-  document.getElementById("load_serv_representacion").style.display = "block";
-  document.getElementById("desc_serv_representacion").style.display = "none";
-  document.getElementById("tipo_serv_re").value = "representacion";
-  popup_servicios.tipo_serv = "representacion";
-  document.getElementById("tipo_etiq_re").value = popup_servicios.label; 
-  document.getElementById("id_vac_serv_re").value = popup_servicios.id;
-  document.getElementById("id_etiq_re").value = popup_servicios.id_et;
-
-  load_cv_serv(2);
-
-}else if(i == 2){
-  try{
-    document.getElementById("load_serv_postulacion").style.display = "none";
-    document.getElementById("desc_serv_postulacion").style.display = "block";
-    document.getElementById("tipo_serv_ap").value = "";
-    document.getElementById("tipo_etiq_ap").value = ""; 
-    document.getElementById("id_vac_serv_ap").value = "";
-    document.getElementById("id_etiq_ap").value = "";
-  }catch(e){
-    console.log("ok")
+  if(i == 1){
+    document.getElementById("load_serv_postulacion").style.display = "block";
+    document.getElementById("desc_serv_postulacion").style.display = "none";
+    
+    document.getElementById("tipo_serv_ap").value = "analisis";
+    popup_servicios.tipo_serv = "analisis";
+    
+    document.getElementById("tipo_etiq_ap").value = popup_servicios.label; 
+    document.getElementById("id_vac_serv_ap").value = popup_servicios.id;
+    document.getElementById("id_etiq_ap").value = popup_servicios.id_et;
+    
+    load_cv_serv(4);
+    
+    
+  }else if(i == 3){
+    document.getElementById("load_serv_representacion").style.display = "block";
+    document.getElementById("desc_serv_representacion").style.display = "none";
+    document.getElementById("tipo_serv_re").value = "representacion";
+    popup_servicios.tipo_serv = "representacion";
+    document.getElementById("tipo_etiq_re").value = popup_servicios.label; 
+    document.getElementById("id_vac_serv_re").value = popup_servicios.id;
+    document.getElementById("id_etiq_re").value = popup_servicios.id_et;
+    
+    load_cv_serv(2);
+    
+  }else if(i == 2){
+    try{
+      document.getElementById("load_serv_postulacion").style.display = "none";
+      document.getElementById("desc_serv_postulacion").style.display = "block";
+      document.getElementById("tipo_serv_ap").value = "";
+      document.getElementById("tipo_etiq_ap").value = ""; 
+      document.getElementById("id_vac_serv_ap").value = "";
+      document.getElementById("id_etiq_ap").value = "";
+    }catch(e){
+      console.log("ok")
+    }
+  }else if(i == 4){
+    try{
+      document.getElementById("load_serv_representacion").style.display = "none";
+      document.getElementById("desc_serv_representacion").style.display = "block";
+      document.getElementById("tipo_serv_re").value = "";
+      document.getElementById("tipo_etiq_re").value = ""; 
+      document.getElementById("id_vac_serv_re").value = "";
+      document.getElementById("id_etiq_re").value = "";
+    }catch(e){
+      console.log("ok")
+    }
   }
-}else if(i == 4){
-  try{
-    document.getElementById("load_serv_representacion").style.display = "none";
-    document.getElementById("desc_serv_representacion").style.display = "block";
-    document.getElementById("tipo_serv_re").value = "";
-    document.getElementById("tipo_etiq_re").value = ""; 
-    document.getElementById("id_vac_serv_re").value = "";
-    document.getElementById("id_etiq_re").value = "";
-  }catch(e){
-    console.log("ok")
-  }
-}
 }
 function show_usuario(o){
   id_session = parseInt(o.id.split("show_usuario_")[1]);
@@ -954,14 +999,21 @@ function show_usuario(o){
     console.log("usuario")
   }
   document.getElementById("contenedor_info_usuario").classList.remove("hidden");
-//document.getElementById("boton_back").style.display="block"; 
-get_full_user_info();
+  //document.getElementById("boton_back").style.display="block"; 
+  get_full_user_info();
 }
-function show_menu(){
-  if(document.getElementById("div_contenedor_menu").className.includes("hidden_menu")){
+async function show_menu(){
+  if(document.getElementById("div_contenedor_menu").style.display == "none" || document.getElementById("div_contenedor_menu").style.display == ""){
+    document.getElementById("div_contenedor_menu").style.display="block";
+    await sleep(100);
     document.getElementById("div_contenedor_menu").classList.remove("hidden_menu");
+    
+    
   }else{
+    
     document.getElementById("div_contenedor_menu").classList.add("hidden_menu");
+    await sleep(500);
+    document.getElementById("div_contenedor_menu").style.display="none";
   }
 }
 async function show_contenedor(div,config){
@@ -980,7 +1032,7 @@ async function show_contenedor(div,config){
   document.getElementById(div).classList.remove("hide");
   if(div == "contenedor_right"){
     close_popup(6)
-
+    
     var prim = (accion.includes("crear"))?"Crear "+config.nombre:"Editar "+config.nombre;
     try{
       document.getElementById("titulo_contenedor_right").innerHTML = prim;
@@ -990,19 +1042,19 @@ async function show_contenedor(div,config){
     document.getElementById("boton_call2action").innerHTML = prim;
     //document.getElementById("boton_call2action").style.display = "block";
     if(config.div == "contacto_masivo"){
-
+      
       document.getElementById("contenedor_popup_formularios").classList.add("cargue_masivo");
-      document.getElementById("contenedor_popup_formularios").classList.remove("extenso");   
+      //document.getElementById("contenedor_popup_formularios").classList.remove("extenso");   
     }else if(config.div == "proceso"){
-      document.getElementById("contenedor_popup_formularios").classList.add("extenso");
+      //document.getElementById("contenedor_popup_formularios").classList.add("extenso");
       document.getElementById("contenedor_popup_formularios").classList.remove("cargue_masivo");   
     }else{
       document.getElementById("contenedor_popup_formularios").classList.remove("cargue_masivo");      
-      document.getElementById("contenedor_popup_formularios").classList.remove("extenso");      
-
+      //document.getElementById("contenedor_popup_formularios").classList.remove("extenso");      
+      
     }
   }
-
+  
 }
 function ocultar_mensaje(){
   document.getElementById("div_mensaje_retorno").classList.add("invisible");
@@ -1025,78 +1077,110 @@ function tab_contenedor(ob,fix=false,div=""){
         document.getElementById(id).classList.add("hide");
       }
     }catch(e){
-
+      
     }
   }
   
 }
-function show_rutas(o,event){
+function show_load(){
+  document.getElementById("sub_contenedor_popup_postula").style.display="block";
+  document.getElementById("sub_contenedor_popup_detalle").style.display="none";
+  document.getElementById("sub_contenedor_popup_comentario").style.display="none";
+  document.getElementById("sub_contenedor_popup_red").style.display="none";
+  
+  
+}
+function show_comentario(){
+  document.getElementById("sub_contenedor_popup_comentario").style.display="block";
+  document.getElementById("sub_contenedor_popup_detalle").style.display="none";
+  document.getElementById("sub_contenedor_popup_postula").style.display="none";
+  document.getElementById("sub_contenedor_popup_red").style.display="none";
+  
+  
+}
+function show_rutas(){
   document.getElementById("sub_contenedor_popup_red").style.display="block";
   document.getElementById("sub_contenedor_popup_detalle").style.display="none";
+  document.getElementById("sub_contenedor_popup_postula").style.display="none";
+  document.getElementById("sub_contenedor_popup_comentario").style.display="none";
   paint_network(popup.obj_rutas,680,280);
-
+  
 }
 function show_detalle(){
-  try{
-    document.getElementById("sub_contenedor_popup_red").style.display="none";
-    document.getElementById("sub_contenedor_popup_detalle").style.display="block";
-  }catch(e){
-    console.log("no esta")
-  }
+  //try{
+  
+  document.getElementById("sub_contenedor_popup_detalle").style.display="block";
+  document.getElementById("sub_contenedor_popup_postula").style.display="none";
+  document.getElementById("sub_contenedor_popup_red").style.display="none";
+  document.getElementById("sub_contenedor_popup_comentario").style.display="none";
+  popup.postulando = 0;
+  popup.representando = 0;
+  popup.referido = '';
+  popup.tipo_envio = "";
+  //}catch(e){
+  //  console.log("no esta",e)
+  //}
 }
 async function popup_envio_solicitud(o,event){
   event.stopPropagation();
-
   
-  var id = o.parentNode.getElementsByTagName("input")[0].id;
-  popup.link_invita = 'https://aleja.com.co/verificacion?n1='+popup.pnombre+'&n2='+app.sesion.pnombre+'&type=ok&idt='+popup.id+'&ids='+id_session;
+  
+  
+  popup.link_invita = 'https://portal.aleia.app/verificacion?n1='+popup.pnombre+'&n2='+app.sesion.pnombre+'&type=ok&idt='+popup.id+'&ids='+id_session;
+  var metodo = "popup.copiar_texto('"+popup.link_invita+"')"
   document.getElementById("mensaje_popup_pregunta").innerHTML = "Cuando invitas a alguien a inscribirse a Aleia y el carga sus contactos cercanos, estos te saldrán en la pestaña de 'Contactos que puedo llegar a conocer', lo cual va a expandir tu red de networking de forma rapida y sencilla.<br><br>Copia el siguiente link y enviaselo a "+popup.pnombre+"<br><br><br><br>"+
   '<div class="div_link_copy">'+
-  '<input value="https://aleja.com.co/verificacion?n1='+popup.pnombre+'&n2='+app.sesion.pnombre+'&type=ok&idt='+popup.id+'&ids='+id_session+'" class="link_copy">'+
-  '<button class="copy_link_button" onclick="copy_popup_link()">Copiar</button>'+
+  '<input value="'+popup.link_invita+'" class="link_copy">'+
+  '<button class="copy_link_button" onclick="'+metodo+'">Copiar</button>'+
   '</div>';
   document.getElementById("div_contenedor_popup_pregunta").style.display="block";
   await sleep(100);
   document.getElementById("div_contenedor_popup_pregunta").classList.remove("hide");
   document.getElementById("div_contenedor_popup_pregunta").classList.add("show");
 }
+async function popup_share_vacante(){
 
+  popup.link_invita = 'https://portal.aleia.app?id_vacante='+popup.id;
+  metodo = "popup.copiar_texto('"+popup.link_invita+"')"
+  document.getElementById("mensaje_popup_pregunta").innerHTML = "Envia el siguiente link para que puedan ver la vacante en Aleia"+
+  '<div class="div_link_copy">'+
+  '<input value="'+popup.link_invita+'" class="link_copy">'+
+  '<button class="copy_link_button" onclick="'+metodo+'">Copiar</button>'+
+  '</div>';
+  document.getElementById("div_contenedor_popup_pregunta").style.display="block";
+  await sleep(100);
+  document.getElementById("div_contenedor_popup_pregunta").classList.remove("hide");
+  document.getElementById("div_contenedor_popup_pregunta").classList.add("show");
+}
 function delete_etiqueta(id_etiq){
   //event.stopPropagation();
-
+  
   //var id_et = parseInt(o.id.split("etiqueta_")[1])
   /*if(id_et == tmp_etiqueta){
     close_contenedor("contenedor_right");
   }*/
-
+  
   eliminar_etiqueta(id_session,id_etiq)
   close_popup(12)
   close_popup(1)
   close_popup(2)
 }
-function copy_popup_link(){
-  var $temp = $("<textarea>");
-  $("body").append($temp);
-  $temp.val(popup.link_invita).select();
-  document.execCommand("copy");
-  $temp.remove();
-  alert("copiado")
-}
-function copiar_objeto(){
 
+function copiar_objeto(){
+  
   var element = popup.resumen;
   try{
     var brRegex = /<br\s*[\/]?>/gi;
     var element_copy = element.trim().replace(brRegex, "\r\n");
     var $temp = $("<textarea>");
-
+    
     $("body").append($temp);
     $temp.val(element_copy).select();
     document.execCommand("copy");
     $temp.remove();
     popup.estado_copy = "Copiado!";
   }catch(x){
-    mostrar_mensaje_flotante("ok","Error al copiar");
+    mostrar_mensaje_flotante("error","Error al copiar");
   }
 }
 function eliminar_opcion_usuario(o){
@@ -1114,9 +1198,9 @@ function usuario_seleccionado(o){
     if(popup_many.usuarios[i].id == id_ob){
       console.log("encontrado...",popup_many.usuarios_seleccionados.filter(obj => obj.id == id_ob))
       if(popup_many.usuarios_seleccionados.filter(obj => obj.id == id_ob).length == 0){
-
+        
         popup_many.usuarios_seleccionados.push({"id":popup_many.usuarios[i].id,"nombre":popup_many.usuarios[i].nombre});
-
+        
       }
       break;
     }
@@ -1128,30 +1212,30 @@ async function share(o,i,event){
   var id_ob = parseInt(o.id.split("share_")[1]);
   if(i == 1){
     //for(var w = 0; w<app.vacantes.length;w++){
-      //if(app.vacantes[w].id == id_ob){
-        //i = app.vacantes[w].label;
-        var data = get_vacante_cb(id_ob)
-        popup_many.label = "oportunidad";
-        popup_many.id = data.id;
-        popup_many.titulo = "Oportunidad en "+data.empresa;
-        popup_many.subtitulo = data.cargo;
-       // break;
-      //}
+    //if(app.vacantes[w].id == id_ob){
+    //i = app.vacantes[w].label;
+    var data = get_vacante_cb(id_ob)
+    popup_many.label = "oportunidad";
+    popup_many.id = data.id;
+    popup_many.titulo = "Oportunidad en "+data.empresa;
+    popup_many.subtitulo = data.cargo;
+    // break;
+    //}
     //}
   }else if (i==2){
     var data = get_persona_cb(id_ob)
     //for(var w = 0; w<app.personas.length;w++){
-      //if(app.personas[w].id == id_ob){
-        //i = app.personas[w].label;
-        popup_many.label = "contacto";
-        popup_many.id = data.id;
-        popup_many.titulo = "Contacto en "+data.ultima_empresa;
-        popup_many.subtitulo = data.nombre+" - "+data.ultimo_cargo;
-        document.getElementById("tipo_contacto").value = 1;
-        //break;
-      //}
+    //if(app.personas[w].id == id_ob){
+    //i = app.personas[w].label;
+    popup_many.label = "contacto";
+    popup_many.id = data.id;
+    popup_many.titulo = "Contacto en "+data.ultima_empresa;
+    popup_many.subtitulo = data.nombre+" - "+data.ultimo_cargo;
+    document.getElementById("tipo_contacto").value = 1;
+    //break;
     //}
-
+    //}
+    
   }
   document.getElementById("div_contenedor_popup_share").style.display="block";
   await sleep(100);
@@ -1161,7 +1245,7 @@ async function share(o,i,event){
 function conteo_atributos(arr){
   var atts = {};
   for(var o in arr){
-
+    
     if(atts.hasOwnProperty(arr[o].observacion)){
       atts[arr[o].observacion]++;
     }else{
@@ -1174,8 +1258,45 @@ function conteo_atributos(arr){
   return atts;
 }
 function selecciona_contacto(o){
-
+  
   conlis_red.filtros = ["#id:"+o.id.split("contacto_red_")[1]];
+}
+async function show_acuerdo(){
+  location.href = location.origin+"?id_vacante=12636"
+  //close_popup(1);
+  /*DEPRECIADO POR APAGAR LOS AGENTES DE TALENTO
+  if(app.usuario.convenio_busco == "si"){
+    mostrar_mensaje_flotante("ok","Ya cuentas con el acuerdo de agentes de talento")
+  }else{
+    document.getElementById("div_popup_convenio").style.display="block";
+    if(app.usuario.return != "error"){
+      popup_conveio.nombre = app.usuario.nombre;
+      popup_conveio.correo = app.usuario.mail;
+      popup_conveio.numero_identificacion = app.usuario.numero_identificacion;
+      popup_conveio.telefono = app.usuario.telefono;
+      popup_conveio.ultimo_cargo = app.usuario.ultimo_cargo;
+      popup_conveio.ultima_empresa = app.usuario.ultima_empresa;
+      popup_conveio.nivel_estudio = app.usuario.nivel_estudio;
+      popup_conveio.nivel_ingles = app.usuario.nivel_ingles;
+      popup_conveio.aspiracion_max = app.usuario.aspiracion_max;
+      popup_conveio.aspiracion_min = app.usuario.aspiracion_min;
+      popup_conveio.value_citys = {"name":app.usuario.ciudad};
+      popup_conveio.value_carreras = {"name":app.usuario.carrera};
+      if(typeof app.usuario.cargos_aspira != "undefined"){
+        for(var u of app.usuario.cargos_aspira){
+          popup_conveio.value_cargos.push({"name":u})
+        }
+      }
+      if(typeof app.usuario.cargos_aspira != "undefined"){
+        for(var u of app.usuario.relocaliza){
+          popup_conveio.value_citys_move.push({"name":u})
+        }
+      }
+    }
+    await sleep(100);
+    document.getElementById("div_popup_convenio").classList.remove("hide");
+  }*/
+  
 }
 async function share_item_fijo(id_vac,label="oportunidad"){
   document.getElementById("input_comentario").value = "";
@@ -1197,12 +1318,13 @@ async function share_item_fijo(id_vac,label="oportunidad"){
     }
     popup.imagen = imagenes_popup[label];
     popup.id = data.id;
-
-    if(data.tipo != ""){popup.tipo_oportunidad = tipo_oportunidad[ parseInt(data.tipo)].texto;}
+    popup.servicio  = data.servicio;
+    
+    if(data.tipo != ""){popup.tipo_oportunidad = tipo_oportunidad[ data.tipo].texto;}
     
     popup.titulo = data.cargo;
     popup.rango_salario = (data.rango_mayor+"" != "undefined" && data.rango_menor+"" != "undefined" && (data.rango_mayor+"").trim()+""+(data.rango_menor+"").trim() == "")?"":"Entre "+data.rango_menor+" y "+data.rango_mayor;
-    popup.subtitulo = "Vacante";
+    popup.subtitulo = "busca";
     popup.subtitulo2 = data.empresa;
     popup.titulo_texto1 = (popup.keywords.length == 0)?"":"Requisitos";
     popup.texto1 = (data.req != "undefined")?data.req:"No esta especificado";
@@ -1218,54 +1340,162 @@ async function share_item_fijo(id_vac,label="oportunidad"){
     document.getElementById("div_contenedor_popup").classList.add("show");
   }
 }
+function cumplimiento_req(o){
+  var id_req = parseInt(o.id.split("cumple_")[1])
+  var cumple = (o.id.includes("nocumple"))?false:true;
+  for(var o in popup.reqs){
+    if( popup.reqs[o].id_req == id_req){
+      popup.reqs[o].cumple = cumple;
+    }
+  }
+  
+}
+
 async function share_item(item,label,event){
-  event.stopPropagation();
-  document.getElementById("input_comentario").value = "";
-  //popup.contenido = link_teachable+videos["etiqueta_"+label].id;
-  //popup.texto_contenido =videos["etiqueta_"+label].titulo_video;
-  popup.keywords = [];
+  if(event != null){
+    event.stopPropagation();
+  }
+  
+  //document.getElementById("input_comentario").value = "";
+  
   popup.label = label;
   if(label == "oportunidad"){
-    //document.getElementById("contenedor_popup").className = "contenedor_popup";
-    //document.getElementById("sub_contenedor_popup_datos").className = "sub_contenedor_popup center";
     var data = get_vacante_cb(parseInt(item.id.split("share_etiqueta_")[1]))
-    var tmp_list = [];
-    if(typeof data["req"] != "undefined"){
-      tmp_list = data["req"].split(".");
-      for(u in tmp_list){
-        tmp_list[u] = tmp_list[u].replaceAll("\n"," ").trim();
-      }
-      popup.keywords = tmp_list;
-    }
+    console.log(data)
     popup.imagen = imagenes_popup[label];
+    popup.recompensa = (typeof data.recompensa != "undefined")?data.recompensa:"";
+    popup.recompensa1 = (typeof data.recompensa1 != "undefined")?data.recompensa1:"";
     popup.id = data.id;
-
-    if(data.tipo != ""){popup.tipo_oportunidad = tipo_oportunidad[ parseInt(data.tipo)].texto;}
+    popup.lista_preguntas = (typeof data.lista_preguntas != "undefined")?data.lista_preguntas:[];
+    popup.tipo_link = data.tipo_link;
+    popup.link_corto = data.link_corto;
+    if(data.tipo != ""){popup.tipo_oportunidad = tipo_oportunidad[ data.tipo].texto;}
     
+    popup.recompensa = new Intl.NumberFormat('es-co', {style: 'decimal', currency: 'COP'}).format(popup.recompensa);
+    popup.recompensa1 = new Intl.NumberFormat('es-co', {style: 'decimal', currency: 'COP'}).format(popup.recompensa1);
+    popup.id_user = data.id_user;
     popup.titulo = data.cargo;
-    //popup.rango_salario = (data.rango_mayor+"" != "undefined" && data.rango_menor+"" != "undefined" && (data.rango_mayor+"").trim()+""+(data.rango_menor+"").trim() == "")?"":
-    popup.rango_salario ="Entre "+data.rango_menor+" y "+data.rango_mayor;
-    popup.subtitulo = "Vacante";
+    popup.ciudad = data.ciudad;
+    popup.rango_menor = data.rango_menor
+    popup.rango_mayor = data.rango_mayor
+    
+    if(typeof data.rango_mayor == "object"){
+      popup.rango_salario = data.rango_mayor;
+    }/*else if(typeof data.rango_mayor == "string"){
+      popup.rango_salario = (data.rango_mayor+"" == "undefined" || data.rango_menor+"" == "undefined")?"":((data.rango_menor+"").trim() != "")?((data.rango_mayor+"").trim() != "")?[data.rango_menor+" a "+data.rango_mayor]:[data.rango_menor]:[""];
+    }*/
+    
+    popup.subtitulo = "busca";
     popup.subtitulo2 = data.empresa;
-    popup.titulo_texto1 = (popup.keywords.length == 0)?"":"Requisitos";
-    popup.texto1 = (data.req != "undefined")?data.req:"No esta especificado";
+    popup.titulo_texto1 = "Requisitos";
+    popup.lista_categorias = (typeof data.lista_cats != "undefined" && data.lista_cats.length > 0)?data.lista_cats:[];
     popup.titulo_texto2 = "Descripción de la vacante";
     popup.texto2 = (data.obs != "")?data.obs:"La vacante no tiene descripción";
     popup.titulo_texto3 = "";
     popup.texto3 = "Salario entre "+data.rango_menor+" y "+data.rango_mayor+" en "+data.ciudad;
     popup.link = data.link;
+    popup.servicio  = data.servicio;
+    popup.postulacion = data.postulacion;
+    popup.fecha = data.fecha;
     popup.resumen = data.cargo+" en "+data.empresa+"\n"+data.link;
+    
+    if(item.id.split("share_etiqueta_")[0].includes("postulame_")){
+      
+      if(typeof popup.reqs != "undefined" && popup.reqs.length > 0){
+        //LOGICA CUANDO SE PUEDE POSTULAR POR EL PORTAL
+        var pasa = true;
+        
+        
+        
+        if(pasa)
+        {
+          document.getElementById("contenedor_popup_postula_externa").style.display = "none";
+          document.getElementById("contenedor_popup_postula_intera").style.display = "block";
+          document.getElementById("requisitos").style.display = "block";
+        }else{
+          return;
+        }
+        if((item.id.split("share_etiqueta_")[0].includes("repre_"))){
+          popup.representando = 1
+          popup.tipo_envio = "representacion";
+        }else{
+          popup.postulando = 1;
+          popup.tipo_envio = "postulacion";
+        }
+      }else{
+        //LOGICA CUANDO SE NO PUEDE POSTULAR POR EL PORTAL
+        if(popup.link.includes("@")){
+          popup.postulando = 2;
+          popup.tipo_envio = "";
+          popup.copiar_texto(popup.link)
+          document.getElementById("mensaje_actualizado_redirecciona").innerHTML = "Copié el correo "+popup.link+" en tu portapapeles para que puedas pegarlo donde quieras.";
+          document.getElementById("contenedor_popup_postula_externa").style.display = "block";
+          document.getElementById("contenedor_popup_postula_intera").style.display = "none";
+
+        }else if(popup.valid_url(popup.link)){
+          
+          popup.postulando = 2;
+          popup.tipo_envio = "";
+          let domain = (new URL(popup.link));
+          document.getElementById("mensaje_actualizado_redirecciona").innerHTML = "Te estoy redireccionando a "+domain.hostname+"...";
+          document.getElementById("contenedor_popup_postula_externa").style.display = "block";
+          document.getElementById("contenedor_popup_postula_intera").style.display = "none";
+          document.getElementById("requisitos").style.display = "none";
+          
+          show_load();
+          await sleep(2000);
+          
+          window.open(popup.link);
+          document.getElementById("mensaje_actualizado_redirecciona").innerHTML = "Te redireccioné a "+domain.hostname+".";
+        }else{
+          mostrar_mensaje_flotante("error","Hay un error con los datos de esta vacante. Por favor comunicalo al soporte de Whatsapp del botón de abajo a la derecha.")
+        }
+      }
+      
+      show_load();
+    }else if(item.id.split("share_etiqueta_")[0].includes("refiere")){
+      popup.referido = "referido"
+      popup.tipo_envio = "referido";
+      document.getElementById("contenedor_popup_postula_externa").style.display = "none";
+      document.getElementById("contenedor_popup_postula_intera").style.display = "block";
+      document.getElementById("requisitos").style.display = "none";
+      show_load();
+    }else{
+      //ACCIONES QUE SOLO HACE CUANDO ENTRA
+      popup.reqs = []
+      for(var o in data.lista_reqs){
+        if(data.lista_reqs[o].trim() != "")
+        popup.reqs.push({"req":data.lista_reqs[o],"cumple":null,"motivo":"","id_req":o})
+      }
+      
+      console.log(typeof item.fijo_param == "undefined",item)
+      if(typeof item.fijo_param == "undefined"){
+        if(item.getAttribute("id_et") != null){
+          popup.id_et = item.getAttribute("id_et")
+        }else{
+          popup.id_et = -1;
+        }
+      }
+      
+    }
+    
+    popup.texto1 = (popup.reqs.length == 0)?"No esta especificado":"";
+    
     document.getElementById("div_contenedor_popup").style.display="block";
     await sleep(100);
     document.getElementById("div_contenedor_popup").classList.remove("hide");
     document.getElementById("div_contenedor_popup").classList.add("show");
+    
+    if(window.mobileCheck()){
+    document.getElementById("contenedor_vacantes_seleccionadas").style.display="block";
+    }
+    
   }else if(label == "contacto" || label == "proceso"){
-    //document.getElementById("contenedor_popup").className = "contenedor_popup extenso";
     var data = get_persona_cb(parseInt(item.id.split("share_etiqueta_")[1]))
     popup.imagen = imagenes_popup[label];
     popup.id = data.id;
     popup.titulo = data.nombre;
-    popup.rango_salario = (data.aspiracion_max+"" != "undefined" && data.aspiracion_min+"" != "undefined" && (data.aspiracion_min+"").trim()+""+(data.aspiracion_max+"").trim() == "")?"":"Entre "+data.aspiracion_min+" y "+data.aspiracion_max;
+    popup.rango_salario = (data.aspiracion_max+"" == "undefined" || data.aspiracion_min+"" == "undefined")?"No especificado":((data.aspiracion_min+"").trim() != "")?((data.aspiracion_max+"").trim() != "")?"Entre "+data.aspiracion_min+" y "+data.aspiracion_max:data.aspiracion_min:"No especificado";
     popup.ciudad = data.ciudad;
     popup.area = data.area;
     popup.sector = data.sector;
@@ -1279,12 +1509,12 @@ async function share_item(item,label,event){
       contacto_def = oculta_contenido(data.mail,"mail")+"\n"+oculta_contenido(data.telefono,"telefono");
     }
     popup.datos_contacto = contacto_def;
-    popup.subtitulo = data.ultimo_cargo;
-    popup.subtitulo2 = data.ultima_empresa;
+    popup.subtitulo = "";
+    popup.subtitulo2 = data.ultimo_cargo +"en "+ data.ultima_empresa;
     popup.titulo_texto1 = "Perfil";
     
     popup.texto1 = (typeof data.cargos_aplica != "undefined" && data.cargos_aplica.trim() != "")?data.cargos_aplica:"El usuario aun no tiene su perfil actualizado";
-
+    
     
     popup.logros = (typeof data.logros != "undefined" && data.logros != "")?data.logros:"El usuario no ha cargado sus logros";
     
@@ -1300,7 +1530,7 @@ async function share_item(item,label,event){
     }
     if(typeof data.comentarios != "undefined" && data.comentarios.length > 0){
       popup.titulo_texto3 = "¿Que dicen los que han interactuado con "+data.nombre.split(" ")[0]+"?";
-
+      
       var comentarios = conteo_atributos(data.comentarios);
       var predominante = "";
       var porcentaje_predominante = 0;
@@ -1322,26 +1552,139 @@ async function share_item(item,label,event){
     popup.texto2+"\n"+
     popup.titulo_texto3+"\n"+
     popup.texto3;
-
+    
     
     document.getElementById("div_contenedor_popup").style.display="block";
     await sleep(100);
     document.getElementById("div_contenedor_popup").classList.remove("hide");
     document.getElementById("div_contenedor_popup").classList.add("show");
     if(typeof item.id != "undefined" && !item.id.includes("buscar_") ){
-
+      
       document.getElementById("sub_contenedor_popup_datos").className = "sub_contenedor_popup left";
       if(app.usuario.tipo != 13){
         await sleep(100);
-      //document.getElementById("contenedor_popup").classList.add("extenso");
+        //document.getElementById("contenedor_popup").classList.add("extenso");
+        
+        get_network_filtered([data.id]);
+      }
+    }
+    
+  }
+}
+
+function validar_formulario(form){
+  var vars = []
+  switch(form){
+    case "postulacion":
+    var pasa = true;
+    
+    if(popup.tipo_envio !== "referido"){
+      for (var o in popup.reqs) {
+        var id_req = parseInt(o) + 1;
+        if (popup.reqs[o].cumple == null) {
+          mostrar_mensaje_flotante("error","Aun te falta responder si cumples con el requisito " + id_req);
+          pasa = false;
+        } else if (popup.reqs[o].cumple == true && popup.reqs[o].motivo.trim() == "") {
+          mostrar_mensaje_flotante("error","Especifica los motivos por los que cumples el requisitos " + id_req);
+          pasa = false;
+        }
+      }
+    }
+    if (pasa != true) {
+      return false;
+    }
+    
+    vars = [
+      {"obj":popup.usuario.nombre,"mensaje":"nombre","dependencia":"none","valordep":null},
+      {"obj":popup.usuario.telefono,"mensaje":"telefono","dependencia":popup.postulando,"valordep":1},
+      {"obj":popup.usuario.mail,"mensaje":"correo","dependencia":popup.postulando,"valordep":1},
+      //{"obj":popup.usuario.aspiracion_max,"mensaje":"rango en que esta tu aspiración salarial","dependencia":"none","valordep":null},
+      {"obj":popup.usuario.aspiracion_min,"mensaje":"salario actual","dependencia":popup.postulando,"valordep":1},
+      {"obj":popup.usuario.aspiracion_max,"mensaje":"campo de aspiración salarial","dependencia":popup.postulando,"valordep":1},
+      {"obj":popup.usuario.pass,"mensaje":"campo de contraseña","dependencia":app.usuario.return+"-"+popup.postulando,"valordep":["error-1"]},
+      {"obj":popup.filelist,"mensaje":"campo de hoja de vida","dependencia":popup.check_last_cv+"","valordep":["false"]}
+    ]
+    
+    break;
+    case "vacante":
+    if(formulario_vacante.etapa == 2){
+      var indx = 0;
+      for(var o of formulario_vacante.value_cats){
+        indx++;
+        if(o.tit == "Otro"){
+          if(typeof o.otro == "undefined" || o.otro.trim() == ""){
+            mostrar_mensaje_flotante("error","Categoría #"+indx+" necesita un nombre.");
+            return false;
+          }
+        }
+        if(o.des.trim() == ""){
+          mostrar_mensaje_flotante("error","Debes describir la categoria #"+indx);
+          return false;
+        }
+      }
+    }
+    if(formulario_vacante.etapa == 1){
+      var indx=0;
+      for(var o of formulario_vacante.value_reqs){
+        indx++;
+        if(o.des.trim() == ""){
+          mostrar_mensaje_flotante("error","Debes describir el requerimiento #"+indx);
+          return false;
+        }
+      }
+    }
+     
+    vars = [
+      {"obj":formulario_vacante.usuario.ultima_empresa,"mensaje":"empresa","dependencia":formulario_vacante.etapa,"valordep":[0]},
+      {"obj":formulario_vacante.cargo,"mensaje":"cargo","dependencia":formulario_vacante.etapa,"valordep":[0]},
+      {"obj":formulario_vacante.confidencial,"mensaje":"confidencial","dependencia":formulario_vacante.etapa,"valordep":[0]},
+      {"obj":formulario_vacante.value_reqs,"mensaje":"campo de requerimientos de la vacante","dependencia":formulario_vacante.etapa,"valordep":[1]},
+      {"obj":formulario_vacante.value_cats,"mensaje":"campo de categorias de la vacante","dependencia":formulario_vacante.etapa,"valordep":[2]},
+
+
+      {"obj":formulario_vacante.nombre_contacto,"mensaje":"nombre","dependencia":formulario_vacante.etapa,"valordep":[3]},
+      {"obj":formulario_vacante.cargo_contacto,"mensaje":"cargo","dependencia":formulario_vacante.etapa,"valordep":[3]},
+      {"obj":formulario_vacante.correo_contacto,"mensaje":"correo","dependencia":formulario_vacante.etapa,"valordep":[3]},
+      {"obj":formulario_vacante.telefono_contacto,"mensaje":"telefono","dependencia":formulario_vacante.etapa,"valordep":[3]},
+      {"obj":formulario_vacante.password,"mensaje":"campo de contraseña","dependencia":formulario_vacante.etapa+"-"+formulario_vacante.usuario.return,"valordep":['3-error']}
       
-      get_network_filtered([data.id]);
+    ]
+    break;
+    case "acuerdo":
+    vars = [
+      {"obj":popup_conveio.correo,"mensaje":"correo","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.nombre,"mensaje":"nombre","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.salario_actual,"mensaje":"salario actual","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.telefono,"mensaje":"telefono","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.numero_identificacion,"mensaje":" número de identificación","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.ultimo_cargo,"mensaje":"campo de ultimo cargo","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.ultima_empresa,"mensaje":"campo de ultima empresa","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.value_citys,"mensaje":"campo de ciudad","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.value_citys_move,"mensaje":"campo de ciudades a donde te mudarias","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.value_carreras,"mensaje":"campo de carrera","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.usuario.aspiracion_max,"mensaje":"campo de aspiración salarial","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.usuario.aspiracion_min,"mensaje":"campo de salario actual","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.value_cargos,"mensaje":"campo de cargos a los que aplicas","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.nivel_estudio,"mensaje":"nivel de estudio","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.nivel_ingles,"mensaje":"nivel de ingles","dependencia":"none","valordep":null},
+      //{"obj":popup_conveio.sector,"mensaje":"campo de industrias","dependencia":"none","valordep":null},
+      {"obj":popup_conveio.password,"mensaje":"campo de contraseña","dependencia":app.usuario.return,"valordep":['error']}
+    ]
+    break;
+  }
+  for(var o of vars){
+    if(o.dependencia == "none" || (o.dependencia != null && (""+o.valordep).includes(o.dependencia))){
+      if(typeof o.obj == "undefined" || (o.obj instanceof Array && o.obj.length == 0) || (!(o.obj instanceof Array) && o.obj.toString().trim() == "")){
+        mostrar_mensaje_flotante("error","Debes diligenciar el "+o.mensaje)
+        return false;
+      }
     }
   }
+  return true;
+}
 
-}
-document.getElementById("sub_contenedor_popup_comentarios").style.display="none";
-}
+
+
 function eliminar_comentario(o){
   var id_com = parseInt(o.id.split("eliminar_comentario_")[1]);
   delete_comentario(id_session,popup.id_et,id_com)
@@ -1383,14 +1726,14 @@ async function share_etiqueta(o,event){
   }
   popup.label = data.label;
   switch(data.label){
-
+    
     case "contacto":
     data.data = get_persona_cb(data.data.id)
     popup.id = data.data.id;
     popup.titulo = data.data.nombre;
     popup.rango_salario = (typeof data.data.aspiracion_min != "undefined" && (data.data.aspiracion_min+"").trim()+""+(data.data.aspiracion_max+"").trim() == "")?"":"Entre "+data.data.aspiracion_min+" y "+data.data.aspiracion_max;
-    popup.subtitulo = data.data.ultimo_cargo;
-    popup.subtitulo2 = data.data.ultima_empresa;
+    popup.subtitulo = "";
+    popup.subtitulo2 = data.ultimo_cargo +"en "+ data.ultima_empresa;
     popup.titulo_texto1 = "Perfil";
     popup.ciudad = data.data.ciudad;
     popup.area = data.data.area;
@@ -1400,7 +1743,7 @@ async function share_etiqueta(o,event){
     popup.profesion = data.data.profesion;
     popup.logros = (typeof data.data.logros != "undefined" && data.data.logros != "")?data.data.logros:"El usuario no ha cargado sus logros";
     popup.texto1 = (typeof data.data.cargos_aplica != "undefined" && data.data.cargos_aplica.trim() != "")?data.data.cargos_aplica:"El usuario aun no tiene su perfil actualizado";
-
+    
     var contacto_def = "";
     if(app.sesion.data.admin == 1 || app.sesion.data.tipo == 13){
       contacto_def = data.data.mail+"\n"+data.data.telefono;
@@ -1421,7 +1764,7 @@ async function share_etiqueta(o,event){
     }
     if(typeof data.data.comentarios != "undefined" && data.data.comentarios.length > 0){
       popup.titulo_texto3 = "¿Que dicen los que han interactuado con "+data.data.nombre.split(" ")[0]+"?";
-
+      
       var comentarios = conteo_atributos(data.data.comentarios);
       var predominante = "";
       var porcentaje_predominante = 0;
@@ -1457,7 +1800,7 @@ async function share_etiqueta(o,event){
     
     popup.id = data.data.id;
     popup.titulo = data.data.cargo;
-    popup.subtitulo = "Vacante";
+    popup.subtitulo = "busca";
     popup.subtitulo2 = data.data.empresa;
     popup.titulo_texto1 = (popup.keywords.length == 0)?"":"Requisitos";
     popup.texto1 = (data.data.req != "undefined")?data.data.req:"No esta especificado";
@@ -1474,8 +1817,9 @@ async function share_etiqueta(o,event){
     data.data_persona = get_persona_cb(data.data_persona.id)
     popup.id = data.data_persona.id;
     popup.titulo = data.data_persona.nombre;
-    popup.subtitulo = data.data_persona.ultimo_cargo;
-    popup.subtitulo2 = data.data_persona.ultima_empresa;
+    popup.subtitulo = "";
+    popup.subtitulo2 = data.data_persona.ultimo_cargo +"en "+ data.data_persona.ultima_empresa;
+    
     popup.titulo_texto1 = "Datos de contacto para "+tipos_procesos[parseInt(data.tipo_proceso)].texto;
     popup.texto1 = (data.data_persona.mail.trim()+""+(data.data_persona.telefono+"").trim() != "")?data.data_persona.mail+"\n"+data.data_persona.telefono:"No hay datos de contacto";;
     popup.titulo_texto2 = "¿Cual es la mejor forma de comunicarme con "+data.data_persona.nombre.split(" ")[0]+"?";
@@ -1490,7 +1834,7 @@ async function share_etiqueta(o,event){
     }
     if(typeof data.data_persona.comentarios != "undefined" && data.data_persona.comentarios.length > 0){
       popup.titulo_texto3 = "¿Que dicen los que han interactuado con "+data.data_persona.nombre.split(" ")[0]+"?";
-
+      
       var comentarios = conteo_atributos(data.data_persona.comentarios);
       var predominante = "";
       var porcentaje_predominante = 0;
@@ -1516,12 +1860,11 @@ async function share_etiqueta(o,event){
   }
   document.getElementById("sub_contenedor_popup_datos").className = "sub_contenedor_popup left2";
   
-  document.getElementById("sub_contenedor_popup_comentarios").style.display="block";
   document.getElementById("div_contenedor_popup").style.display="block";
   await sleep(100);
   document.getElementById("div_contenedor_popup").classList.remove("hide");
   document.getElementById("div_contenedor_popup").classList.add("show");
-
+  
 }
 function cargar_novedad(){
   accion = "crear_observacion";
@@ -1550,12 +1893,12 @@ function edit_etiqueta(o,event){
         console.log("no esta");
       }
     }
-
+    
   }
   show_contenedor("contenedor_right",config[i])
-
+  
   switch(config[i].div){
-
+    
     case "contacto":
     data.data = get_persona_cb(data.data.id);
     document.getElementById("id_contacto").value = data.data.id;
@@ -1569,13 +1912,13 @@ function edit_etiqueta(o,event){
     document.getElementById("crystal_contacto").value = data.data.crystal;
     document.getElementById("personalidad_contacto").value = data.personalidad;
     document.getElementById("obs_contacto").value = data.obs;
-
+    
     break;
-
-
+    
+    
     case "oportunidad":
     data.data = get_vacante_cb(data.data.id)
-
+    
     document.getElementById("id_oportunidad").value = data.data.id;
     document.getElementById("empresa_oportunidad").value = data.data.empresa;
     document.getElementById("cargo_oportunidad").value = data.data.cargo;
@@ -1600,8 +1943,8 @@ function edit_etiqueta(o,event){
     for(var i = 0; i < reqs.length;i++){
       document.getElementById("req"+(i+1)).value = reqs[i]
     }
-
-
+    
+    
     break;
     case "proceso":
     data.data_persona = get_persona_cb(data.id_persona);
@@ -1619,7 +1962,7 @@ function edit_etiqueta(o,event){
     document.getElementById("telefono_proceso").value =data.data_persona.telefono;
     document.getElementById("tipo_proceso").value =data.tipo_proceso;
     document.getElementById("obs_proceso").value=data.obs;
-
+    
     break;
     case "observacion":
     document.getElementById("observacion").value=data.valor;
@@ -1645,12 +1988,12 @@ function edit_item(o,event,tipo){
         console.log("no esta");
       }
     }
-
+    
   }
   show_contenedor("contenedor_right",config[i])
-
+  
   switch(config[i].div){
-
+    
     case "contacto":
     data = get_persona_cb(parseInt(id_et));
     document.getElementById("id_contacto").value = data.id;
@@ -1661,13 +2004,13 @@ function edit_item(o,event,tipo){
     document.getElementById("mail_contacto").value = data.mail;
     document.getElementById("telefono_contacto").value = data.telefono;
     document.getElementById("crystal_contacto").value = data.crystal;
-
+    
     break;
-
-
+    
+    
     case "oportunidad":
     data = get_vacante_cb(parseInt(id_et))
-
+    
     document.getElementById("id_oportunidad").value = data.id;
     document.getElementById("empresa_oportunidad").value = data.empresa;
     document.getElementById("cargo_oportunidad").value = data.cargo;
@@ -1678,10 +2021,10 @@ function edit_item(o,event,tipo){
     document.getElementById("tipo_oportunidad").value = data.tipo;
     document.getElementById("obs_oportunidad").value = data.obs;
     //document.getElementById("req_oportunidad").value = data.req;
-
-
+    
+    
     break;
-
+    
   }
 }
 function crear(i){
@@ -1710,8 +2053,8 @@ function crear(i){
   for(var j in config){
     if(config[j].div == config[i].div){
       document.getElementById("div_crear_"+config[i].div).style.display="block";
-      if(!window.location.href.includes("/content") && !window.location.href.includes("/people") && !window.location.href.includes("/admin") && !window.location.href.includes("/app") && !window.location.href.includes("/activacion") && !window.location.href.includes("/login") && !window.location.href.includes("/profile") && !window.location.href.includes("/verificacion")){
-
+      if(esta_en_index()){
+        
         if(config[i].div == "login"){
           document.getElementById("div_info_login").style.display = "block";
           document.getElementById("boton_call2action").style.display = "none";
@@ -1720,7 +2063,7 @@ function crear(i){
           document.getElementById("div_info_oportunidad").style.display = "block";
           document.getElementById("div_info_login").style.display = "none";
           document.getElementById("boton_call2action").style.display = "block";
-
+          
         }
       }
     }else{
@@ -1730,32 +2073,35 @@ function crear(i){
         console.log("no esta");
       }
     }
-
+    
   }
   show_contenedor("contenedor_right",config[i])
-
+  
 }
 
 async function show_popup_video(o){
-  console.log("reproducir video",o)
-  close_popup(3);
-  if(videos[o].link == ""){
-    document.getElementById("player").style.display = "none";
-    document.getElementById("sorry").style.display = "block";
-  }else{
-    document.getElementById("sorry").style.display = "none";
-    document.getElementById("player").style.display = "block";
-  player.loadVideoById(videos[o].link);
-  
-  player.playVideo();
-}
-  //video.descripcion_video = info_video.descripcion_video;
-  //video.titulo_video = info_video.titulo_video;
-
-  document.getElementById("div_contenedor_video").style.display="block";
-  await sleep(100);
-  document.getElementById("div_contenedor_video").classList.remove("hide");
-  document.getElementById("div_contenedor_video").classList.add("show");
+  //LOGICA BLOQUEADA MIENTAS QUE SE DEFINE EL TEMA DE CONTENIDOS
+  if(false){
+    console.log("reproducir video",o)
+    close_popup(3);
+    if(videos[o].link == ""){
+      document.getElementById("player").style.display = "none";
+      document.getElementById("sorry").style.display = "block";
+    }else{
+      document.getElementById("sorry").style.display = "none";
+      document.getElementById("player").style.display = "block";
+      player.loadVideoById(videos[o].link);
+      
+      player.playVideo();
+    }
+    //video.descripcion_video = info_video.descripcion_video;
+    //video.titulo_video = info_video.titulo_video;
+    
+    document.getElementById("div_contenedor_video").style.display="block";
+    await sleep(100);
+    document.getElementById("div_contenedor_video").classList.remove("hide");
+    document.getElementById("div_contenedor_video").classList.add("show");
+  }
 }
 function close_popup_atts(o){
   document.getElementById(o.id.split("_close")[0]).classList.add("hidden");
@@ -1772,7 +2118,7 @@ function selecciona_order(o){
     if(contenedores_listas[i].div == div){      
       var lista = contenedores_listas[i].server_identifier;
       for (var ww in contenedores_listas[i].lista_atts_orden["Orden:"]){
-
+        
         if(contenedores_listas[i].lista_atts_orden["Orden:"][ww].id == att){
           var asc = contenedores_listas[i].lista_atts_orden["Orden:"][ww].asc;
           if(typeof lista != "undefined"){
@@ -1792,7 +2138,7 @@ function selecciona_order(o){
       }
     }
   }
-
+  
 }
 function selecciona_att(o){
   var tmp = o.id.split("_att_");
@@ -1804,7 +2150,7 @@ function selecciona_att(o){
       document.getElementById(div+"_popup_filtro").classList.add("hidden");
     }
   }
-
+  
 }
 function borrar_att_tmp(o){
   var tmp = o.id.split("_att_tmp");
@@ -1812,18 +2158,23 @@ function borrar_att_tmp(o){
   for(var i in contenedores_listas){
     if(contenedores_listas[i].div == div){
       contenedores_listas[i].att_tmp = "";  
-
+      
     }
   }
-
+  
+}
+function valida_mas_items(item){
+  
+  get_more_items(item)
+  
 }
 async function borrar_filtro(o){
-
+  
   var div = o.id.split("borrar_")[1].split("-")[0];
   var index = parseInt(o.id.split("-")[1]);
   for(var i in contenedores_listas){
     if(contenedores_listas[i].div == div){
-
+      
       contenedores_listas[i].filtros.splice(index,1);
       if(contenedores_listas[i].filtros.length == 0){
         contenedores_listas[i].order = "fecha";
@@ -1841,9 +2192,114 @@ async function borrar_filtro(o){
   }
   
 }
-
+async function busqueda_persona(e = null){
+  if(e == null || e.key == "Enter"){
+    var val = document.getElementById("buscador_index").value;
+    if(val.trim() == ""){
+      conlis_objetos_admin.filtros = [];
+    }else{
+      conlis_objetos_admin.filtros = [val];
+    }
+    conlis_objetos_admin.order = (val.trim() == "")?"fecha":"coincidencia";
+    conlis_objetos_admin.asc = 0;
+    filtrar_listas(conlis_objetos_admin.filtros,"contactos",conlis_objetos_admin.order,conlis_objetos_admin.asc);
+    
+  }
+}
+async function busqueda_index(e = null){
+  if(e == null || e.key == "Enter"){
+    var val = document.getElementById("buscador_index").value;
+    if(val.trim() == ""){
+      conlis_objetos_admin.filtros = [];
+    }else{
+      conlis_objetos_admin.filtros = [val];
+    }
+    conlis_objetos_admin.order = (val.trim() == "")?"fecha":"coincidencia";
+    conlis_objetos_admin.asc = 0;
+    filtrar_listas(conlis_objetos_admin.filtros,"vacantes",conlis_objetos_admin.order,conlis_objetos_admin.asc);
+    
+  }
+}
+function nueva_categoria(){
+  formulario_vacante.value_cats.push({"tit":"","des":""})
+}
+function borrar_categoria(o){
+  var indx = parseInt(o.id.split("_")[1])
+  var prev = formulario_vacante.value_cats[indx].tit;
+  formulario_vacante.value_cats.splice(indx,1);
+  formulario_vacante.cat_options.push({"text":prev})
+}
+function nuevo_requerimiento(){
+  formulario_vacante.value_reqs.push({"des":""})
+}
+function borrar_requerimiento(o){
+  var indx = parseInt(o.id.split("_")[1])
+  formulario_vacante.value_reqs.splice(indx,1);
+}
+/*async function guarda_categoria(e = null){
+  if(e != null && e.key == "Enter")
+  e.preventDefault();
+  if(e == null || e.key == "Enter"){
+    var des = formulario_vacante.categoria_sel;
+    if(des.trim() == ""){
+      mostrar_mensaje_flotante("error","Debes diligenciar la descripción de la categoria");
+      return
+    }
+    var cat = (formulario_vacante.cat_selected != "otro")?formulario_vacante.cat_selected:formulario_vacante.cat_otro;
+    
+    
+    var tit = (formulario_vacante.cat_selected != "otro")?formulario_vacante.cat_options.filter(o => o.value == cat)[0].text:formulario_vacante.cat_otro;
+    var val = {des,tit} 
+    if(formulario_vacante.cat_selected == "otro"){
+      formulario_vacante.cat_otro = "";
+    }
+    formulario_vacante.value_cats.unshift(val)
+    formulario_vacante.categoria_sel = ''
+    formulario_vacante.cat_selected = ''
+    
+    
+    
+  }
+}
+function action_cat(o){
+  
+  var indx = parseInt(o.id.split("_")[1])
+  if(o.id.includes("edit")){
+    formulario_vacante.categoria_sel = formulario_vacante.value_cats[indx]["des"]
+    formulario_vacante.cat_selected = formulario_vacante.value_cats[indx]["cat"]
+  }
+  formulario_vacante.value_cats.splice(indx,1);
+}x
+async function guarda_requerimiento(e = null){
+  if(e != null && e.key == "Enter")
+  e.preventDefault();
+  if(e == null || e.key == "Enter"){
+    
+    var val = formulario_vacante.requerimiento_sel;
+    
+    if(val.trim() != ""){
+      if(formulario_vacante.value_reqs.length < 7){
+        formulario_vacante.value_reqs.unshift(val)
+        formulario_vacante.requerimiento_sel = ''
+      }else{
+        mostrar_mensaje_flotante("error","Puedes ingres máximo 7 requerimientos")
+      }
+      
+    }
+  }else{
+    mostrar_mensaje_flotante("error","Debes diligenciar la descripción del requerimiento")
+  }
+}
+function action_req(o){
+  
+  var indx = parseInt(o.id.split("_")[1])
+  if(o.id.includes("edit")){
+    formulario_vacante.requerimiento_sel = formulario_vacante.value_reqs[indx]
+  }
+  formulario_vacante.value_reqs.splice(indx,1);
+}*/
 async function keyword_selected(e,o){
-
+  
   if (e.key=="Enter") {
     for(var i in contenedores_listas){
       if(contenedores_listas[i].div == o.id && o.value.trim().replace(/(\r\n|\n|\r)/gm,"") != ""){
@@ -1858,7 +2314,7 @@ async function keyword_selected(e,o){
           }
           contenedores_listas[i].att_tmp = "";
           
-
+          
         }else{
           contenedores_listas[i].order = "coincidencia";
           contenedores_listas[i].asc = 0;
@@ -1887,7 +2343,7 @@ async function keyword_selected(e,o){
 }
 
 function verify_data(i){
-
+  
   switch(accion){
     case "crear_cargue_masivo":
     return false;
@@ -1922,8 +2378,8 @@ function verify_data(i){
     break;
     case "crear_oportunidad":
     case "editar_oportunidad":
-
-
+    
+    
     if(document.getElementById("empresa_oportunidad").value.trim() == ""){
       mostrar_mensaje_flotante("error","La empresa es obligatoria");
       return false;
@@ -1948,9 +2404,9 @@ function verify_data(i){
     //var words_obs = document.getElementById("obs_oportunidad").value.trim().split(" ");
     if(app.usuario.tipo == 13 || app.sesion.data.admin == 1){
       if(document.getElementById("req1").value.trim() == "" ||
-        document.getElementById("req2").value.trim() == "" ||
-        document.getElementById("req3").value.trim() == "" ||
-        document.getElementById("req4").value.trim() == "")
+      document.getElementById("req2").value.trim() == "" ||
+      document.getElementById("req3").value.trim() == "" ||
+      document.getElementById("req4").value.trim() == "")
       {
         mostrar_mensaje_flotante("error","Debe diligenciar por lo menos 4 requerimientos");
         return false;
@@ -1964,11 +2420,11 @@ function verify_data(i){
       //  mostrar_mensaje_flotante("error","La descripción de la oportunidad debe tener mínimo 10 palabras.");
       //  return false;
       //}
-
+      
     }
     return true;
     break;
-
+    
     case "crear_observacion":
     case "editar_observacion":
     if(document.getElementById("input_novedad").value.trim() == ""){
@@ -1977,7 +2433,7 @@ function verify_data(i){
     }
     return true;    
     break;
-
+    
     case "crear_proceso":
     case "editar_proceso":
     if(document.getElementById("cargo_proceso").value.trim() == ""){
@@ -1996,7 +2452,7 @@ function verify_data(i){
       mostrar_mensaje_flotante("error","Debes diligenciar el nombre de tu contacto");
       return false;
     }
-
+    
     if(document.getElementById("tipo_proceso").value.trim() == ""){
       mostrar_mensaje_flotante("error","Debes diligenciar el tipo de proceso que estas cursando");
       return false;
@@ -2018,35 +2474,35 @@ function verify_data(i){
       mostrar_mensaje_flotante("error","El cargo es obligatorio");
       return false;
     }
-
+    
     if(document.getElementById("tipo_servicio").value == "recompensa"){
       if(document.getElementById("recompensa").value.trim() == ""){
         mostrar_mensaje_flotante("error","Si vas a dar recompensa, debes especificar el valor");
         return false;
       }
-
+      
     }
-
+    
     /*var words_obs = document.getElementById("obs_oportunidad").value.trim().split(" ");
-
+    
     if(words_obs.length < 10){
       mostrar_mensaje_flotante("error","La descripción de la oportunidad debe tener mínimo 10 palabras.");
       return false;
     }*/
     
-
+    
     if(document.getElementById("req1").value.trim() == "" ||
-      document.getElementById("req2").value.trim() == "" ||
-      document.getElementById("req3").value.trim() == "" )
+    document.getElementById("req2").value.trim() == "" ||
+    document.getElementById("req3").value.trim() == "" )
     {
       mostrar_mensaje_flotante("error","Debes tener por lo menos 3 criterios obligatorios para esta vacante");
       return false;
     }
-
+    
     if(document.getElementById("nombre_usuario").value.trim() == "" ||
-      document.getElementById("empresa_oportunidad").value.trim() == "" ||
-      document.getElementById("correo_usuario").value.trim() == "" ||
-      document.getElementById("telefono_usuario").value.trim() == "")
+    document.getElementById("empresa_oportunidad").value.trim() == "" ||
+    document.getElementById("correo_usuario").value.trim() == "" ||
+    document.getElementById("telefono_usuario").value.trim() == "")
     {
       mostrar_mensaje_flotante("error","Faltan datos por diligenciar");
       return false;
@@ -2056,15 +2512,15 @@ function verify_data(i){
     case "crear_usuario":
     case "editar_usuario":
     if(document.getElementById("linkedin_usuario").value.trim() == "" ||
-      document.getElementById("nombre_usuario").value.trim() == "" ||
-      document.getElementById("cargo_usuario").value.trim() == "" ||
-      document.getElementById("empresa_usuario").value.trim() == "" ||
-      document.getElementById("mail_usuario").value.trim() == "" ||
-      document.getElementById("telefono_usuario").value.trim() == "" ||
-      document.getElementById("aspiracion_min_usuario").value.trim() == "" ||
-      document.getElementById("aspiracion_max_usuario").value.trim() == "" ||
-      document.getElementById("area_usuario").value.trim() == "" ||
-      document.getElementById("estado_usuario").value.trim() == "")
+    document.getElementById("nombre_usuario").value.trim() == "" ||
+    document.getElementById("cargo_usuario").value.trim() == "" ||
+    document.getElementById("empresa_usuario").value.trim() == "" ||
+    document.getElementById("mail_usuario").value.trim() == "" ||
+    document.getElementById("telefono_usuario").value.trim() == "" ||
+    document.getElementById("aspiracion_min_usuario").value.trim() == "" ||
+    document.getElementById("aspiracion_max_usuario").value.trim() == "" ||
+    document.getElementById("area_usuario").value.trim() == "" ||
+    document.getElementById("estado_usuario").value.trim() == "")
     {
       mostrar_mensaje_flotante("error","Faltan datos por diligenciar");
       return false;
@@ -2074,21 +2530,25 @@ function verify_data(i){
     case "crear_job_hacker":
     case "editar_job_hacker":
     if(document.getElementById("nombre_job_hacker").value.trim() == "" ||
-      document.getElementById("cargo_job_hacker").value.trim() == "" ||
-      document.getElementById("empresa_job_hacker").value.trim() == "" ||
-      document.getElementById("mail_job_hacker").value.trim() == "" ||
-      document.getElementById("telefono_job_hacker").value.trim() == "")
+    document.getElementById("cargo_job_hacker").value.trim() == "" ||
+    document.getElementById("empresa_job_hacker").value.trim() == "" ||
+    document.getElementById("mail_job_hacker").value.trim() == "" ||
+    document.getElementById("telefono_job_hacker").value.trim() == "")
     {
       mostrar_mensaje_flotante("error","Faltan datos por diligenciar");
       return false;
     }
-
+    
     return true; 
     break;
     case "crear_sesion":
     case "editar_sesion":
     return true;
   }
+}
+function remove_recom(i){
+  listas_recomendacion[i].objeto.recomendaciones =[];
+  listas_recomendacion[i].objeto.recom_sel = -1; 
 }
 
 function select_recom(i,o){
@@ -2100,11 +2560,11 @@ function select_recom(i,o){
     for(var jj = 0;jj<ids.length;jj++){
       var b = document.getElementById(ids[jj]);
       b.value = texto.split("--")[jj].trim()
-
+      
     }
     var b = document.getElementById(id);
     recomendaciones(i,b)
-
+    
   }else{
     var b = document.getElementById(id);
     b.value = o.innerHTML.trim();
@@ -2112,11 +2572,7 @@ function select_recom(i,o){
   }
   
 }
-
-function remove_recom(i){
-  listas_recomendacion[i].objeto.recomendaciones =[];
-  listas_recomendacion[i].objeto.recom_sel = -1; 
-}
+/*
 function selecciona_tipo_servicio(){
   var val = document.getElementById("tipo_servicio").value;
   if(val != "recompensa"){
@@ -2126,8 +2582,6 @@ function selecciona_tipo_servicio(){
     document.getElementById("div_recompensa").style.display = "block";
   }
 }
-
-
 function explore_recom(e,i,o){
   var evento = false;
   var selected = false;
@@ -2142,7 +2596,7 @@ function explore_recom(e,i,o){
     }else{
       listas_recomendacion[i].objeto.recom_sel = 0;
     }
-
+    
     break;
     case "ArrowUp":
     evento = true;
@@ -2161,21 +2615,21 @@ function explore_recom(e,i,o){
     break;
   }
   if(evento){
-
+    
     var objs = o.parentNode.getElementsByClassName("recomendaciones")[0].children;
     if(objs.length == 1 && selected){
       o.value = objs[0].innerHTML.trim();
       recomendaciones(i,objs[0])
     }else{
       for(var l in objs){
-
+        
         if(typeof objs[l].id != "undefined"){
           if(selected){
             if(objs[l].id.includes("_reco"+listas_recomendacion[i].objeto.recom_sel)){
               o.value = objs[l].innerHTML.trim();
               recomendaciones(i,objs[l])
             }
-
+            
           }else{
             if(objs[l].id.includes("_reco"+listas_recomendacion[i].objeto.recom_sel)){
               objs[l].classList.add("focus");
@@ -2187,37 +2641,38 @@ function explore_recom(e,i,o){
       }
     }
   }
-
-
-
+  
+  
+  
 }
 function recomendaciones(i,o){
   var t = o.value;
   var salida = []
   listas_recomendacion[i].objeto.recom_sel = -1; 
-
+  
   var comp = []
   listas_recomendacion[i].lista.forEach(element => comp.push(element.substr(0, t.length)));
-
+  
   var f = fuzzball.extract(t, comp, {scorer: fuzzball.token_set_ratio,limit: 6,cutoff: 80});
   for(var w in f){
     salida.push(listas_recomendacion[i].lista[f[w][2]])
   }
   if(salida.length == 1 && standarize_attribute(salida[0] == standarize_attribute(t))){
-   listas_recomendacion[i].objeto.recomendaciones = [];  
-
- }else if(t.trim() == ""){
-  listas_recomendacion[i].objeto.recomendaciones =[];
-}else{
-  listas_recomendacion[i].objeto.recomendaciones = salida;
+    listas_recomendacion[i].objeto.recomendaciones = [];  
+    
+  }else if(t.trim() == ""){
+    listas_recomendacion[i].objeto.recomendaciones =[];
+  }else{
+    listas_recomendacion[i].objeto.recomendaciones = salida;
+  }
+  
+  
+  
 }
-
-
-
-}
+*/ 
 function selecciona_sesion(){
   formulario.sesion_seleccionada = document.getElementById("sesion").value;
-
+  
 }
 function guardar_candidato(){
   label="contacto";
@@ -2330,8 +2785,8 @@ function call2action_index_vac(){
   }else{
     console.log("error con los datos")
   }
-
-
+  
+  
   
 }
 function call2action_data_perfil(){
@@ -2359,9 +2814,9 @@ function call2action(){
     "]]personalidad[["+document.getElementById("personalidad_contacto_perfil").value+
     "]]obs[["+document.getElementById("obs_contacto_perfil").value+
     "]]fecha[["+today+"]]";
-
+    
     break;
-    case "crear_contacto_masivo":
+    /*case "crear_contacto_masivo":
     
     for(var o in formulario.csv_preview){
       var lin = (mixin.methods.valid_url(formulario.csv_preview[o].linkedin))?formulario.csv_preview[o].linkedin:"";
@@ -2380,9 +2835,10 @@ function call2action(){
     mostrar_mensaje("ok","Contactos cargados");
     formulario.csv_preview = [];
     break;
+    */
     case "crear_contacto":
     case "editar_contacto":
-
+    
     parametro = "id[["+document.getElementById("id_contacto").value+
     "]]linkedin[["+document.getElementById("linkedin_contacto").value+
     "]]verificacion_contacto[["+document.getElementById("verificacion_contacto").checked+
@@ -2397,10 +2853,10 @@ function call2action(){
     "]]personalidad[["+document.getElementById("personalidad_contacto").value+
     "]]obs[["+document.getElementById("obs_contacto").value+
     "]]fecha[["+today+"]]";
-
+    
     break;
-
-
+    
+    
     case "crear_oportunidad":
     case "editar_oportunidad":
     var checked = "";
@@ -2421,15 +2877,15 @@ function call2action(){
       +document.getElementById("req4").value+","
       +document.getElementById("req5").value;
       servicio_v = document.getElementById("tipo_servicio").value;
-
+      
       postulacion = document.getElementById("postulacion_oportunidad").checked;
-
+      
     }else{
       //reqs =document.getElementById("req_oportunidad").value;
       obs2 = document.getElementById("obs_oportunidad").value;
       servicio_v = document.getElementById("cumplimiento_100").value;
     }
-
+    
     parametro = "id[["+document.getElementById("id_oportunidad").value+
     "]]empresa[["+document.getElementById("empresa_oportunidad").value+
     "]]cargo[["+document.getElementById("cargo_oportunidad").value+
@@ -2465,17 +2921,17 @@ function call2action(){
     "]]servicio[["+servicio+
     "]]obs[["+document.getElementById("obs_proceso").value+
     "]]fecha[["+today+"]]";
-
-
+    
+    
     break;
     case "crear_observacion":
     case "editar_observacion":
     parametro= "obs[["+document.getElementById("input_novedad").value+"]]fecha[["+today+"]]";
     break;
-
+    
     case "crear_usuario":
     case "editar_usuario":
-
+    
     parametro = "id[["+document.getElementById("id_usuario").value+
     "]]linkedin[["+document.getElementById("linkedin_usuario").value+
     "]]nombre[["+document.getElementById("nombre_usuario").value+
@@ -2493,7 +2949,7 @@ function call2action(){
     break;
     case "crear_job_hacker":
     case "editar_job_hacker":
-
+    
     parametro = "id[["+document.getElementById("id_job_hacker").value+
     "]]linkedin[["+document.getElementById("linkedin_job_hacker").value+
     "]]nombre[["+document.getElementById("nombre_job_hacker").value+
@@ -2514,16 +2970,16 @@ function call2action(){
     break;
   }
   if(verify_data(accion)){
-
+    
     crear_actualizar_objeto(parametro,accion,tmp_etiqueta,id_session);
   }else{
     console.log("error con los datos")
   }
-
+  
 }
 function add_usuario(){
   document.getElementById("div_crear_usuario").style.display = "block";
-
+  
   //close_contenedor("contenedor_right");
   //close_contenedor('contenedor_buscar');
   close_contenedor_menu('div_crear_job_hacker');
@@ -2533,7 +2989,7 @@ function add_usuario(){
 }
 function add_job_hacker(){
   document.getElementById("div_crear_job_hacker").style.display = "block";
-
+  
   //close_contenedor("contenedor_right");
   //close_contenedor('contenedor_buscar');
   close_contenedor_menu('div_crear_usuario');
@@ -2547,48 +3003,49 @@ function add_persona(obj,label,event){
   var id_per = parseInt(obj.id.split("add_persona_")[1]);
   var data = {};
   if(label == 1){
-   data = get_persona_cb(id_per);
- }else{
-  for(var i = 0; i<conlis_objetos_con.lista['full_contactos'].length;i++){
-    if(conlis_objetos_con.lista['full_contactos'][i].id == id_per){
-      data = conlis_objetos_con.lista['full_contactos'][i];
-      break;
+    data = get_persona_cb(id_per);
+  }else{
+    for(var i = 0; i<conlis_objetos_con.lista['full_contactos'].length;i++){
+      if(conlis_objetos_con.lista['full_contactos'][i].id == id_per){
+        data = conlis_objetos_con.lista['full_contactos'][i];
+        break;
+      }
     }
   }
-}
-tmp_id = data.id;
-accion = "crear_contacto";
-document.getElementById("id_contacto").value = data.id;
-document.getElementById("linkedin_contacto").value = data.linkedin;
-document.getElementById("nombre_contacto").value = data.nombre;
-document.getElementById("cargo_contacto").value = data.ultimo_cargo;
-document.getElementById("empresa_contacto").value = data.ultima_empresa;
-document.getElementById("crystal_contacto").value = data.crystal;
-document.getElementById("mail_contacto").value = data.mail;
-document.getElementById("telefono_contacto").value = data.telefono;
-document.getElementById("tipo_contacto").value = 1;
-document.getElementById("obs_contacto").value = "";
-crear("contacto");
-
-
+  tmp_id = data.id;
+  accion = "crear_contacto";
+  document.getElementById("id_contacto").value = data.id;
+  document.getElementById("linkedin_contacto").value = data.linkedin;
+  document.getElementById("nombre_contacto").value = data.nombre;
+  document.getElementById("cargo_contacto").value = data.ultimo_cargo;
+  document.getElementById("empresa_contacto").value = data.ultima_empresa;
+  document.getElementById("crystal_contacto").value = data.crystal;
+  document.getElementById("mail_contacto").value = data.mail;
+  document.getElementById("telefono_contacto").value = data.telefono;
+  document.getElementById("tipo_contacto").value = 1;
+  document.getElementById("obs_contacto").value = "";
+  crear("contacto");
+  
+  
 }
 async function open_link_teachable() {
   window.open("https://seligo.teachable.com/courses/enrolled/657060","_blank")
 }
-async function open_link(obj){
 
+async function open_link(obj){
+  
   if(popup.id <= 0){
     tmp_id = popup_servicios.id;  
   }else{
     tmp_id = popup.id;
   }
-
+  
   tmp_etiqueta = 0;
   accion = "crear_oportunidad";
   
   asociar_previo("link");
-
-
+  
+  
   mostrar_mensaje_flotante("ok","Abriendo link de la vacante...");
   await sleep(3000);
   window.open(obj.id, '_blank');
@@ -2597,7 +3054,7 @@ async function open_link(obj){
 function add_vacante_repre(obj,event,repre){
   event.stopPropagation();
   tmp_id = popup_servicios.id;
-
+  
   
   asociar_previo(repre);
   close_popup(11)
@@ -2615,8 +3072,8 @@ function add_vacante(obj,event){
   tmp_etiqueta = 0;
   accion = "crear_oportunidad";
   
-  asociar_previo();
-
+  asociar_previo("pendiente");
+  
 }
 function actualizacion_archiv(){
   x = "aca se tiene algo bueno";
@@ -2646,9 +3103,9 @@ function load_profile(o,r){
     console.log("sin crystal")
   }
   show_loading(false,"");
-
-
-
+  
+  
+  
 }
 
 window.mobileAndTabletCheck = function() {
@@ -2658,7 +3115,7 @@ window.mobileAndTabletCheck = function() {
 };
 
 function show_contenedor_items(o,i){
-
+  
   if(o == 1){
     document.getElementById("show_contenedor_items_1").classList.add("selected");
     document.getElementById("show_contenedor_items_2").classList.remove("selected");
@@ -2668,24 +3125,24 @@ function show_contenedor_items(o,i){
     document.getElementById("show_contenedor_items_1").classList.remove("selected");
     document.getElementById("div_contenedor_items_oportunidad").style.display="none";
   }
-
+  
 }
 //function close_center(){
-  //document.getElementById("contenedor_center").classList.remove("show_mobile");
+//document.getElementById("contenedor_center").classList.remove("show_mobile");
 //}
 
 function close_opciones_cargar(){
- document.getElementById("opciones_cargar").classList.remove("show"); 
+  document.getElementById("opciones_cargar").classList.remove("show"); 
 }
 function show_opciones_cargar(){
- document.getElementById("opciones_cargar").classList.add("show"); 
+  document.getElementById("opciones_cargar").classList.add("show"); 
 }
 /*
 $(document).mouseup(function (e) { 
   if ($(e.target).closest(".boton_crear_objeto.subopcion").length 
-    === 0) { 
+  === 0) { 
     document.getElementById("opciones_cargar_contacto").style.display = "none";
-} 
+  } 
 }); 
 */
 
@@ -2717,26 +3174,23 @@ function read_csv(text){
     if(row > 1){
       formulario.csv_preview.push(obj);
     }
-
+    
     
     row++;
-
+    
   }
 }
 
-
+/*
 // 1. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
-
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
 var player;
 function onYouTubeIframeAPIReady() {
   if(document.getElementById("player_index")){
-
+    
   }
   player = new YT.Player('player', {
     playerVars: {
@@ -2752,84 +3206,84 @@ function onYouTubeIframeAPIReady() {
         'onStateChange': onPlayerStateChange
       }
     });
-}
-
-function onPlayerReady(event) {
-  if(app.usuario.ultimo_login == ""){
-    show_popup_video("bienvenida");
-    event.target.playVideo();  
   }
   
-  
-}
-
-var done = false;
-function onPlayerStateChange(event) {
-
-}
-function stopVideo() {
-  player.stopVideo();
-}
-function onPlayerPlaybackQualityChange(event) {
-  var playbackQuality = event.target.getPlaybackQuality();
-  var suggestedQuality = 'hd720';
-
-  console.log("Quality changed to: " + playbackQuality );
-
-  if( playbackQuality !== 'hd720') {
-    console.log("Setting quality to " + suggestedQuality );
-    event.target.setPlaybackQuality( suggestedQuality );
-  }
-}
-
-txts = ["empleo","candidato","crecimiento profesional"]
-txtvar = txts[0];
-var i = 0;
-var itxt = 0;
-var tmp_txt = ""
-var speed = 70;
-async function typeWriter() {
-  if(i < txtvar.length){
-
-    tmp_txt += txtvar.charAt(i);
-    document.getElementById("titulo_index").innerHTML =  tmp_txt;
-    i++;
-    setTimeout(typeWriter, speed);
-  }else{
-    await sleep(2000);
-    i = 0;
-    tmp_txt =  txtvar;
-    typeDeleter();
-  }
-}
-function typeDeleter(){
-  if(i < txtvar.length){
-
-    tmp_txt = tmp_txt.slice(0, -1);
-    document.getElementById("titulo_index").innerHTML = tmp_txt;
-    i++;
-    setTimeout(typeDeleter, speed);
-  }else{
-    if(itxt < txts.length-1){
-      itxt++;
-    }else{
-      itxt = 0;
+  function onPlayerReady(event) {
+    if(app.usuario.ultimo_login == ""){
+      show_popup_video("bienvenida");
+      event.target.playVideo();  
     }
-    txtvar = txts[itxt]
-    tmp_txt = "";
-    i = 0;
-    typeWriter()
-
-
+    
+    
   }
-}
-
-
-
-
-/*
-
-function handleFileSelect(evt) {
+  
+  var done = false;
+  function onPlayerStateChange(event) {
+    
+  }
+  function stopVideo() {
+    player.stopVideo();
+  }
+  function onPlayerPlaybackQualityChange(event) {
+    var playbackQuality = event.target.getPlaybackQuality();
+    var suggestedQuality = 'hd720';
+    
+    console.log("Quality changed to: " + playbackQuality );
+    
+    if( playbackQuality !== 'hd720') {
+      console.log("Setting quality to " + suggestedQuality );
+      event.target.setPlaybackQuality( suggestedQuality );
+    }
+  }
+  
+  txts = ["empleo","candidato","crecimiento profesional"]
+  txtvar = txts[0];
+  var i = 0;
+  var itxt = 0;
+  var tmp_txt = ""
+  var speed = 70;
+  async function typeWriter() {
+    if(i < txtvar.length){
+      
+      tmp_txt += txtvar.charAt(i);
+      document.getElementById("titulo_index").innerHTML =  tmp_txt;
+      i++;
+      setTimeout(typeWriter, speed);
+    }else{
+      await sleep(2000);
+      i = 0;
+      tmp_txt =  txtvar;
+      typeDeleter();
+    }
+  }
+  function typeDeleter(){
+    if(i < txtvar.length){
+      
+      tmp_txt = tmp_txt.slice(0, -1);
+      document.getElementById("titulo_index").innerHTML = tmp_txt;
+      i++;
+      setTimeout(typeDeleter, speed);
+    }else{
+      if(itxt < txts.length-1){
+        itxt++;
+      }else{
+        itxt = 0;
+      }
+      txtvar = txts[itxt]
+      tmp_txt = "";
+      i = 0;
+      typeWriter()
+      
+      
+    }
+  }
+  
+  
+  
+  
+  /*
+  
+  function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
     console.log("archivos...cargados...",files[0])
     // Loop through the FileList and render image files as thumbnails.
@@ -2843,9 +3297,9 @@ function handleFileSelect(evt) {
       formulario.archivos+=files[i].name+", ";
       // Only process image files.
       
-
+      
       var reader = new FileReader();
-
+      
       // Closure to capture the file information.
       reader.onload = (function(theFile) {
         return function(e) {
@@ -2853,7 +3307,7 @@ function handleFileSelect(evt) {
           
         };
       })(f);
-
+      
       // Read in the image file as a data URL.
       reader.readAsText(f);
     }
@@ -2864,4 +3318,5 @@ function handleFileSelect(evt) {
     console.log("nothing")
   }
   */
+
   console.log(new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds()+"INICIA CARGA ALEJA");

@@ -1,0 +1,214 @@
+{% load static %}
+
+{% load versioned_static %}
+<div id="mensaje_flotante" class="mensaje_flotante hide">
+	<h2 id="texto_mensaje_flotante" class=""></h2>
+	<button class="close_mensaje_flotante" onclick="document.getElementById('mensaje_flotante').classList.add('hide');">Ignorar</button>
+</div>
+<div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
+	<div id="contenedor_popup_pregunta" class="contenedor_popup_pregunta">
+		<button  class="close_corner" onclick="close_popup(this)"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+		<span id="mensaje_popup_pregunta"></span>
+	</div>
+</div>
+<div id="banner_opciones_mobile" class="banner_opciones mobile" style="display: none">
+	<div class="opcion_banner_mobile">
+		<button class="opcion_menu1 mobile" onclick="show_menu()">
+			<img type="image" src="/static/imgs/menu.png" class="menu_img">
+			<div class="texto_opcion_mobile">
+				Menú
+			</div>
+		</button>
+	</div>
+	<a href="/" class="opcion_banner_mobile" v-show="usuario.tipo != 13">
+		<button  :class="'opcion_menu mobile '+style_selected('') ">
+			<img type="image" src="/static/imgs/menu/busca.png" class="menu_img">
+			<div class="texto_opcion_mobile">
+				Soy<br>candidato
+			</div>
+		</button>
+	</a>
+	<a href="loadjobs" class="opcion_banner_mobile" >
+		<button :class="'opcion_menu mobile '+style_selected('loadjob') ">
+			<img type="image" src="/static/imgs/menu/load.png" class="menu_img">
+			<div class="texto_opcion_mobile">
+				Soy<br>empresa
+			</div>
+		</button>
+	</a>
+	<a href="myjobs" class="opcion_banner_mobile"  v-show="usuario.tipo == 13">
+		<button :class="'opcion_menu mobile '+style_selected('myjobs') ">
+			<img type="image" src="/static/imgs/menu/saved.png" class="menu_img">
+			<div class="texto_opcion_mobile">
+				Mis<br>vacantes
+			</div>
+		</button>
+	</a>
+	
+	
+	
+	<!--
+		<div class="opcion_banner" onclick="cambiar('menu')">
+			<img type="image" class="menu_img" src="{% static 'imgs/menu.png'%}"  />
+			<div class="texto_opcion_mobile">
+				Menú
+			</div>
+		</div>
+		
+		<div class="opcion_banner" onclick="cambiar('inicio')">
+			<img type="image" class="menu_img" src="{% static 'imgs/inicio.png'%}"  />
+			<div class="texto_opcion_mobile">
+				Inicio
+			</div>
+		</div>
+		<div class="opcion_banner" onclick="cambiar('servicios')">
+			<img type="image" class="menu_img" src="{% static 'imgs/services.png'%}"  />
+			<div class="texto_opcion_mobile">
+				Servicios
+			</div>
+		</div>
+	-->
+	
+</div>
+<div id="div_contenedor_video" class="div_contenedor_popup hide" style="display: none">
+	<button  class="close_corner video" onclick="close_popup(5)"><img type="image" class="corner_img video" src="{% static 'imgs/cancel_c.png'%}"  />
+		Cerrar video
+	</button>
+	<div id="player"></div>
+	<div id="sorry">
+		¡Lo siento! Este consejo aun no está disponible.
+		<br><br>
+		Tenemos un equipo de Job Hackers creando los mejores consejos para que cambies tu búsqueda de empleo y tu futuro profesional.
+		<br><br>
+		A medida que lanecemos los consejos te notificaremos al correo, así que esta atento.
+	</div>
+	<div class="botonera_popup_video">
+		<div class="boton_popup_video">
+			<button class="boton_popup_video_b">Ver consejos de Aleia</button>
+		</div>
+		
+		<div class="boton_popup_video">
+			<a href="https://www.seligo.co" target="_blank">
+				<button  class="boton_popup_video_b">Obtén créditos de Aleia</button>
+			</a>
+		</div>
+		
+	</div>
+	
+</div>
+<div id="div_contenedor_menu" class="div_menu" >
+	<button  class="close_corner mobile" onclick="show_menu()"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  />
+	</button>
+	<a href="https://wa.link/06k9aq" target="_blank">
+		<button class="ayuda">
+			<img src="/static/imgs/whatsapp.png" class="logo_ayuda">
+			¿Necesitas ayuda? Habla con un asesor
+		</button>
+	</a>
+	<!--<button class="close_corner menu" onclick="close_menu()"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>-->
+	<div id="logo_aleja" >
+		<!--Aleia<h3>beta</h3>-->
+		<img src="/static/imgs/logo_aleja_2.png" class="logo_aleja_img">
+		<input v-if="tipo == 6" type="image" src="/static/imgs/menu/brand/compensar.png" class="external_brand">
+	</div>
+	<div id="div_contendor_login" class="div_menu_login desktop" v-show="typeof usuario.return == 'undefined' || usuario.return == 'error'">
+		<a href="login" >
+			<button  class="boton_login">
+				Login
+			</button>
+		</a>
+		<a href="login?type=registro">
+			<button   class="boton_login">
+				Registrate
+			</button>
+		</a>
+	</div>
+	<div class="opcion_menu like" v-show="usuario.convenio_busco == 'si'">
+		<img type="image" src="/static/imgs/menu/diamond.png" class="opcion_img_menu">
+		Con Agente de talento
+	</div>
+	<div class="opcion_menu" v-show="usuario.return != 'error'" v-if="creditos != 0"> 
+		<img type="image" src="/static/imgs/menu/coin.png" class="opcion_img_menu">
+		<span v-if="creditos < 0">Ilimitados</span>
+		<span v-if="creditos > 0">[[creditos]] créditos</span>
+	</div>
+	<a href="services" v-show="usuario.return != 'error' && usuario.tipo != 13 && usuario.servicios > 0">
+		<button :class="'opcion_menu '+style_selected('services') " >
+			<img type="image" src="/static/imgs/menu/rocket.png" class="opcion_img_menu">
+			Mis servicios ([[usuario.servicios]])
+		</button>
+	</a>
+	
+	
+	
+
+	<a href="login" v-show="usuario.return == 'error'" class="mobile">
+		<button   :class="'opcion_menu '+style_selected('login') ">
+			<img type="image" src="/static/imgs/menu/login.png" class="opcion_img_menu">
+			Iniciar sesión
+		</button>
+	</a>
+	
+	
+	
+	<a href="/" v-show="usuario.tipo != 13" >
+		<button  :class="'opcion_menu '+style_selected('') ">
+			<img type="image" src="/static/imgs/menu/busca.png" class="opcion_img_menu">
+			Soy candidato
+		</button>
+	</a>
+	
+	
+	
+	
+	<a href="loadjobs" >
+		<button :class="'opcion_menu '+style_selected('loadjob') ">
+			<img type="image" src="/static/imgs/menu/load.png" class="opcion_img_menu">
+			Soy empresa
+		</button>
+	</a>
+
+	<div class="titulo_contenedor" v-show="usuario.return != 'error'">
+		<h1>[[nombre_usuario]]</h1>	
+	</div>
+
+	<a href="https://seligo.teachable.com/courses/enrolled/657060" target="_blank" v-show="usuario.tipo == 5 || usuario.convenio_busco == 'si'">
+		<button class="opcion_menu" >
+			<img type="image" src="/static/imgs/popup/play.png" class="opcion_img_menu">
+			Ver curso online
+		</button>
+	</a>
+	<a href="profile" v-show="usuario.return != 'error'">
+		<button :class="'opcion_menu profile '+style_selected('profile') " >
+			
+			<img type="image" src="/static/imgs/menu/usuario.png" class="opcion_img_menu profile">
+			
+		</button>
+	</a>
+	<a href="myjobs" v-show="usuario.return != 'error'">
+		<button :class="'opcion_menu '+style_selected('myjobs') ">
+			<img type="image" src="/static/imgs/menu/saved.png" class="opcion_img_menu">
+			Mis vacantes
+		</button>
+	</a>
+	<button class="opcion_menu" v-show="usuario.return == 'error'" onclick="show_message_popup(this,true,'mensaje_1')">
+		<img type="image" src="/static/imgs/menu/saved.png" class="opcion_img_menu">
+		Mis vacantes
+	</button>
+	
+	<!--<a href="profile" id="div_contenedor_popup_perfil" v-show="data_pendiente == 'true'">
+		<div id="subdiv_contenedor_popup_perfil" class="alerta_perfil">
+			<div id="alerta_manual_aleja" class="alert">
+				<img type="image" src="/static/imgs/popup/alert.png" class="opcion_img_alert">
+			</div>
+			<h2>
+				Permite que las empresa te encuentren.
+				<br><br>
+				Completa tu perfil aquí.
+				
+			</h2>
+		</div>
+	</a>-->
+	
+</div>
+

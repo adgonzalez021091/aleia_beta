@@ -25,41 +25,45 @@ class loader_interactions(object):
         #mongo_client = MongoClient('mongodb://%s:%s@18.218.58.145' % (username, password)) #PROD
         mongo_client = MongoClient(str(url_bd) % (username, password))#TEST
         return mongo_client.aleja_bd
-    def login(self,user,passw):
+    def login(self,user,passw,temporal):
         
         db = self.load_mongo_client()
         print("tm28:", datetime.now().strftime("%H:%M:%S"),user.strip())
-        rat = db.personas.find({"usuario":user.strip()})
-        if rat.count() == 0:
+        rat = db.personas.find({"usuario":user.strip().lower().strip()})
+        rat_count = db.personas.count_documents({"usuario":user.lower().strip()})
+        
+        if rat_count == 0:
             return {"error":True,"mensaje":"Usuario no encontrado"}
         if "cargos_aplica" in rat[0]:
             cargos_aplica = rat[0]["cargos_aplica"]
         else:
             cargos_aplica = ""
         salida = ""
-        print("tm31:", datetime.now().strftime("%H:%M:%S"),str(rat[0]["password"]),str(passw) , str(rat[0]["password"]).strip(),rat[0])
+        label = "password"
+        if temporal == True:
+            label = "password_tmp"
         try:
-            if str(rat[0]["password"]) == str(passw) and str(rat[0]["password"]).strip() != "":
+            if str(rat[0][label]) == str(passw) and str(rat[0][label]).strip() != "":
                 admin = 0
                 if (int(rat[0]["tipo"]) in permisos_usuario_admin) and rat[0]["usuario"] != "":
                     admin = 1
                 salida= {"data":{"lista":{},"cargos_aplica":cargos_aplica,"nombre":rat[0]["nombre"],"id":rat[0]["id"],"admin":admin,"tipo":rat[0]["tipo"]},"error":False}
-            elif str(rat[0]["password"]).strip() == "":
+            elif str(rat[0][label]).strip() == "":
                 salida = {"error":True,"mensaje":"Cuenta pendiente por activar. Por favor revisa tu correo"}
-            elif str(rat[0]["password"]) != str(passw):
+            elif str(rat[0][label]) != str(passw):
                 salida = {"error":True,"mensaje":"Contraseña incorrecta"}
         except ValueError:
             print(ValueError)
-            salida = {"error":True,"mensaje":"Usuario no encontrado."}
+            salida = {"error":True,"mensaje":"Error no controlado."}
         
             
         return salida
 
-def login(user,passw):
+def login(user,passw,temporal = False):
     import gc
     gc.collect()
     rcm = loader_interactions()
     
-    obj = rcm.login(user,passw)
+    obj = rcm.login(user,passw,temporal)
     json_data = json.dumps({"retorno":obj}, sort_keys=False, ensure_ascii=False)
     return json_data

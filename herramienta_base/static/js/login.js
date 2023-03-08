@@ -12,7 +12,6 @@ function validar_usuario(user,pass){
 		url:'EPE/get_login',
 		type:'POST',
 		data:{ 'user': user,'pass':pass},
-		headers:{'Transfer-Encoding':'chunked'},
 		success: async function(ret){
 			ret = JSON.parse(ret)["retorno"]
 			if(ret.error == true){
@@ -22,7 +21,7 @@ function validar_usuario(user,pass){
 			}else{
 				console.log("okok");
 				document.getElementById("div_mensaje_error").style.display="none";
-				window.location.href = 'app'
+				window.location.href = '/'
 			}
 
 		},

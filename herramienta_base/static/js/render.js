@@ -1,4 +1,6 @@
 
+
+
 var label_vacante = "oportunidad"
 var label_contacto = "contacto"
 var label_proceso = "proceso";
@@ -79,7 +81,7 @@ var config = {
 	"2":{
 		"color":"#ff917d",
 		"nombre":"Vanessa"
-
+		
 	},
 	"oportunidad":
 	{
@@ -165,6 +167,12 @@ var tipos_usuarios = {
 	11:"Usuario Sesión",
 	13:"Usuario Empresa"
 }
+var textos_servicios = {
+	"pago":{"texto":"Reclutamiento Aleia","estilo":""},
+	"gratuito":{"texto":"Vacante abierta","estilo":""},
+	"sourcing":{"texto":"Vacante abierta","estilo":""},
+	"no":{"texto":"Vacante abierta","estilo":""}
+}
 var niveles_networking = {
 	1:{"texto":"Deconocido","color":"#e3e3e3"},
 	2:{"texto":"Conocido","color":"#f7a17eb3"},
@@ -185,10 +193,23 @@ var tipos_procesos = {1:{"texto":"Entrevista con equipo de selección","color":"
 6:{"texto":"Vacante cerrada","color":"white"},
 7:{"texto":"Contratado","color":"white"}
 }
+var niveles_vacantes = {
+	"undefined":{"texto":"Guardada","color":"#3498DB"},
+	"false":{"texto":"Guardada","color":"#3498DB"},
+	"pendiente":{"texto":"Guardada","color":"#3498DB"},
+	"postulacion":{"texto":"Postulada","color":"#7b75dd"},
+	"true":{"texto":"Representada","color":"#dc6580"},
+	"agente":{"texto":"Representada con agente","color":"#dc6580"},
+	"entrevista":{"texto":"En entrevista","color":"#29d884"},
+	"analisis":{"texto":"En entrevista","color":"#29d884"}
+}
 var tipo_oportunidad = {
-	1:{"texto":"Contrato de tiempo completo"},
-	2:{"texto":"Consultoria / Freelancing"},
-	4:{"texto":"Otro"}
+	"1":{"texto":"Contrato de tiempo completo"},
+	"2":{"texto":"Consultoria / Freelancing"},
+	"4":{"texto":"Otro"},
+	"presencial":{"texto":"Presencial"},
+	"remoto":{"texto":"Remoto"},
+	"semipresencial":{"texto":"Semi presencial"},	
 }
 var limites_tiempo = {
 	0:"#3eda678c",
@@ -212,7 +233,191 @@ var rangos_calificacion = {
 	8:"#3eda678c"
 }
 
-
+var cargos = [
+	{'name':'director de tecnología - CTO'},
+	{'name':'Líder de SG-SST - Seguridad y salud en el trabajo'},
+	{'name':'Abogado'},
+	{'name':'Ingeniero ambiental'},
+	{'name':'Analista de marketing'},
+	{'name':'Gerente Financiero'},
+	{'name':'Gerente administrativo y financiero'},
+	{'name':'Analista financiero'},
+	{'name':'tesorero'},
+	{'name':'jefe o coordinador - coordinadora de recursos humanos'},
+	{'name':'Key Account Manager - KAM'},
+	{'name':'Director de servicio al cliente'},
+	{'name':'Gerente de mercadeo - marketing'},
+	{'name':'analista de selección - Talent acquisition'},
+	{'name':'jefe de logística'},
+	{'name':'Gerente de Operaciones'},
+	{'name':'Gerente de comunicaciones'},
+	{'name':'Jefe de alimentos'},
+	{'name':'Líder logístico - logística'},
+	{'name':'Gerente de marca - Gerente de producto - product manager'},
+	{'name':'Gerente de recursos humanos'},
+	{'name':'Gerente de compras'},
+	{'name':'trabajador social - trabajadora social'},
+	{'name':'analista de servicio al cliente'},
+	{'name':'Gerente general'},
+	{'name':'Jefe de almacén'},
+	{'name':'Jefe de operaciones'},
+	{'name':'jefe de producción'},
+	{'name':'Gerente comercial - ventas'},
+	{'name':'ingeniero mecánico'},
+	{'name':'Gerente de proyectos'},
+	{'name':'Asistente administrativo - administrativa'},
+	{'name':'Community manager'},
+	{'name':'Jefe de Crédito y cartera'},
+	{'name':'Coordinador de cuentas por cobrar'},
+	{'name':'Analista o asistente contable'},
+	{'name':'Comunicador social - periodista'},
+	{'name':'Jefe de planeación financiera'},
+	{'name':'Jefe o coordinador coordinadora de mercadeo o marketing'},
+	{'name':'Coordinador administrativo'},
+	{'name':'Auxiliar administrativo'},
+	{'name':'científico de datos'},
+	{'name':'Supply Chain'},
+	{'name':'analista de proyectos'},
+	{'name':'Coordinador contable'},
+	{'name':'Coordinador de operaciones'},
+	{'name':'Jefe de costos'},
+	{'name':'Asesor comercial'},
+	{'name':'Coordinador de calidad'},
+	{'name':'analista de crédito'},
+	{'name':'Analista de riesgo - Risk analyst'},
+	{'name':'Business intelligence analyst - Analista de inteligencia de negocios'},
+	{'name':'jefe de compras'},
+	{'name':'Contador'},
+	{'name':'jefe de cartera'},
+	{'name':'Ingeniero de procesos - Analista de procesos'},
+	{'name':'Jefe de planta'},
+	{'name':'Growth marketing'},
+	{'name':'Otro'},
+	{'name':'Analista de operaciones'},
+	{'name':'Controller'},
+	{'name':'ejecutivo comercial'},
+	{'name':'auditor'},
+	{'name':'front end developer'},
+	{'name':'jefe de transporte'},
+	{'name':'head of crm - Growth'},
+	{'name':'Director de transformación digital'},
+	{'name':'Líder de cadena de abastecimiento'},
+	{'name':'Analista de investigación de mercados'},
+	{'name':'Especialista de capacitación y formación'},
+	{'name':'SG-SST'},
+	{'name':'back end developer'},
+	{'name':'Especialista en e-commerce'},
+	{'name':'full stack developer'}
+]
+var options_sueldo = [
+	{"name":"$ 1.000.000 a $ 2.000.000","valm":1,"valt":2},
+	{"name":"$ 2.000.000 a $ 3.000.000","valm":2,"valt":3},
+	{"name":"$ 3.000.000 a $ 4.000.000","valm":3,"valt":4},
+	{"name":"$ 4.000.000 a $ 5.000.000","valm":4,"valt":5},
+	{"name":"$ 5.000.000 a $ 6.000.000","valm":5,"valt":6},
+	{"name":"$ 6.000.000 a $ 8.000.000","valm":6,"valt":8},
+	{"name":"$ 8.000.000 a $ 10.000.000","valm":8,"valt":10},
+	{"name":"$ 10.000.000 a $ 12.000.000","valm":10,"valt":12},
+	{"name":"$ 12.000.000 a $ 15.000.000","valm":12,"valt":15},
+	{"name":"$ 15.000.000 a $ 20.000.000","valm":15,"valt":20},
+	{"name":"$ 20.000.000 a $ 25.000.000","valm":20,"valt":25},
+	{"name":"$ 25.000.000 a $ 30.000.000","valm":25,"valt":30},
+	{"name":"$ 30.000.000 a $ 35.000.000","valm":30,"valt":35},
+	{"name":"$ 35.000.000 a $ 45.000.000","valm":35,"valt":45},
+	{"name":"$ 45.000.000 a $ 60.000.000","valm":45,"valt":60},
+	{"name":"Más de $60.000.000","valm":60,"valt":1000}
+]
+function get_option_sueldo(val){
+	for(var n of options_sueldo){
+		if(val/1000000 >= n["valm"] && val/1000000 < n["valt"]){
+			return n["name"]
+		}
+	}
+	
+}
+var options_carreras = [
+	{"name":"Administración de negocios internacional"},
+	{"name":"Administración hotelera y turística"},
+	{"name":"Administrador de empresas"},
+	{"name":"Arquitectura"},
+	{"name":"Arte escénico"},
+	{"name":"Biología"},
+	{"name":"Comercio exterior - Negocios internacionales"},
+	{"name":"Comunicación social"},
+	{"name":"Contador"},
+	{"name":"Criminalística"},
+	{"name":"Derecho - Abogado"},
+	{"name":"Diseñador gráfico"},
+	{"name":"Diseñador industrial"},
+	{"name":"Economista"},
+	{"name":"Educación físicaFilosofía"},
+	{"name":"Finanzas"},
+	{"name":"Fisioterapeuta"},
+	{"name":"Fonoaudiología"},
+	{"name":"Gastronomía"},
+	{"name":"Ingeniero industrial"},
+	{"name":"Ingeniería ambiental"},
+	{"name":"Ingeniería biomédica"},
+	{"name":"Ingeniería civil"},
+	{"name":"Ingeniería comercial"},
+	{"name":"Ingeniería de sistemas"},
+	{"name":"Ingeniería de telecomunicaciones"},
+	{"name":"Ingeniería eléctrica - electrónica"},
+	{"name":"Ingeniería financiera"},
+	{"name":"Ingeniería química"},
+	{"name":"Lenguas modernasLogística"},
+	{"name":"Matemáticas"},
+	{"name":"Medicina"},
+	{"name":"Medicina Veterinaria"},
+	{"name":"Mercadeo - Marketing"},
+	{"name":"Microbiología"},
+	{"name":"Música"},
+	{"name":"Odontología"},
+	{"name":"Otro"},
+	{"name":"Pedagogía"},
+	{"name":"Psicólogo - psicóloga"},
+	{"name":"Publicista"},
+	{"name":"Sociología"},
+	{"name":"Terapia ocupacional"},
+	{"name":"Trabajo social"},
+	{"name":"Zootecnia"}
+]
+var options_industrias = [
+	{"name":"agencia de viajes"},
+	{"name":"Agencias de relaciones públicas"},
+	{"name":"Agro"},
+	{"name":"Automotriz"},
+	{"name":"Banca"},
+	{"name":"banco"},
+	{"name":"BPO"},
+	{"name":"Buffet de abogados"},
+	{"name":"Cajas de compensación"},
+	{"name":"Consultoría en recursos humanos"},
+	{"name":"Consumo masivo"},
+	{"name":"Cosméticos"},
+	{"name":"Educación"},
+	{"name":"Eps"},
+	{"name":"Equipos médicos"},
+	{"name":"Ferretería"},
+	{"name":"Fintech"},
+	{"name":"Fábrica de software"},
+	{"name":"HORECA, Hoteles, restaurantes"},
+	{"name":"Hospitales, clínicas, IPS"},
+	{"name":"Investigación de mercados"},
+	{"name":"manufactura"},
+	{"name":"Medios - Televisión, radio, otros"},
+	{"name":"Multinivel"},
+	{"name":"Otro"},
+	{"name":"Producción de alimentos"},
+	{"name":"Retail"},
+	{"name":"Sector petrolero"},
+	{"name":"sector real"},
+	{"name":"Seguros"},
+	{"name":"Startups"},
+	{"name":"Telecomunicaciones"},
+	{"name":"Transporte"},
+	{"name":"Otro"}
+]
 var month = new Array();
 month[0] = "Ene";
 month[1] = "Feb";
@@ -234,7 +439,7 @@ function order_array_asc(arr,param){
 	return arr.sort((a, b) => (standarize_attribute(a[param]) > standarize_attribute(b[param])) ? 1 : (standarize_attribute(a[param]) === standarize_attribute(b[param])) ? ((a["id"] > b["id"]) ? 1 : -1) : -1 )
 }
 function tiempo_desde_fecha(fecha){
-
+	
 	var dias = Math.round((new Date()-new Date(fecha))/(1000*60*60*24));
 	if(dias == 0){
 		return "hoy";
@@ -244,7 +449,7 @@ function tiempo_desde_fecha(fecha){
 			return dias+" d";
 		}
 		return Math.round(dias/7)+" s";
-
+		
 	}else{
 		return Math.round(dias/30)+" m";
 	}
@@ -263,9 +468,9 @@ function calular_columnas_metricas(){
 	var fmn = new Date();
 	fmn.setDate(prevMonday.getDate() - 14);
 	var ffd = new Date();
-
+	
 	ffd.setDate(prevMonday.getDate() -8);
-
+	
 	var d1 = [fmn.toISOString().substring(0,10),ffd.toISOString().substring(0,10)]
 	var smn = new Date()
 	smn.setDate(prevMonday.getDate()-7)
@@ -280,9 +485,25 @@ function calular_columnas_metricas(){
 }
 
 var mixin  = {
-	
-
+	components: { Multiselect: window.VueMultiselect.default },
+	data:{
+		usuario:{}
+	},
 	methods:{
+		isNumber ($event) {
+			//console.log($event.keyCode); //keyCodes value
+			let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
+			if ((keyCode < 48 || keyCode > 57)) { // 46 is dot
+				$event.preventDefault();
+			}
+		},
+		get_texto_servicio(servicio){
+			if(servicio in textos_servicios){
+				return textos_servicios[servicio].texto;
+			}else{
+				return "Postulación abierta"
+			}
+		},
 		get_texto_resultados(res,tot){
 			if(res == tot){
 				return (tot > 1)?tot+" resultados.":tot+" resultado";
@@ -291,7 +512,7 @@ var mixin  = {
 				return "No se encontraron resultados."
 			}
 			if(res < tot){
-				return (res > 1)?res+" resultados encontrados de "+tot+".":res+" resultado encontrado de "+tot+".";
+				return (res > 1)?res+" resultados de "+tot+".":res+" resultado encontrado de "+tot+".";
 			}
 		},
 		get_link_acotado(link){
@@ -317,7 +538,7 @@ var mixin  = {
 			if(i == 0){
 				return {"s":" contigo","t":nombret};
 			}else{
-
+				
 				//var s = arr[i-1].n;
 				console.log(arr,s)
 				var nombres = " con "+nom_sss.split(" ")[0];
@@ -326,7 +547,7 @@ var mixin  = {
 		},
 		get_info_complemento(i,label){
 			switch(label){
-
+				
 				case "pnombre":
 				return i.split(" ")[0];
 				break;
@@ -375,13 +596,13 @@ var mixin  = {
 				return ret;
 				break;
 			}
-
+			
 			return {"texto":"","color":"white"}
 		},
 		get_color_etiqueta(i){
-
+			
 			var color = config[i];
-
+			
 			if(color == null){color = color_default;
 			}
 			else{color = color.color_texto;
@@ -391,18 +612,37 @@ var mixin  = {
 		valid_url(str){
 			var pattern = new RegExp('^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?');
 			return !!pattern.test(str);
+		},
+		copiar_texto: function(txt,event){
+			try{
+				if(txt.trim() != ""){
+					var $temp = $("<textarea>");
+					$("body").append($temp);
+					$temp.val(txt).select();
+					document.execCommand("copy");
+					$temp.remove();
+					mostrar_mensaje_flotante("ok",txt+" copiado!");
+				}
+			}catch(x){
+				mostrar_mensaje_flotante("error","Error al copiar");
+			}
 		}
 	},
 	computed:{
-		
+		options_sueldo:function(){
+			return options_sueldo
+		},
 		contenidos:function(){
 			return videos
 		},
 		sesion:function(){
 			return app.sesion;
 		},
-		usuario:function(){
-			return app.usuario;
+		servicios:function(){
+			return app.servicios;
+		},
+		creditos:function(){
+			return app.creditos;
 		},
 		total_items:function(){
 			var cuenta = 0;
@@ -411,17 +651,21 @@ var mixin  = {
 		}
 	}
 };
+
+
 var app = new Vue({
 	mixins: [mixin],
 	delimiters: ['[[', ']]'],
 	data: {
 		sesion:{"data":{"admin":-1,"id":-1,"tipo":-1}},
-		usuario:{"nombre":""},
 		vacantes: [],
 		personas : [],
 		indxd_vacantes: {},
 		indxd_personas : {},
-		empresas : []
+		empresas : [],
+		servicios:[],
+		creditos:0,
+		options_citys:[]
 	}
 	,
 	computed:{
@@ -429,89 +673,67 @@ var app = new Vue({
 			return conlis_objetos_vac.lista["vacantes"].concat(conlis_objetos_con.lista["contactos"]);
 		}
 	},
+	
 	methods:{
-
+		
 		get_etiquetas_info(etiquetas){
 			listas_recomendacion["vacantes"].lista = [];
-
+			
 			conlis_objetos_vac.lista["vacantes"] = []
 			conlis_objetos_con.lista["contactos"] = []
 			conlis_novedades.lista["novedades"] = []
+			procesos_tmp = []
 			var sesiones = {};
 			var obj_tmp = {};
+			console.log(etiquetas)
 			for(var o in etiquetas){
+				
 				obj_tmp = {};
-				//etiquetas[o].consolidado="[[label||"+etiquetas[o].label+"]]"
+				
+				if(typeof etiquetas[o].cumple == "undefined" || !etiquetas[o].cumple in niveles_vacantes){
+					//logica para datos viejos
+					etiquetas[o].cumple = "false";
+				}
 				switch(etiquetas[o].label){
 					case "contacto":
 					//obj_tmp = this.indxd_personas[etiquetas[o].id_objeto]
 					//if(obj_tmp){
-						//etiquetas[o].data = obj_tmp;
-						//etiquetas[o].consolidado+= etiquetas[o].data.consolidado+"[[nivel||"+etiquetas[o].nivel+"]]";
-						etiquetas[o].titulo = etiquetas[o].data.nombre;
-						etiquetas[o].valor = etiquetas[o].data.ultimo_cargo;
-						etiquetas[o].valor2 =  etiquetas[o].data.ultima_empresa;
-						etiquetas[o].valor3 =  "";
-						etiquetas[o].complemento = parseInt(etiquetas[o].nivel);
-						etiquetas[o].link = (typeof etiquetas[o].data.linkedin == "undefined")?"":(""+etiquetas[o].data.linkedin).trim();
-					//}else{
-					//	etiquetas[o].valor = "Recarga para ver esta información...";
-					//}
+					//etiquetas[o].data = obj_tmp;
+					//etiquetas[o].consolidado+= etiquetas[o].data.consolidado+"[[nivel||"+etiquetas[o].nivel+"]]";
+					etiquetas[o].titulo = etiquetas[o].data.nombre;
+					etiquetas[o].valor = etiquetas[o].data.ultimo_cargo;
+					etiquetas[o].valor2 =  etiquetas[o].data.ultima_empresa;
+					etiquetas[o].valor3 =  "";
+					etiquetas[o].complemento = parseInt(etiquetas[o].nivel);
+					etiquetas[o].link = (typeof etiquetas[o].data.linkedin == "undefined")?"":(""+etiquetas[o].data.linkedin).trim();
 					conlis_objetos_con.lista["contactos"].push(etiquetas[o]);
 					break;
+					
 					case "oportunidad":
-					
-					etiquetas[o].oculta = etiquetas[o].data.oculta;
-					//etiquetas[o].consolidado+= etiquetas[o].data.consolidado;
-					etiquetas[o].titulo = etiquetas[o].data.cargo;
-					etiquetas[o].valor = etiquetas[o].data.empresa;
-					etiquetas[o].valor2 = (etiquetas[o].cumple == true)?"Servicio asociado":(etiquetas[o].cumple == false)?"":"Servicio asociado";//"Salario entre "+obj_tmp.rango_menor+" y "+obj_tmp.rango_mayor;
-					etiquetas[o].valor3 =  etiquetas[o].data.ciudad;
-					etiquetas[o].complemento = etiquetas[o].protegido;
-					etiquetas[o].keywords = etiquetas[o].data.keywords;
-					etiquetas[o].link = (typeof etiquetas[o].data.link == "undefined")?"":(""+etiquetas[o].data.link).trim()
-					listas_recomendacion["vacantes"].lista.push(etiquetas[o].data.cargo+" -- "+etiquetas[o].data.empresa)
-					//}else{
-					//	etiquetas[o].valor = "Recarga para ver esta información...";
-					//}
-					conlis_objetos_vac.lista["vacantes"].push(etiquetas[o]);
-					break;
-					case "proceso":
-					etiquetas[o].keywords = []
-					//if(obj_tmp){
-					//etiquetas[o].data_vacante = obj_tmp;
-					//etiquetas[o].consolidado+= etiquetas[o].data_vacante.consolidado+"[[tipo_proceso||"+etiquetas[o].tipo_proceso+"]]";
-					try{
-						etiquetas[o].titulo = tipos_procesos[etiquetas[o].tipo_proceso].texto+" para "+etiquetas[o].data_vacante.cargo;
-					}catch(e){
-						etiquetas[o].titulo = "Entrevista";
+					listas_recomendacion["vacantes"].lista.push(etiquetas[o].cargo+" -- "+etiquetas[o].empresa)
+					if(etiquetas[o].cumple == "postulacion" && etiquetas[o].servicio == "gratuito"){
+						etiquetas[o].cumple = "agente";
 					}
-					etiquetas[o].valor = etiquetas[o].data_vacante.empresa;
-					etiquetas[o].valor2 = "";
-					etiquetas[o].valor3 =  etiquetas[o].data_vacante.ciudad;
-					etiquetas[o].complemento = etiquetas[o].tipo_proceso;
-					etiquetas[o].link = (typeof etiquetas[o].data_vacante.link == "undefined")?"":(""+etiquetas[o].data_vacante.link).trim()
-
-					//}else{
-					//	etiquetas[o].valor = "Recarga para ver esta información...";
-					//}
-					//obj_tmp = {};
-					//obj_tmp = this.indxd_personas[etiquetas[o].id_persona];
-					//if(obj_tmp){
-					//etiquetas[o].data_persona = obj_tmp;
-					//etiquetas[o].consolidado += etiquetas[o].data_persona.consolidado;
-					etiquetas[o].valor2 = "Persona a cargo: "+etiquetas[o].data_persona.nombre+". "+etiquetas[o].data_persona.ultimo_cargo
-
-					//}
+					if(etiquetas[o].servicio == "pago"){
+						etiquetas[o].empresa = "Reclutadores de Aleia"
+					}
+					console.log("entro acaáaa")
+					etiquetas[o].texto_cumple = niveles_vacantes[etiquetas[o].cumple].texto
+					etiquetas[o].color_cumple = niveles_vacantes[etiquetas[o].cumple].color
 					conlis_objetos_vac.lista["vacantes"].push(etiquetas[o]);
 					break;
-					case "observacion":
-					//etiquetas[o].consolidado+="[[ observacion ||"+etiquetas[o].valor+"]]"
 					
+					case "proceso":
+					etiquetas[o].cumple = "entrevista"
+					etiquetas[o].texto_cumple = niveles_vacantes[etiquetas[o].cumple].texto
+					etiquetas[o].color_cumple = niveles_vacantes[etiquetas[o].cumple].color
+					procesos_tmp.push(etiquetas[o]);
+					break;
+					
+					case "observacion":
 					conlis_novedades.lista["novedades"].push(etiquetas[o]);
 					break;
 					case "sesion":
-					//etiquetas[o].consolidado = "";
 					if(!sesiones.hasOwnProperty(etiquetas[o].id_sesion)){
 						sesiones[etiquetas[o].id_sesion] = etiquetas[o].valor;
 					}else{
@@ -527,11 +749,24 @@ var app = new Vue({
 			for(var o in sesiones){
 				arr_sesiones.push({"titulo":preguntas_sesiones[parseInt(o)].descripcion,"sesion":parseInt(o),"contenido":sesiones[o]});
 			}
+			console.log(procesos_tmp)
+			for(var w in procesos_tmp){
+				esta = false
+				for (var w2 in conlis_objetos_vac.lista["vacantes"]){
+					if(procesos_tmp[w].id_vacante == conlis_objetos_vac.lista["vacantes"][w2].id_objeto){
+						esta = true
+						conlis_objetos_vac.lista["vacantes"][w2].cumple = "entrevista"
+					}
+				}
+				if(!esta){
+					conlis_objetos_vac.lista["vacantes"].push(procesos_tmp[w]);
+				}
+			}
 			conlis_info_usuario.lista["contactos"] = order_array_desc(conlis_objetos_con.lista["contactos"],"fecha");
 			conlis_info_usuario.lista["vacantes"] = order_array_desc(conlis_objetos_vac.lista["vacantes"],"fecha");
 			conlis_info_usuario.lista["novedades"] = order_array_desc(conlis_novedades.lista["novedades"],"fecha")
 			conlis_objetos_con.lista["contactos"] = order_array_desc(conlis_objetos_con.lista["contactos"],"fecha");
-			conlis_objetos_vac.lista["vacantes"] = order_array_desc(conlis_objetos_vac.lista["vacantes"],"fecha");
+			conlis_objetos_vac.lista["full_vacantes"] = order_array_desc(conlis_objetos_vac.lista["vacantes"],"fecha");
 			conlis_sesiones.sesiones = arr_sesiones;
 			console.log("etiquetas asociadas correctamente");
 			
@@ -539,9 +774,126 @@ var app = new Vue({
 	}
 });
 
+function formulario_vacante_data(){
+	var arr_cat_options =[{"value":"descripcion_empresa","text":"Descripción de tu empresa"},{"value":"beneficios","text":"Beneficios"},{"value":"equipo","text":"Equipo con el que trabajarás"},{"value":"proceso_seleccion","text":"Proceso de selección"},{"value":"otro","text":"Otro"}];
+	var arr_selected = [{"value":"rango_salarial","text":"Rango salarial"},{"value":"salario_fijo","text":"Salario fijo"},{"value":"convenir","text":"A convenir"}];
+
+	return {
+		etapa:0,
+		value_citys: [],
+		
+		//options_citys: [],
+		value_sueldo:[],
+		value_reqs:[{"des":""},{"des":""}],
+		requerimiento_sel:"",
+		cat_options:arr_cat_options.slice(2),
+		options_reqs:[],
+		cat_otro:"",
+		value_cats:[{"tit":arr_cat_options[0].text,"des":"","previous":arr_cat_options[0].text},{"tit":arr_cat_options[1].text,"des":"","previous":arr_cat_options[1].text}],
+		categoria_sel:"",
+		options_cats:[],
+		value_cargos:[],
+		options_cargos:cargos,
+		value_industrias:[],
+		options_industrias:options_industrias,
+		empresa:"",
+		confidencial:"false",
+		cargo:"",
+		req1:"",
+		req2:"",
+		req3:"",
+		req4:"",
+		req5:"",
+		link:"",
+		tipo:"",
+		servicio:"no",
+		selected: arr_selected,
+		rango: {"rango_menor":"","rango_mayor":""},
+		obs:"",
+		nombre_contacto:"",
+		cargo_contacto:"",
+		telefono_contacto:"",
+		correo_contacto:"",
+		password:""
+	};
+}
+var formulario_vacante= new Vue({
+	mixins: [mixin],
+	delimiters: ['[[', ']]'],
+	el: '#div_contenedor_loadjobs',
+	
+	data: function (){
+		return formulario_vacante_data();
+	}, 
+	computed:{
+		sesion:function(){
+			return app.sesion;
+		},
+		usuario:function(){
+			return app.usuario;
+		},
+		options_citys:function (){
+			return app.options_citys;
+		}
+	},
+	methods: {
+		reset:function(){
+			Object.assign(this.$data, formulario_vacante_data());
+		},
+		cat_selected(event,pre){
+			console.log(pre)
+			if(pre.tit != "Otro" ){
+				this.cat_options = this.cat_options.filter(o=>o.text != pre.tit)	
+			}
+			if(typeof pre.previous != "undefined" && pre.previous != "Otro"){
+				this.cat_options.push({"text":pre.previous})
+			}
+			pre.sel = "true";
+			pre.previous = pre.tit;
+		}
+	}
+})
+
 calular_columnas_metricas();
 var color_default = "#EEEEEE";
-
+var popup_conveio = new Vue({
+	delimiters:['[[',']]'],
+	mixins: [mixin],
+	el:"#div_popup_convenio",
+	data: {
+		nombre:"",
+		etapa:1,
+		correo:"",
+		numero_identificacion:"",
+		nivel_ingles:"",
+		nivel_estudio:"",
+		telefono:"",
+		ultimo_cargo:"",
+		ultima_empresa:"",
+		value_citys: [],
+		options_carreras:options_carreras,
+		value_carreras:[],
+		//options_citys: [],
+		value_citys_move: [],
+		//options_citys_move: [],
+		value_sueldo:[],
+		
+		value_cargos:[],
+		salario_actual:0,
+		options_cargos:cargos,
+		sector:"",
+		check_last_cv:false,
+		password:""
+	},
+	computed:{
+		options_citys:function (){
+			return app.options_citys;
+		},
+		options_citys_move:function (){
+			return app.options_citys;
+		},
+	}
+})
 var popup_many = new Vue({
 	delimiters:['[[',']]'],
 	el: '#div_contenedor_popup_share',
@@ -555,27 +907,45 @@ var popup_many = new Vue({
 		usuarios_seleccionados:[]
 	}
 })
-var popup = new Vue({
-	mixins: [mixin],
-	delimiters:['[[',']]'],
-	el: '#div_contenedor_popup_perfil'
-});
+
 
 var popup = new Vue({
 	mixins: [mixin],
 	delimiters:['[[',']]'],
 	el: '#div_contenedor_popup',
 	data: {
+		filelist: [],
 		id:-1,
+		pestana:"info",
+		check_last_cv:false,
+		tipo_link:"",
+		link_corto:"",
+		lista_categorias:[],
+		lista_preguntas:[],
+		//ESTE GUARDA SI PIDIERON ASESORIA (TIPO DE VACANTE)
+		servicio:"",
+		pregunta:"",
+		postulando :0,
+		representando :0,
+		recompensa:"",
+		recompensa1:"",
+		tipo_envio:"",
 		label:"",
 		logros:"",
 		obj_rutas:{},
+		referido:"",
+		contacto_telefono_referido:"",
+		contacto_mail_referido:"",
+		contacto_nombre_referido:"",
 		id_et:-1,
 		id_et_del:-1,
 		link_invita:"",
 		contenido:"",
 		texto_contenido:"",
 		imagen:"",
+		//ESTE GUARDA SI ES EXTERNO O INTERNO
+		postulacion:"",
+		reqs:[],
 		estado_copy:"Copiar",
 		titulo:"",
 		subtitulo:"",
@@ -586,7 +956,9 @@ var popup = new Vue({
 		datos_contacto:"",
 		perfil_usuario :"",
 		ultimo_login:"",
-		rango_salario :"",
+		rango_menor:"",
+		rango_mayor:"",
+		rango_salario:"",
 		tipo_oportunidad:"",
 		ciudad :"",
 		area :"",
@@ -598,52 +970,141 @@ var popup = new Vue({
 		keywords:[],
 		texto2:"",
 		texto3:"",
+		fecha:"",
 		link:"",
 		rutas:[],
 		nodos_intermedios:[],
-		sesion:{"data":{"admin":-1,"id":-1}}
+		sesion:{"data":{"admin":-1,"id":-1}},
+		value_sueldo:[],
+		id_user:""
 	},
 	
 	methods:{
+		enviar_pregunta(){
+			var local_ret = []
+			global_enviar_pregunta(function(returnValue){
+
+				mostrar_mensaje_flotante("ok","Pregunta enviada correctamente");
+				local_ret = returnValue.return;
+			},
+			{"id_vacante":this.id,"pregunta":this.pregunta,"id_usuario":this.usuario.id});
+			this.lista_preguntas = local_ret
+			this.pregunta="";
+		},
+		enviar_respuesta(r){
+			var local_ret = []
+			global_enviar_respuesta(function(returnValue){
+				mostrar_mensaje_flotante("ok","Respuesta enviada correctamente");
+				local_ret = returnValue.return;
+			},
+			{"id_vacante":this.id,"respuesta":r.respuesta_nueva,"id_usuario":this.usuario.id,"id_pregunta":r.id});
+			this.lista_preguntas = local_ret.sort( (a,b) => a.date - b.date);
+			this.pregunta="";
+		},
 		get_tipo_usuario(i){
 			return tipos_usuarios[i]
 		},
-		valid_url(str){
-			var pattern = new RegExp('^(https?:\\/\\/)?'+ 
-				'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ 
-				'((\\d{1,3}\\.){3}\\d{1,3}))'+ 
-				'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ 
-				'(\\?[;&a-z\\d%_.~+=-]*)?'); 
-			return !!pattern.test(str);
-		}
+		cambia_pestana(o){
+			this.pestana = o;
+		},
+		onChange() {
+			this.filelist = [...this.$refs.file.files];
+			for(var o of this.filelist){
+				var arrext = o.name.split(".");
+				var ext = "."+arrext[arrext.length-1]
+				
+				o["file_name"] = (o.name.split(ext)[0].length > 40)?o.name.split(ext)[0].substring(0,32)+"..."+o.name.split(ext)[0].substring(o.name.split(ext)[0].length-3,o.name.split(ext)[0].length)+ext:o.name;
+			}
+		},
+		remove(i) {
+			this.filelist.splice(i, 1);
+			if(this.filelist.length == 0){
+				document.getElementById("loader_postulacion").classList.add('gray');
+				document.getElementById("loader_postulacion").classList.remove('white');
+				document.getElementById("loader_postulacion").classList.remove('green');
+				
+			}
+		},
+		dragover(event) {
+			event.preventDefault();
+			// Add some visual fluff to show the user can drop its files
+			if (!event.currentTarget.classList.contains('green')) {
+				event.currentTarget.classList.remove('gray');
+				event.currentTarget.classList.remove('white');
+				event.currentTarget.classList.add('green');
+			}
+		},
+		dragleave(event) {
+			// Clean up
+			event.currentTarget.classList.add('gray');
+			event.currentTarget.classList.remove('white');
+			event.currentTarget.classList.remove('green');
+		},
+		drop(event) {
+			event.preventDefault();
+			
+			
+			if(event.dataTransfer.files.length > 1){
+				mostrar_mensaje_flotante("error","Solo es permitido subir un archivo");
+				event.currentTarget.classList.add('gray');
+				event.currentTarget.classList.remove('white');
+				event.currentTarget.classList.remove('green');
+				
+			}else{
+				this.$refs.file.files = event.dataTransfer.files;
+				for(var o of this.$refs.file.files){
+					var arrext = o.name.split(".");
+					var ext = "."+arrext[arrext.length-1]
+					
+					o["file_name"] = (o.name.split(ext)[0].length > 40)?o.name.split(ext)[0].substring(0,32)+"..."+o.name.split(ext)[0].substring(o.name.split(ext)[0].length-3,o.name.split(ext)[0].length)+ext:o.name;
+				}
+				event.currentTarget.classList.remove('gray');
+				event.currentTarget.classList.add('white');
+				event.currentTarget.classList.remove('green');
+			}
+			this.onChange(); // Trigger the onChange event manually
+			// Clean up
+		},
 	},
 	computed:{
 		pnombre:function (){
 			return this.titulo.split(" ")[0];
+		},
+		get_value_sueldo:function(){
+			this.value_sueldo = app.usuario.aspiracion_max
+			return "ok"
+		},
+		hide:function() {
+			if (window.location.href.includes("/myjobs")){	
+				return true;
+			}else{
+				return false;
+				
+			}
 		}
 	}
-})
+});
 var normalize = (function() {
 	var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç", 
 	to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
 	mapping = {};
-
+	
 	for(var i = 0, j = from.length; i < j; i++ )
-		mapping[ from.charAt( i ) ] = to.charAt( i );
-
+	mapping[ from.charAt( i ) ] = to.charAt( i );
+	
 	return function( str ) {
 		str = str.toString().trim().toLowerCase();
 		var ret = [];
 		for( var i = 0, j = str.length; i < j; i++ ) {
 			var c = str.charAt( i );
 			if( mapping.hasOwnProperty( str.charAt( i ) ) )
-				ret.push( mapping[ c ] );
+			ret.push( mapping[ c ] );
 			else
-				ret.push( c );
+			ret.push( c );
 		}      
 		return ret.join( '' );
 	}
-
+	
 })();
 
 
@@ -667,17 +1128,33 @@ var popup_servicios = new Vue({
 		id_user:0
 	}
 });
+
 var adm = new Vue({
 	delimiters:['[[',']]'],
 	mixins: [mixin],
 	el: '#div_contenedor_menu',
 	data: {
 		job_hackers:[],
-		tipo:-2
+		tipo:-2,
+		data_pendiente:"false"
 	},
 	computed:{
 		nombre_usuario:function(){
-			return (app.usuario.id == app.sesion.data.id)?"Hola "+app.usuario.nombre.split(" ")[0]:"Traza de "+app.usuario.nombre;
+			return (app.usuario.return != "error")?"Hola "+app.usuario.nombre.split(" ")[0]:"";
+		},
+		style_selected:function(){
+			var m = function(o){
+				if(o == "" && window.location.pathname == "/"){
+					return "selected";
+				}else if(o != "" && window.location.pathname.includes(o)){
+					return "selected";
+				}else{
+					return "";
+				}
+				
+			}
+			return m;
+			
 		}
 	},
 	methods:{
@@ -722,17 +1199,7 @@ var servicios = new Vue({
 	computed:{
 		creditos:function(){
 			if(app.usuario.representaciones+"".trim() != "" && typeof app.usuario.representaciones != "undefined"){
-				if(parseInt(app.usuario.representaciones) > 0){
-					if(parseInt(app.usuario.representaciones) == 1){
-						return 1
-					}else{
-						return app.usuario.representaciones;
-					}
-				}else if(parseInt(app.usuario.representaciones) < 0){
-					return "Ilimitados";
-				}else if(parseInt(app.usuario.representaciones) == 0){
-					return 0;
-				}
+				return parseInt(app.usuario.representaciones);
 			}else{
 				return 0;
 			}
@@ -769,6 +1236,7 @@ var servicios = new Vue({
 		}
 	}
 });
+
 var formulario = new Vue({
 	mixins: [mixin],
 	delimiters: ['[[', ']]'],
@@ -802,77 +1270,40 @@ var formulario = new Vue({
 				}
 			}
 			return sals;
-
+			
 		}
 	}
 });
 
-/*var conlis_stats = new Vue({
-	el:"#contenedor_estadisticas",
+var profile = new Vue({
 	mixins: [mixin],
-	delimiters: ['[[', ']]'],
-	data:{
-		total_usuarios:0,
-		contenido:link_teachable+videos["networking"].id,
-		texto_contenido:videos["networking"].titulo_video,
-		numeros_stats:{"entrevistas":{"tot":0,"avg":0},"contactos":{"tot":0,"avg":0}}
-	},
-	computed:{
-		etiquetas:function (){
-			return conlis_objetos_vac.lista["vacantes"].concat(conlis_objetos_con.lista["contactos"]);
-		},
-		datos:function(){
-			
-			console.log("____datos_conlis_stats");
-			var salida = [{"x":"Conocido","y":0,"i":2},{"x":"Confianza","y":0,"i":3},{"x":"Muy cercano","y":0,"i":4}];
-
-			for(var i =0;i<this.etiquetas.length;i++){
-				if(this.etiquetas[i].label == "contacto" && this.etiquetas[i].nivel > 1){
-					salida[this.etiquetas[i].nivel-2].y+=1
-				}
-			}
-			return salida;
-
-		},
-		usuario:function(){
-			return app.usuario;
-		},
-		sesion:function(){
-			return app.sesion;
-		},
-		nombre_usuario:function(){
-			return app.usuario.nombre.split(" ")[0];
-		},
-		metricas:function(){
-			//PENDIENTE OPTIMIZACIÓN!!!
-			var datos = {};
-			console.log("calculando metricas adm,...",columnas_metricas.length,app.vacantes.length,adm.job_hackers.length)
-			for(var o in app.vacantes){
-				for(var i = 0 ; i<columnas_metricas.length;i++){
-					if(string2date(app.vacantes[o].fecha) >= string2date(columnas_metricas[i][0]) &&
-						string2date(app.vacantes[o].fecha) <= string2date(columnas_metricas[i][1])){
-						for(var u in adm.job_hackers){
-
-							if(app.vacantes[o].id_user == adm.job_hackers[u].id_db){
-								if(!(adm.job_hackers[u].id in datos)){
-									datos[adm.job_hackers[u].id] = new Array(columnas_metricas.length).fill(0)
-								}
-								datos[adm.job_hackers[u].id][i]+=1;
-							}
-						}
-					}
-				}
-			}
-			var columnas_metricas_texto = new Array(columnas_metricas.length); 
-			for(var o in columnas_metricas){
-				columnas_metricas_texto[o] = month[string2date(columnas_metricas[o][0]).getMonth()]+" "+string2date(columnas_metricas[o][0]).getDate()+" - "+
-				month[string2date(columnas_metricas[o][1]).getMonth()]+" "+string2date(columnas_metricas[o][1]).getDate();
-			}
-			return {"columnas":columnas_metricas_texto,
-			"datos":datos};
-		}
+	delimiters:['[[',']]'],
+	el: '#contenedor_profile',
+	data: {
+		name :"",
+		id:"",
+		estado:"",
+		fecha:"",
+		telefono:"",
+		mail:"",
+		linkedin:"",
+		logros:"",
+		area:"",
+		aspiracion_min:"",
+		aspiracion_max:"",
+		contenedor_profile:"",
+		ciudad:"",
+		sector:"",
+		subsector:"",
+		tipo:"",
+		cargos_aplica:"",
+		sesion_seleccionada:1,
+		recomendaciones:[],
+		recom_sel:-1
+		
 	}
-});*/
+})
+
 var conlis_job_hacker = new Vue({
 	mixins: [mixin],
 	delimiters: ['[[', ']]'],
@@ -885,44 +1316,8 @@ var conlis_job_hacker = new Vue({
 		compuerta:"and",
 		server_identifier:"usuarios",
 		indices_lista:{"total_usuarios":0}
-
-	},/*
-	watch:{
-		lista:function() {
-			conlis_stats.total_usuarios = 0;
-			
-			console.log("extrayendo colis_stats total usuarios")
-			if((app.usuario.tipo == 0 || app.usuario.tipo == 1 || app.usuario.tipo == 2) && app.usuario.usuario.trim() != ""){
-				for(var j =0; j<app.personas.length;j++){
-					
-
-					if(permisos_usuario_seguimiento.includes(app.personas[j].tipo)){
-						conlis_stats.total_usuarios++;
-						if(app.personas[j].job_hacker == app.usuario.usuario){
-							tmp_arr.push(app.personas[j])
-						}else{
-							tmp_arr2.push(app.personas[j]);
-						}
-					}
-				}
-				return {"usuarios":order_array_desc(tmp_arr,"dias_ultimo_dato"),"otros_usuarios":order_array_desc(tmp_arr2,"dias_ultimo_dato")};
-
-			}else if(app.usuario.tipo == 9){
-				for(var j =0; j<app.personas.length;j++){
-					
-
-					if(app.personas[j].tipo == 6){
-						conlis_stats.total_usuarios++;
-						tmp_arr.push(app.personas[j])
-						
-					}
-				}
-				return {"usuarios":order_array_desc(tmp_arr,"dias_ultimo_dato"),"otros_usuarios":order_array_desc(tmp_arr2,"dias_ultimo_dato")};
-
-			}
-			return {"usuarios":[],"otros_usuarios":[]};
-		}
-	},*/
+		
+	},
 	computed:{
 		
 		sesion:function(){
@@ -975,17 +1370,17 @@ var video = new Vue({
 	}
 });
 try{
-var contenidos = new Vue({
-	delimiters: ['[[', ']]'],
-	el: '#contenedor_contenidos',
-	data: {
-		videos: videos
-	},
-	methods:{
-
-		show_popup_video:show_popup_video
-	}
-});
+	var contenidos = new Vue({
+		delimiters: ['[[', ']]'],
+		el: '#contenedor_contenidos',
+		data: {
+			videos: videos
+		},
+		methods:{
+			
+			show_popup_video:show_popup_video
+		}
+	});
 }catch(e){
 	console.log("no se por que falla")
 }
@@ -1007,7 +1402,7 @@ var conlis_objetos_admin = new Vue({
 		{"id":"ultima_empresa","texto":"Empresa contacto"},
 		{"id":"ultimo_cargo","texto":"Cargo contacto"},
 		{"id":"obs","texto":"Descripción vacante"}]},
-
+		
 		lista_atts_orden:{"Orden:":[{"id":"empresa","texto":"Empresa vacante","asc":1},
 		{"id":"fecha","texto":"Fecha","asc":0},
 		{"id":"cargo","texto":"Cargo vacante","asc":1},
@@ -1022,7 +1417,7 @@ var conlis_objetos_admin = new Vue({
 		lista:{"vacantes":[],"contactos":[]},
 		indices_lista:{"total_vacantes":0,"total_contactos":0},
 		compuerta:"and"
-
+		
 	},
 	computed:{
 		sesion:function(){
@@ -1051,7 +1446,7 @@ var conlis_info_usuario = new Vue({
 		{"id":"ultima_empresa","texto":"Empresa contacto"},
 		{"id":"ultimo_cargo","texto":"Cargo contacto"},
 		{"id":"obs","texto":"Descripción vacante"}]},
-
+		
 		lista_atts_orden:{"Orden:":[{"id":"empresa","texto":"Empresa vacante","asc":1},
 		{"id":"fecha","texto":"Fecha","asc":0},
 		{"id":"cargo","texto":"Cargo vacante","asc":1},
@@ -1064,7 +1459,7 @@ var conlis_info_usuario = new Vue({
 		div:"buscador_objetos_vac",
 		lista:{"vacantes":[],"contactos":[],"novedades":[]},
 		compuerta:"and"
-
+		
 	},
 	computed:{
 		sesion:function(){
@@ -1087,7 +1482,7 @@ var conlis_novedades = new Vue({
 		div:"buscador_contenedor_novedades",
 		lista:{"novedades":[]},
 		compuerta:"and"
-
+		
 	},
 	computed:{
 		sesion:function(){
@@ -1098,6 +1493,7 @@ var conlis_novedades = new Vue({
 		}
 	}
 });
+
 var conlis_objetos_vac = new Vue({
 	mixins: [mixin],
 	delimiters: ['[[', ']]'],
@@ -1113,7 +1509,7 @@ var conlis_objetos_vac = new Vue({
 		{"id":"ciudad","texto":"Ciudad"},
 		{"id":"link","texto":"Link"},
 		{"id":"obs","texto":"Descripción"}]},
-
+		
 		lista_atts_orden:{"Orden:":[{"id":"empresa","texto":"Empresa","asc":1},
 		{"id":"fecha","texto":"Fecha","asc":0},
 		{"id":"cargo","texto":"Cargo","asc":1},
@@ -1124,7 +1520,7 @@ var conlis_objetos_vac = new Vue({
 		lista:{"vacantes":[],"full_vacantes":[]},
 		indices_lista:{"total_vacantes":0,"total_full_vacantes":0},
 		compuerta:"and"
-
+		
 	},
 	computed:{
 		sesion:function(){
@@ -1154,18 +1550,18 @@ var conlis_objetos_con = new Vue({
 		{"id":"linkedin","texto":"LinkedIn"},
 		{"id":"ultimo_cargo","texto":"Cargo"},
 		{"id":"ultima_empresa","texto":"Empresa"}]},
-
+		
 		lista_atts_orden:{"Orden:":[{"id":"nombre","texto":"Nombre","asc":1},
 		{"id":"ultimo_cargo","texto":"Cargo","asc":1},
 		{"id":"ultima_empresa","texto":"Empresa","asc":1},
 		{"id":"coincidencia","texto":"Coincidencia","asc":0}]},
-
+		
 		div:"buscador_objetos_con",
 		lista:{"contactos":[],"full_contactos":[]},
 		indices_lista:{"total_contactos":0,"total_full_contactos":0},
 		compuerta:"and",
 		total_items:0
-
+		
 	},
 	computed:{
 		sesion:function(){
@@ -1186,7 +1582,7 @@ var conlis_sesiones = new Vue({
 	data: {
 		
 		sesiones:[]
-
+		
 	},
 	computed:{
 		sesion:function(){
@@ -1204,4 +1600,26 @@ var listas_recomendacion = {
 	"ciudad":{"objeto":formulario,"lista":[]},
 	"vacantes":{"objeto":formulario,"lista":[]}
 }
-check_session();
+$( document ).ready(function() {
+	check_session();
+});
+
+var lista_requisitos = new Vue({
+	delimiters: ['[[',']]'],
+	el: '#criterios',
+	data: {
+		newItem: '',
+		cumplimiento_requisitos: [{ "requisito": '', "cumplimiento": ''}]
+	},
+	methods: {
+		additem() {
+			if (cumplimiento_req = "cumple") {
+				this.cumplimiento_requisitos.push({text: this.newItem })
+				this.newItem = ''
+			}
+		}
+	}
+});
+
+
+Vue.config.devtools = true;

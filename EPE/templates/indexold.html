@@ -1,0 +1,572 @@
+{% load static %}
+
+{% load versioned_static %}
+
+<html>
+<head>
+	<!-- Hotjar Tracking Code for www.aleja.com.co -->
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleia</title>
+	<meta property="og:title" content="Aleia"/>
+	<meta name="facebook-domain-verification" content="81hix51l37a1nid82uhmhvqtkwy1dx" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_index.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_index_mobile.css' %}">
+</head>
+<body >
+	<div id="div_contenedor_video" class="div_contenedor_popup hide" style="display: none">
+		<button  class="close_corner video" onclick="close_popup(5)"><input type="image" class="corner_img video" src="{% static 'imgs/cancel_c.png'%}"  />
+		Cerrar video</button>
+		<div id="player"></div>
+		<div id="sorry">
+			¡Lo siento! Este consejo aun no está disponible.
+			<br><br>
+			Tenemos un equipo de Job Hackers creando los mejores consejos para que cambies tu búsqueda de empleo y tu futuro profesional.
+			<br><br>
+			A medida que lanecemos los consejos te notificaremos al correo, así que esta atento.
+		</div>
+		<!--<div class="botonera_popup_video">
+			<div class="boton_popup_video">
+				<button class="boton_popup_video_b">Ver consejos de Aleia</button>
+			</div>
+			<div class="boton_popup_video">
+				<button  class="boton_popup_video_b">Obtén créditos de Aleia</button>
+			</div>
+		</div>-->
+	</div>
+	<div id="contenedor_right" class="div_contenedor_popup hide">
+
+
+		<div id="contenedor_popup_formularios" class="contenedor_popup_perfil">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			
+			<div id="div_info_oportunidad" class="mensaje_popup_perfil">
+				
+				<p style="color: #3e3e3e; font-size: 30;"><span style="color:#7336b3">Busca candidatos y publica vacantes GRATIS.</span>  </p><br>
+				<h1 style="color: #5f5e5e">
+					Si entre nuestra comunidad de talentos está tu candidato perfecto te lo presentamos SIN COSTO.
+					<br>Acelera tu reclutamiento ahora mismo con Aleia como aliada.
+				</h1>
+				<br>
+				<br>
+				<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('inicio_empresa_aleia')">
+					<input type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.inicio_gente_aleia.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.inicio_gente_aleia.titulo]]</div>
+				</button>
+
+				
+
+
+
+			</div>
+			<div id="div_info_login" class="mensaje_popup_perfil">
+
+				<p style="color: #3e3e3e; font-size: 30;"><span style="color:#7336b3">Busca empleo de una forma diferente.</span>  </p><br>
+				<h1 style="color: #5f5e5e">
+					Recopilamos vacantes de todos los portales y te damos varias opciones para que te postules y avances en los procesos de selección.
+					<br><br>
+					En ningún momento estarás solo, Aleia te guía con consejos para que mejores tu proceso de búsqueda de empleo.
+				</h1>
+				<br>
+				<br>
+				<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('inicio_gente_aleia')">
+					<input type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.inicio_empresa_aleia.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.inicio_empresa_aleia.titulo]]</div>
+				</button>
+				
+
+				
+
+
+
+			</div>
+			<div id="div_mensaje_retorno" style="display: none"></div>
+			<div id="div_crear_login" class="form_popup_perfil" style="display: none;margin-top: 50px;height: 70%;">
+				<a href="/login?type=registro" target="_blank">
+				<button class="opcion_vacante nivel1 index_top">Registrate GRATIS</button>
+			</a>
+			</div>
+			<div id="div_crasdear_oportunidad" class="form_popup_perfil" style="display: none;">
+
+				<div class="div_input id" style="display: none">
+					<input id="id_oportunidad" class="id" readonly />
+
+				</div>
+				<div class="div_input">
+					<input id="empresa_oportunidad" class="input" placeholder="Empresa" />
+
+				</div>
+				<div class="div_input">
+					<input id="cargo_oportunidad" class="input" placeholder="Cargo" />
+
+				</div>
+				<div class="div_input">
+					<input id="req1" class="input" placeholder="¿Cual es el primer criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input">
+					<input id="req2" class="input" placeholder="¿Cual es el segundo criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input">
+					<input id="req3" class="input" placeholder="¿Cual es el tercer criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input">
+					<input id="req4" class="input" placeholder="¿Cual es el cuarto criterio que el cargo debe cumplir?" />
+
+				</div>
+				<div class="div_input">
+					<input id="req5" class="input" placeholder="¿Cual es el quinto criterio que el cargo debe cumplir?" />
+
+				</div>
+				<div class="div_input">
+					<textarea placeholder="¿Quieres incluir mas información sobre el cargo? (Horarios, condiciones especiales, qué lo podría hacer más interesante como candidato para ti)" id="obs_oportunidad"></textarea>
+				</div>
+				<div class="div_input">
+
+					<div class="desde">
+						<h2>Rango salarial desde</h2>
+					</div>
+					<div class="desde2">
+						<input id="rango_menor_oportunidad" class="input" placeholder="$" />
+					</div>
+					<div class="hasta">
+						<h2>hasta</h2>
+					</div>
+					<div class="hasta2">
+						<input id="rango_mayor_oportunidad" class="input" placeholder="$" />
+					</div>
+				</div>
+				<div class="div_input" >
+					<div class="titulo_select">
+						<h2>¿Quieres apoyo para encontrar candidatos?</h2>
+					</div>
+					<select id="tipo_servicio" class="input select" onchange="selecciona_tipo_servicio()">
+						<option value="empresa_ayuda">Si</option>
+						<option value="no" selected>No</option>
+						<option value="empresa_llamada">Quiero hablar con un asesor primero</option>
+					</select>
+				</div>
+				<div id="div_recompensa" class="div_input" style="display: none;">
+					<input id="recompensa" class="input" placeholder="¿Cuanto es tu presupuesto para pagarle al candidato?" />
+				</div>
+				<div class="div_input">
+
+					<div class="titulo_select">
+						<h2>Quiero que se puedan postular por Aleia
+						</h2> 
+					</div>
+					<input type="checkbox" id="postulacion_oportunidad">
+					<button class="opcion_input" onclick="show_message_popup(this)">
+						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+					</button>
+				</div>
+
+				<div class="div_input">
+					<div class="titulo_select">
+						<h2>Tipo de oportunidad:</h2>
+					</div>
+					<select id="tipo_oportunidad" class="input select" placeholder="Tipo de relación">
+						<option value="1">Empleado</option>
+						<option value="2">Consultoria</option>
+						<option value="4">Otro</option>
+					</select>
+
+				</div>
+
+				<!--<div class="sub_contenedor_form_empresa" id="sub_contenedor_form_empresa" style="display: none">
+					<h1 style="color:#1d1dbb">Necesitamos esta información extra para poder cargar tu vacante</h1>-->
+					<div class="div_input">
+						<div class="recomendaciones">
+							<button :id="'ciudad_oportunidad_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('ciudad',this)">
+								[[o]]
+							</button>
+						</div>
+						<input id="ciudad_oportunidad" onblur="remove_recom('ciudad')" onkeydown="explore_recom(event,'ciudad',this)" oninput="recomendaciones('ciudad',this)" class="input" placeholder="Ciudad" />
+
+					</div>
+					<div class="div_input">
+						<input id="link_oportunidad" class="input" placeholder="Link" />
+
+					</div>
+
+					<!--</div>-->
+					<input id="req_oportunidad" style="display: none"/ >
+					<input id="cumplimiento_100" style="display: none"/>
+					<input id="oportunidad_oculto" style="display: none"/>
+
+					<div class="div_input">
+						<input id="nombre_usuario" class="input" placeholder="Escribe tu nombre" />
+
+					</div>
+					<div class="div_input">
+						<input id="correo_usuario" class="input" placeholder="Escribe un correo para que te contactemos" />
+
+					</div>
+					<div class="div_input">
+						<input id="telefono_usuario" class="input" placeholder="Escribe un telefono para que te contactemos" />
+
+					</div>
+
+
+
+				</div>
+				<div class="contenedor_botones_perfil">
+					<button id="boton_call2action" class="opcion_vacante nivel1 job_resume" onclick="call2action_index_vac()" >¡Quiero empezar!</button>
+				</div>
+			</div>
+		</div>
+		<div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+		<div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
+			<div id="contenedor_popup_pregunta" class="contenedor_popup_pregunta">
+				<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+				<span id="mensaje_popup_pregunta"></span>
+			</div>
+		</div>
+		<div id="loading" class="loading_show">
+			<div class="loadingio-spinner-ellipsis-cbdgjz18cd"><div class="ldio-dlo8blsimq">
+				<div></div><div></div><div></div><div></div><div></div>
+			</div></div>
+			<div class="div_texto_loading">
+				<h1 id="texto_loading">Cargando datos de Aleia</h1>
+			</div>
+		</div>
+
+		<div class="contenedor_botones">
+			<a href="/login" class="login_a"><button class="login">Iniciar sesión</button></a>
+			<a href="/login?type=registro" class="registro_a"><button class="login registro">Registrate GRATIS</button></a>
+		</div>
+		<div id="brand" >
+			<h3>by</h3> <a href="https://www.seligo.com.co/" target="_blank"><img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img"></a>
+		</div>
+
+		<div id="div_contenedor_popup" class="div_contenedor_popup hide" style="display: none;">
+			<div id="contenedor_popup" class="contenedor_popup extenso">
+				<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+				<div id="sub_contenedor_popup_datos" class="sub_contenedor_popup datos">
+					<div id="subpopup_superior" class="subpopup superior">
+						<div id="subpopup_superior_izq" class="imagen_popup">
+							<img :src="imagen" class="popup_img"/>
+						</div>
+						<div id="subpopup_superior_der" class="div_titulo_popup">
+							<h2 class="titulo_popup">[[titulo]]. <span style="color:grey">ID [[id]]</span></h2>
+							<h1>[[subtitulo]] en <b class="empresa">[[subtitulo2]]</b></h1>
+						</div>
+					</div>
+					<div id="subpopup_inferior" class="subpopup inferior">
+						<div id="subpopup_inferior_vac" v-show="label == 'oportunidad'" class="subpopup_data">
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Vacantes al mes</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly >
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Rango de sueldos</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="rango_salario">
+								</div>
+							</div>
+						</div>
+						<div id="subpopup_inferior_per"  v-show="label == 'contacto'" class="subpopup_data">
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Aspiración salarial</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="rango_salario">
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Profesión</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="profesion">
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Ultima búsqueda</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="ultimo_login">
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Ciudad</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="ciudad">
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Sector</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="sector">
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Subector</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="subsector">
+								</div>
+							</div>
+							<div class="info_popup">
+								<div class="label_info">
+									<h2>Area</h2>
+								</div>
+								<div class="data_info">
+									<input class="input_data_popup" readonly :value="area">
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div id="sub_contenedor_popup_detalle" class="sub_contenedor_popup detalle">
+					<div id="subpopup_detalle_vac"  v-show="label == 'oportunidad'" class="subpopup_data">
+						<h1>[[titulo_texto1]]</h1><br>
+						<h2>[[texto1]]</h2>
+						<br><br>
+						<h1>[[titulo_texto2]]</h1><br>
+						<h2>[[texto2]]</h2>
+					</div>
+					<div id="subpopup_detalle_con"  v-show="label == 'contacto'" class="subpopup_data">
+						<h1>[[titulo_texto1]]</h1><br>
+						<h2>[[texto1]]</h2>
+						<br><br>
+						<h1>[[titulo_texto2]]</h1><br>
+						<h2>[[texto2]]</h2>
+					</div>
+
+				</div>
+				<div id="sub_contenedor_popup_red" class="sub_contenedor_popup red" style="display: none;">
+
+				</div>
+
+				<div id="sub_contenedor_popup_comentarios" class="sub_contenedor_popup comentarios" style="display: none">
+					<div class="contenendor_comentarios">
+						<div class="contenedor_comentario"  v-for="o in comentarios">
+							<button :id = "'eliminar_comentario_'+o.id" class="eliminar_comentario" onclick="eliminar_comentario(this)"><input type="image" class="eliminar_comentario_img" src="{% static 'imgs/delete.png'%}"  />
+							</button>
+							<h3>[[o.fecha]]</h3>
+							<h2>[[o.comentario]]</h2>
+						</div>
+					</div>
+					<div class="contenedor_input_comentario">
+						<textarea class="input_comentario" placeholder="Escribe un comentario" id="input_comentario">
+
+						</textarea>
+
+						<button onclick="enviar_comentario()" class="enviar_comentario" >Subir
+						</button>
+					</div>
+				</div>
+				<div id="sub_contenedor_popup_botonera" class="sub_contenedor_popup botonera">
+					<div class="sub_contenedor_botonera">
+						<button  v-show="valid_url(link)" :id="link" class="opcion_popup" onclick="open_link(this)">
+							<input type="image" src="/static/imgs/popup/link.png" class="img_opcion popup">Abrir link
+						</button>
+						
+						<button class="opcion_popup" v-show="id_et == -1 &&  label == 'oportunidad'" :id="'pp_add_vacante_'+id" onclick="show_message_popup(null,true,'mensaje_1')">
+							<input type="image" class="img_opcion popup" src="{% static 'imgs/add.png'%}"  />Guardar en Aleia
+						</button>
+						<button class="opcion_popup principal" v-show="id_et == -1 && label == 'oportunidad' " :id="'pp_add_vacante_repre_'+id" onclick="show_message_popup(null,true,'mensaje_0')">
+							<input type="image" class="img_opcion popup" src="{% static 'imgs/arrow.png'%}"  />Postulate
+						</button>
+
+						<button class="opcion_popup" v-show="id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="popup_envio_solicitud(this,event)">
+							<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Invitar
+						</button>
+						<button class="opcion_popup" v-show="id_et != -1" :id="'delete_etiqueta_'+id_et" onclick="delete_etiqueta(this,event)">
+							<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/delete.png'%}"  />Borrar
+						</button>
+						<button class="opcion_popup" v-show="id_et != -1" :id="'edit_etiqueta_'+id_et" onclick="edit_etiqueta(this,event)" >
+							<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/edit.png'%}"  />Editar
+						</button>
+						<button id="copiar_objeto" v-show="sesion.data.admin == 1 && id_et != -1 " class="opcion_popup" onclick="copiar_objeto()">
+							<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/copy.png'%}"  />[[estado_copy]]
+						</button>
+
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		<div  id="contenedor" class="contenedor" >
+			<div class="contenedor_vista" >
+				<div class="contenido">
+					<div class="top_marca_aleja_index">
+						<div id="logo_titulo">
+							<img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+						</div>
+					</div>
+					<div class="titulo_def_index">
+						Portal de empleo que <br>rompe el mercado <spam  style="color:#c4547e">por ti</spam>
+					</div>
+					<div class="texto">
+
+
+						<button class="subtexto personas" onclick="crear('login')">
+							<img src="/static/imgs/ilustraciones/candidato.png" class="img_index_op"/>
+							¿Necesitas ayuda para conseguir empleo?
+						</button>
+						<button class="subtexto empresas" onclick="crear('oportunidad')">
+							<img src="/static/imgs/ilustraciones/reclutador.png" class="img_index_op"/>
+							¿Quieres encontrar candidatos fácil y rapido?
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+			<div id="contenedor_busquedas_vacantes" class="contenedor_vista mockup">
+				<div class="div_buscador">
+					<input :id="div" onkeypress="keyword_selected(event,this)" class="buscador" placeholder="Escribe lo que buscas y oprime Enter"/>
+					<input type="image" src="/static/imgs/menu/search.png" class="opcion_img_buscador">
+					<div class="filtro_seleccionado atributo" v-show="att_tmp != ''">
+						<h2>[[att_tmp]]</h2><button :id="div+'_att_tmp'" class="borrar_filtro" onclick="borrar_att_tmp(this)"><input type="image" class="filter_img" src="{% static 'imgs/cancel_w.png'%}"  /></button>
+					</div>
+				</div>
+				<div class="div_filtro">
+					<button class="filtro" :id="div+'_popup_filtro_show'" onclick="show_popup_atts(this)"><input type="image" class="img_filter" src="{% static 'imgs/filter2.png'%}"  /><h2 class="desktop">Filtros avanzados</h2></button>
+					<div :id="div+'_popup_filtro'" class="popup_atts hidden">
+						<button :id="div+'_popup_filtro_close'" class="close_corner atts" onclick="close_popup_atts(this)"><input type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+						<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_filtro">
+
+							<div class="att" v-for="att in obj">
+								<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_att(this)"><h2>[[att.texto]]</h2></button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="filtros">
+
+					<h3 class="titulo_filtros">[[filtros.length]] filtro(s):</h3>
+					<div class="contenedor_filtros">
+						<div class="filtro_seleccionado" v-for="(fil,index) in filtros">
+							<h2>[[fil]]</h2><button :id="'borrar_'+div+'-'+index" class="borrar_filtro" onclick="borrar_filtro(this)"><input type="image" class="filter_img" src="{% static 'imgs/cancel_w.png'%}"  /></button>
+						</div>
+
+						<div class="order">
+							<h2>[[order]]</h2><button :id="'sort_'+div" class="borrar_filtro"><input v-show="asc == 0" type="image" class="filter_img" src="{% static 'imgs/up3.png'%}"  /><input v-show="asc == 1" type="image" class="filter_img" src="{% static 'imgs/down3.png'%}"  /></button>
+						</div>
+						<button class="opcion_filtro" onclick="borrar_filtros('vacante')"><h3>Borrar todo</h3></button>
+					</div>
+				</div>
+				<div class="contenedor_listas left">
+					<div :id="'share_etiqueta_'+obj.id" onclick="share_item(this,'oportunidad',event)" class="contenedor_etiqueta" v-for="obj in lista.full_vacantes ">
+
+						<div class="botonera etiqueta">
+							<button  :id="'aplicar_servicio_'+obj.id" class="opcion_vacante nivel1" onclick="show_message_popup(null,true,'mensaje_0')"><input type="image" class="opcion_img" src="{% static 'imgs/arrow.png'%}"  /><h2>Postulate</h2>
+							</button>
+							<button  :id="'add_vacante_'+obj.id" class="opcion_vacante nivel2" onclick="show_message_popup(null,true,'mensaje_1')"><input type="image" class="opcion_img" src="{% static 'imgs/save.png'%}"  /><h2>Guardar</h2>
+							</button>
+
+
+						</div>
+						<div class="div_etiqueta">
+							<div class="etiqueta_fecha">
+								<h3>[[obj.fecha]]</h3>
+							</div>
+							<div class="etiqueta_coincidencia"  v-show="obj.coincidencia > 0">
+								<h4 class="coincide total" v-show="obj.coincidencia == 100">coincidencia completa</h4>
+								<h4 class="coincide parcial" v-show="obj.coincidencia < 100">recomendado</h4>
+							</div>
+						</div>
+						<div class="div_contenido">
+							<h2 style="color:gray"><span class="empresa">[[obj.empresa]]</span> buscó
+								<h1 class="titulo_vacante">[[obj.cargo]]</h1>
+								<div class="div_etiqueta_info">
+									<input type="image" src="/static/imgs/popup/star.png" class="img_de_etiqueta">
+									<h3 class="etiqueta_con_img">[[obj.lista_reqs.length]] requisitos especificados</h3>
+									<!--<div v-if="kw != ''" v-for="kw in obj.lista_reqs"  class="keyword_label">[[kw]]</div>-->
+								</div>
+
+								<div v-show="obj.rango_menor != ''" class="div_etiqueta_info">
+									<input type="image" src="/static/imgs/dollar.png" class="img_de_etiqueta">
+									<h3 class="etiqueta_con_img">Salario entre [[obj.rango_menor]] y [[obj.rango_mayor]]</h3>
+								</div>
+
+								<div  v-if="obj.ciudad != ''" class="div_etiqueta_info">
+									<input type="image" src="/static/imgs/location.png" class="img_de_etiqueta">
+									<h3 class="etiqueta_con_img">Cargo requerido en [[obj.ciudad]]</h3>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="ver_mas_inferior" onclick="show_message_popup(null,true,'Tenemos un equipo de Job Searchers que estan cargando las vacantes más llamativas de todos los portales todos dias.<br><br>Para poder ver mas vacantes debes iniciar sesión o crear una cuenta en Aleia.')" v-show="indices_lista.total_full_vacantes > lista.full_vacantes.length">Ver más</div>
+					</div>
+				</div>
+
+
+			</body>
+			<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+
+			<script  src="{% versioned_static 'js/global.js'%}"></script>
+			<script  src="{% versioned_static 'js/business.js'%}"></script>
+
+			<script  src="{% versioned_static 'js/render.js'%}"></script>
+			<script type="text/javascript">
+
+
+
+				function cargar(){
+					$.ajax({
+						url:'EPE/solicitud_index',
+						type:'POST',
+						async: true,
+						data:{
+							"fecha":new Date().getFullYear() + "-" + (new Date().getMonth()+1) + "-" + new Date().getDate()+" "+new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
+							"nombre":document.getElementById("nombre").value,
+							"telefono":document.getElementById("telefono").value,
+							"cargo":document.getElementById("cargo").value,
+							"empresa":document.getElementById("empresa").value,
+							"comentario":document.getElementById("comentario").value
+						},
+						success: function(ret){
+
+							alert("Envío exitoso!");
+							document.getElementById("nombre").value="";
+							document.getElementById("telefono").value = "";
+							document.getElementById("cargo").value="";
+							document.getElementById("empresa").value="";
+							document.getElementById("comentario").value="";
+
+						},
+						error: async function(xhr, errmsg, err) {
+							alert("Error en el servidor, intentalo mas tarde")
+						}
+					});
+				}
+			</script>
+			</html>

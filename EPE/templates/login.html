@@ -9,122 +9,143 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-
-
+    
+    
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
     <script  src="{% versioned_static 'js/login.js'%}"></script>
-
-
-
+    <script  src="{% versioned_static 'js/global.js'%}"></script>
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+    
+    
 </head>
+{% block content %}
+	
+	{% include 'loading.html' %}
+    {% endblock %} 
 <body style="background: white">
     <div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
         <div id="contenedor_popup" class="contenedor_popup mensaje">
-            <button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+            <button  class="close_corner" onclick="close_popup(this)"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
             <span id="mensaje_popup_pregunta"></span>
         </div>
     </div>
     <div id="div_contenedor_popup" class="div_contenedor_popup hide" style="display: none;">
         <div id="contenedor_popup" class="contenedor_popup mensaje">
-            <button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
-        
+            <button  class="close_corner" onclick="close_popup(this)"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+            
             <h1>Ingresa tu correo para enviarte tu contraseña. Recuerda que este correo debe estar asociado a tu cuenta de Aleia.</h1>
             <div class="div_input">
                 <input id="mail_pass" class="input" placeholder="Correo de recuperación"/>
-
+                
             </div>
-            <button class="request_pass" onclick="request_pass()"> Recuperar contraseña</button>
+            <button class="request_pass like" onclick="request_pass()"> Recuperar contraseña</button>
             <h2 id="mensaje_popup"></h2>
         </div>
     </div>
-
-    <div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
-
-    <div id="login_info" >
-        <img src="{% static 'imgs/intro_new.jpg'%}" style="margin-top: 8%;width: 100%;">
-    </div>
-    <div id="login_datos" class="ingreso_datos_login">
-        <div class="top_marca_aleja top_login" >
-    <div id="logo_titulo">
-        <img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+    
+    <div id="mensaje_flotante" class="mensaje_flotante hide">
+        <h2 id="texto_mensaje_flotante" class=""></h2>
+        <button class="close_mensaje_flotante" onclick="document.getElementById('mensaje_flotante').classList.add('hide');">Ignorar</button>
     </div>
     
+    <div id="login_info" >
+        <img src="{% static 'imgs/ilustraciones/login.jpg'%}" style="margin-top: 8%;width: 71%;margin-left: 16%;">
+        
+    </iframe>
+    
 </div>
-
-        <div class="form_login" >
-            <h1>Login</h1>
-            <div class="div_input">
-                <input id="usuario" class="input" placeholder="Usuario o correo"/>
-
-            </div>
-            <div class="div_input">
-                <input type="password" id="password" class="input" placeholder="Contraseña" />
-                <button class="opcion_input" onclick="show_password(this)">
-                    <input type="image" class="img_pass showp" src="{% static 'imgs/index/eye.png'%}"  />
-                    <input style="display: none" type="image" class="img_pass hidep" src="{% static 'imgs/index/hide.png'%}"  />
+<div id="login_datos" class="ingreso_datos_login">
+    
+    <div class="top_marca_aleja top_login" >
+        <a href="/">
+            <div id="logo_titulo">
+                <img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+            </a>
+        </div>
+        
+    </div>
+    
+    <div class="form_login" >
+        <span class="h0">Login</span>
+        <div class="div_input index">
+            <input id="usuario" class="input" placeholder="Usuario o correo"/>
+            
+        </div>
+        <div class="div_input index">
+            <input type="password" id="password" class="input" placeholder="Contraseña" />
+            <button class="boton_pass" onclick="show_password(this)">
+                <img type="image" class="img_pass showp" src="{% static 'imgs/index/eye.png'%}"  />
+                <img style="display: none" type="image" class="img_pass hidep" src="{% static 'imgs/index/hide.png'%}"  />
+            </button>
+        </div>
+        <div class="send_login">
+            <div class="forgot_pass">
+                <button class="olvide_pass" onclick="forgot_pass()">
+                    <h2>Olvidé o no se mi contraseña</h2>
                 </button>
+                <a href="login?type=registro" >
+                    <button class="olvide_pass" >
+                        <h2>Crear cuenta</h2>
+                    </button>
+                </a>
             </div>
-            <div class="send_login">
-                <div class="forgot_pass">
-                    <button class="olvide_pass" onclick="forgot_pass()">Olvidé mi contraseña</button>
-                    <h3><a href="login?type=registro" >Crear cuenta</a></h3>
-                </div>
-                <div class="login_action">
-                    <button id="iniciar_sesion" class="boton_call2action" onclick="iniciar_sesion()">Iniciar sesión</button>
-                </div>
-            </div>
-            <div id="div_mensaje_error" style="display: none;">
-                <h3 id="mensaje_error" class="mensaje_error">Usuario o contraseña incorrecta</h3>
+            <div class="login_action">
+                <button id="iniciar_sesion" class="boton_call2action" onclick="iniciar_sesion()">Iniciar sesión</button>
             </div>
         </div>
+        <div id="div_mensaje_error" style="display: none;">
+            <h3 id="mensaje_error" class="mensaje_error">Usuario o contraseña incorrecta</h3>
+        </div>
     </div>
-    <div id="registro_datos" class="ingreso_datos_login" style="display: none">
-        <div class="top_marca_aleja top_login" >
-    <div id="logo_titulo">
-        <img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+</div>
+<div id="registro_datos" class="ingreso_datos_login" style="display: none">
+    <div class="top_marca_aleja top_login" >
+        <div id="logo_titulo">
+            <img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+        </div>
+        
     </div>
     
-</div>
-
-        <div class="form_login" >
-            <h1>Registro</h1>
+    <div class="form_login" >
+        <form id="registro_form">
+            <span class="h0">Registro</span>
             
             <div class="div_input">
-                <input id="nombre" class="input" placeholder="Nombre completo"/>
+                <input id="nombre" name="nombre" class="input" placeholder="Nombre completo"/>
                 
-
+                
             </div>
             <div class="div_input">
-                <input id="mail" class="input" placeholder="Correo electrónico"/>
+                <input id="mail" name = "mail" class="input" placeholder="Correo electrónico"/>
             </div>
             <div class="div_input">
-                <input type="password" id="pass" class="input" placeholder="Contraseña"/>
-                <button class="opcion_input" onclick="show_password(this)">
-                    <input type="image" class="img_pass showp" src="{% static 'imgs/index/eye.png'%}"  />
-                    <input style="display: none" type="image" class="img_pass hidep" src="{% static 'imgs/index/hide.png'%}"  />
+                <input type="password" name="pass" id="pass" class="input" placeholder="Contraseña"/>
+                <button type="button" class="boton_pass" onclick="show_password(this)">
+                    <img type="image" class="img_pass showp" src="{% static 'imgs/index/eye.png'%}"  />
+                    <img style="display: none" type="image" class="img_pass hidep" src="{% static 'imgs/index/hide.png'%}"  />
                 </button>
             </div>
-           
+            
             <div class="div_input">
-                <input id="linkedin" class="input" placeholder="Link de LinkedIn"/>
+                <input id="linkedin" name="linkedin" class="input" placeholder="Link de LinkedIn"/>
             </div>
-            <div class="div_input" >
-
+            <!--<div class="div_input" style="display: none;">
+                
                 <div class="titulo_select" style="width: 60%"><h2>¿Quieres un perfil de empresa?</h2></div>
                 <select id="perfil_empresa" class="input select" style="width: 30%" onchange="perfil_empresa()">
                     <option value = ""></option>
                     <option value = "true">Si</option>
-                    <option value = "false">No</option>
+                    <option value = "false" selected>No</option>
                 </select>
                 <button class="opcion_input" onclick="show_message_popup(this)">
-                    <input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                    <img type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
                 </button>
             </div>
             <div id="div_empresa" class="div_input" style="display: none">
@@ -132,25 +153,26 @@
             </div>
             <div id = "div_telefono" class="div_input" style="display: none">
                 <input id="telefono" class="input" placeholder="Celular"/>
-            </div>
+            </div>-->
             <div class="div_input">
-                <h3>Al registarte en Aleia autorizas a Séligo sobre tus datos acorde a las politicas definidas en <a href="https://www.seligo.co/politicadatos">www.seligo.co/politicadatos</a>
+                <h3>Al registarte en Aleia autorizas a Séligo sobre tus datos acorde a las politicas definidas en <a href="https://aleia.app/politicadatos">https://aleia.app/politicadatos</a>
                 </div>
                 <div class="send_login">
                     <div class="forgot_pass">
-
+                        
                         <h3><a href="login" >Iniciar sesión</a></h3>
                     </div>
                     <div class="login_action">
-                        <button id="iniciar_sesion" class="boton_call2action" onclick="registro()">Crear cuenta</button>
+                        <button type="submit" id="iniciar_sesion" class="boton_call2action">Crear cuenta</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="brand" >
-            by <img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img">
-        </div>
-    </body>
-    <script  src="{% versioned_static 'js/registro.js'%}"></script>
-    </html>
+        </form>
+    </div>
+    <div id="brand" >
+        by <img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img">
+    </div>
+</body>
+<script  src="{% versioned_static 'js/registro.js'%}"></script>
+</html>
 

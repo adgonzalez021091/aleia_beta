@@ -1,11 +1,7 @@
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles.css
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles_index.css
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/loading.css
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles_index_mobile.css
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/global.js
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/business.js
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/render.js
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles.css
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles_mobile.css
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/login.js
-django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/registro.js
+root - WARNING - 17:16:6::::VIEWS___tm124:22:16:07
+root - WARNING - 17:16:6::::VIEWS___tm124:22:18:11
+root - WARNING - 17:16:6::::VIEWS___tm124:22:20:00
+root - WARNING - 17:24:0::::VIEWS___tm124:22:24:00
+root - WARNING - 17:24:0::::VIEWS___tm124:22:26:04
+root - WARNING - 17:29:32::::VIEWS___tm124:22:29:32
+root - WARNING - 17:29:32::::VIEWS___tm124:22:30:50

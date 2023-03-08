@@ -3,6 +3,7 @@ import pymongo
 import logging
 logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 import json
+from EPE.business import integracion_monday# integraciones apagadas 02-02-2023 
 from EPE.business.logic import *
 from EPE.business.integracion_sheets import *
 from bson.json_util import dumps
@@ -29,6 +30,17 @@ class read(object):
         #mongo_client = MongoClient('mongodb://%s:%s@18.218.58.145' % (username, password)) #PROD
         mongo_client = MongoClient(str(url_bd) % (username, password))#TEST
         return mongo_client.aleja_bd
+    def read_postulaciones_usuario(self,obj):
+        db = load_mongo_client()
+        postulaciones = db.postulaciones.find({"id_persona":str(obj["id"])})
+        salida_reqs = [] 
+        for p in postulaciones:
+            for r in p["reqs"]:
+                if(r["cumple"]):
+                    salida_reqs.append({"requisito":r["req"],"cumplimiento":r["motivo"]})
+        return salida_reqs
+
+
     def get_persona(self,id):
         print("read_persona:", datetime.now().strftime("%H:%M:%S"))
         logging.info('This will get logged to a file')
@@ -48,8 +60,23 @@ class read(object):
         
         
         s = json.loads(dumps(list(vacante)))
-        s2 = process_data_json(s)
-        return s2[0]
+
+        s2 = process_data_json(s,"vacante")[0]
+        if "confidencial" in s2 and s2["confidencial"] == "true":
+            s2["empresa"] = "Empresa confidencial"
+        if "@" in s2["link"]:
+            s2["tipo_link"] = "mail"
+        else:
+            s2["tipo_link"] = "enlace"
+        if len(s2["link"]) > 30:
+            s2["link_corto"] = s2["link"][0:30]+"..."
+        else:
+            s2["link_corto"] = s2["link"]
+        if "servicio" in s2 and s2["servicio"] == "pago":
+            s2["empresa"] = "Reclutadores de Aleia"
+        
+        s2["lista_preguntas"] = json.loads(dumps(list(db.preguntas.find({"id_vacante":int(id)}))))
+        return s2
     def read_personas(self,id_sesion):
         print("read_personasin_tm11:", datetime.now().strftime("%H:%M:%S"))
         logging.info('This will get logged to a file')
@@ -91,6 +118,75 @@ class read(object):
         s = process_data_ciudades(json.loads(dumps(list(ciudades))))
         print("read_ciudades3:", datetime.now().strftime("%H:%M:%S"))
         return s
+from abc import ABC, abstractmethod
+
+class transaccion(ABC):
+    def __init__(self):
+        self.conexion = load_mongo_client()
+        self.now = datetime.now()
+        
+    @abstractmethod
+    def create(self, obj):
+        pass
+    @abstractmethod
+    def update(self, obj):
+        pass
+    @abstractmethod
+    def read(self, obj):
+        pass
+    @abstractmethod
+    def delete(self, obj):
+        pass
+    
+    def find_id(self,model):
+        lid = model.find_one(sort=[("id", -1)])
+        if lid:
+            return lid["id"]+1
+        else:
+            return 1
+    def load_mongo_client():
+        import os
+        current_file_dir = os.path.dirname(__file__)
+        other_file_path = os.path.join(current_file_dir, "config.txt")
+        url_bd = '18.222.100.32'
+        import urllib.parse
+        username = urllib.parse.quote_plus('aleja_user')
+        password = urllib.parse.quote_plus('02-10-91aldigovE')
+        f=open(other_file_path, "r")
+        if f.mode == 'r':
+            contents =f.read()
+            url_bd = contents.split("url_bd[")[1].split("]")[0]
+        mongo_client = MongoClient(str(url_bd) % (username, password))#TEST
+        return mongo_client.aleja_bd
+class pregunta(transaccion):
+    
+    def create(self,obj):
+        obj["fecha_hora"] = self.now
+        obj["fecha_pregunta"] = self.now.strftime("%Y-%m-%d %H:%M")
+        obj["id_vacante"] = int(obj["id_vacante"])
+        obj["id"] = self.find_id(self.conexion.preguntas)
+        self.conexion.preguntas.insert_one(obj)
+
+        return True
+    def update(self, obj):#pendiente montaje y uso
+        pass
+    def delete(self, obj):#pendiente montaje y uso
+        pass
+    def read(self,params):
+        return json.loads(dumps(list(self.conexion.preguntas.find(params))))
+class respuesta(transaccion):
+    def update(self, obj):#pendiente montaje y uso
+        pass
+    def delete(self, obj):#pendiente montaje y uso
+        pass
+    def read(self, obj):#pendiente montaje y uso
+        pass
+    def create(self,obj):
+        obj["date"]=self.now
+        obj["fecha_respuesta"] = self.now.strftime("%Y-%m-%d %H:%M")
+        obj["id_vacante"] = int(obj["id_vacante"])
+        self.conexion.preguntas.update_one({"id":int(obj["id_pregunta"])},{"$set":{"respuesta":obj["respuesta"],"fecha_respuesta":obj["fecha_respuesta"]}})        
+        return True
 class create_update(object):
     
     """def load_mongo_client():
@@ -110,6 +206,43 @@ class create_update(object):
         mongo_client = MongoClient(str(url_bd) % (username, password))#TEST
         return mongo_client.aleja_bd
     """
+    def crear_editar_usuario_temporal(self,obj_pass,action):
+        import random
+        today = datetime.now().strftime("%Y-%m-%d")
+        tmp_pass =''.join(random.choices(string.ascii_uppercase + string.digits, k = 10)) 
+        parametro = "nombre[["+obj_pass["nombre"]+"]]mail[["+obj_pass["correo"]+"]]numero_identificacion[["+obj_pass["documento"]+"]]pass[["+tmp_pass+"]]ultimo_cargo[["+obj_pass["ultimo_cargo"]+"]]aspiracion_max[["+obj_pass["aspiracion_max"]+"]]cargos_aplica[["+obj_pass["cargos_aspira"]+"]]linkedin[[]]perfil_empresa[[false]]telefono[["+obj_pass["telefono"]+"]]fecha[["+today+"]]";
+        accion = "crear_usuario"
+        if action == "create":
+            accion = "crear_usuario"
+        elif action == "edit":
+            accion = "editar_usuario"
+            parametro = parametro+"id[["+obj_pass["id"]+"]]"
+        return self.crear_actualizar_objeto(parametro,accion,-2,-2,-1)
+    
+    def postulacion(self,obj_pass):
+        
+        obj_pass["fecha"] = datetime.now().strftime("%Y-%m-%d")
+        
+         
+        obj_pass["id"] = obj_pass["id_persona"] 
+        obj_pass["correo"] = obj_pass["mail"] 
+        obj = load_mongo_client().personas.find_one({"id":int(obj_pass["id"])})
+        obj_pass["documento"] =obj["numero_identificacion"]
+        obj_pass["ultimo_cargo"] =obj["ultimo_cargo"]
+        obj_pass["cargos_aspira"] = []#obj["cargos_aplica"]
+        obj_pass["convenio"] =obj["convenio_busco"]
+        
+        
+        if obj_pass["id"] != "" and obj_pass["id"] != "null" and obj_pass["id"] != "-1":
+            self.editar_usuario(obj_pass)
+        else:
+            self.crear_usuario(obj_pass)
+        #self.crear_editar_usuario_temporal(obj_pass,"edit")
+        obj_pass["id"] = str(obj_pass["id_persona"])+"."+str(obj_pass["id_vac"])
+        load_mongo_client().postulaciones.insert_one(obj_pass)
+        integracion_monday.registro_postulacion(obj_pass)
+        
+        return {"id":obj_pass["id_persona"],"message":"ok"}
     
     def actualizacion_info_vacante(self,id_con,id_user,id_et,resp,id_com,tipo):
         try:
@@ -204,8 +337,8 @@ class create_update(object):
         now = datetime.now()
         param_fecha = now.strftime("%Y-%m-%d")
         load_mongo_client().logs.insert_one({"fecha":param_fecha,"parametro":"","accion":"login","id_retorno":"","tipo":"recarga","etiqueta":"","id_user":id_user,"id_sesion":""})
-        actualiza_usuario_login(id_user,param_fecha)
-    def guarda_datos_perfil(self,id,parametro):
+        #actualiza_usuario_login(id_user,param_fecha)
+    def guarda_datos_perfil(self,obj):
         dato_solo = True
         #update
         
@@ -283,7 +416,7 @@ class create_update(object):
         print("controladooo!",label,fecha,texto,id,id_et,id_user)
         #if label == "oportunidad":
         #    responde_vacante(id,id_et,str(fecha)+" "+(datetime.now() + timedelta(hours=-5)).strftime("%H:%M:%S"),texto,id_user)
-        load_mongo_client().personas.update({"id" : int(id), "etiquetas.id": int(id_et)},{"$push":{"etiquetas.$.comentarios":tmp}})
+        load_mongo_client().personas.update_one({"id" : int(id), "etiquetas.id": int(id_et)},{"$push":{"etiquetas.$.comentarios":tmp}})
         ret = load_mongo_client().personas.find_one({"id":int(id)})
         print("control etiqueta...",id_et)
 
@@ -307,100 +440,7 @@ class create_update(object):
         objeto_salida = {}
         object_update = []
         dato_solo = False
-        if tipo == "crear_job_hacker":
-            dato_solo = True
-            linkedin = parametro.split("linkedin[[")[1].split("]]")[0].strip()
-            nombre = parametro.split("nombre[[")[1].split("]]")[0].strip()
-            cargo = parametro.split("cargo[[")[1].split("]]")[0].strip()
-            ps2 = load_mongo_client().personas.find()
-            esta = 0
-            id_personas = -1
-            for w in ps2:
-                if linkedin.strip() != "":
-                    if w["linkedin"].strip().lower() == linkedin.strip().lower():
-                        id_persona = w["id"]
-                        esta = 1
-                        break
-                if nombre.strip() != "" and cargo.strip() != "":
-                    if w["nombre"].strip().lower() == nombre.strip().lower() and w["ultimo_cargo"].strip().lower() == cargo.strip().lower(): 
-                        id_persona = w["id"]
-                        esta = 1
-                        break
-            if esta == 1:
-                #update
-                linkedin = parametro.split("linkedin[[")[1].split("]]")[0].strip()
-                nombre = parametro.split("nombre[[")[1].split("]]")[0].strip()
-                cargo = parametro.split("cargo[[")[1].split("]]")[0].strip()
-                objeto_salida_u = {
-                    "nombre":nombre,
-                    "telefono":parametro.split("telefono[[")[1].split("]]")[0].strip(),
-                    "mail":parametro.split("mail[[")[1].split("]]")[0].strip(),
-                    "linkedin":linkedin,
-                    "ultimo_cargo":cargo,
-                    "crystal":parametro.split("crystal[[")[1].split("]]")[0].strip(),
-                    "ultima_empresa":parametro.split("empresa[[")[1].split("]]")[0].strip(),
-                    "fecha":parametro.split("fecha[[")[1].split("]]")[0].strip()
-                    }
-                load_mongo_client().personas.update_one(
-                    {"id":id_persona},
-                    {"$set":objeto_salida_u
-                    })
-                object_update.append({"tipo":"personas","objeto":process_data_json(process_data_persona(json.loads(dumps(load_mongo_client().personas.find({"id":id_persona}))),-1))[0]})
-                id_retorno = id_persona
-                accion = "update"
-            else:
-                #insert
-                id_persona =  load_mongo_client().personas.find_one(sort=[("id", -1)])["id"]+1
-                usuario_id = nombre.split(" ")[0].lower()+"."+nombre.split(" ")[1].lower()
-                password = nombre.split(" ")[0].lower()+"."+nombre.split(" ")[1].lower()+"_2020"
-                objeto_salida = {
-                    "id":id_persona,
-                    "nombre":nombre,
-                    "telefono":parametro.split("telefono[[")[1].split("]]")[0].strip(),
-                    "mail":parametro.split("mail[[")[1].split("]]")[0].strip(),
-                    "linkedin":linkedin,
-                    "usuario":usuario_id,
-                    "password":password,
-                    "tipo":1,
-                    "job_hacker":"",
-                    "estado":"",
-                    "aspiracion_min":"",
-                    "aspiracion_max":"",
-                    "area":"",
-                    "etiquetas":[],
-                    "ultimo_cargo":cargo,
-                    "ultima_empresa":parametro.split("empresa[[")[1].split("]]")[0].strip(),
-                    "crystal":parametro.split("crystal[[")[1].split("]]")[0].strip(),
-                    "fecha":parametro.split("fecha[[")[1].split("]]")[0].strip()
-                    }
-                load_mongo_client().personas.insert_one(objeto_salida)
-                objeto_salida = process_data_json([objeto_salida])[0]
-                id_retorno = id_persona
-                accion = "create"
-        if tipo == "editar_job_hacker":
-            dato_solo = True
-            #update
-            linkedin = parametro.split("linkedin[[")[1].split("]]")[0].strip()
-            nombre = parametro.split("nombre[[")[1].split("]]")[0].strip()
-            cargo = parametro.split("cargo[[")[1].split("]]")[0].strip()
-            id_persona = int(parametro.split("id[[")[1].split("]]")[0].strip())
-            objeto_salida_u = {
-                "nombre":nombre,
-                "telefono":parametro.split("telefono[[")[1].split("]]")[0].strip(),
-                "mail":parametro.split("mail[[")[1].split("]]")[0].strip(),
-                "linkedin":linkedin,
-                "ultimo_cargo":cargo,
-                "crystal":parametro.split("crystal[[")[1].split("]]")[0].strip(),
-                "ultima_empresa":parametro.split("empresa[[")[1].split("]]")[0].strip(),
-                "fecha":parametro.split("fecha[[")[1].split("]]")[0].strip()
-                }
-            load_mongo_client().personas.update_one(
-                {"id":id_persona},
-                {"$set":objeto_salida_u
-                })
-            id_retorno = id_persona
-            object_update.append({"tipo":"personas","objeto":process_data_json(process_data_persona(json.loads(dumps(load_mongo_client().personas.find({"id":id_persona}))),-1))[0]})
-            accion = "update"
+        
         if tipo == "crear_usuario":
             dato_solo = True
             nombre = parametro.split("nombre[[")[1].split("]]")[0].strip()
@@ -414,6 +454,27 @@ class create_update(object):
             if perfil_empresa == "true":
                 tipo_perfil = 13
             id_personas = -1
+            telefono = ""
+            if "telefono[[" in parametro:
+                telefono = parametro.split("telefono[[")[1].split("]]")[0].strip()
+            documento = ""
+            if "documento[[" in parametro:
+                documento = parametro.split("documento[[")[1].split("]]")[0].strip()
+            id_cv = ""
+            if "id_cv[[" in parametro:
+                id_cv = parametro.split("id_cv[[")[1].split("]]")[0].strip()
+            ultimo_cargo = ""
+            if "ultimo_cargo[[" in parametro:
+                ultimo_cargo = parametro.split("ultimo_cargo[[")[1].split("]]")[0].strip()
+            aspiracion_max = ""
+            if "aspiracion_max[[" in parametro:
+                aspiracion_max = parametro.split("aspiracion_max[[")[1].split("]]")[0].strip()
+            convenio = ""
+            if "convenio[[" in parametro:
+                convenio = parametro.split("convenio[[")[1].split("]]")[0].strip()
+            cargos_aplica = ""
+            if "cargos_aplica[[" in parametro:
+                cargos_aplica = parametro.split("cargos_aplica[[")[1].split("]]")[0].strip()
             for w in ps2:
                 if str(w["mail"]).strip().lower() == correo.strip().lower():
                     id_persona = w["id"]
@@ -427,28 +488,30 @@ class create_update(object):
                         objeto_salida = {
                             "id":id_persona,
                             "nombre":nombre,
-                            "telefono":"",
+                            "telefono":telefono,
                             "mail":correo,
                             "linkedin":parametro.split("linkedin[[")[1].split("]]")[0].strip(),
                             "area":"",
                             "aspiracion_min":"",
-                            "aspiracion_max":"",
-                            "usuario":correo,
-                            "password_tmp":password,
+                            "aspiracion_max":aspiracion_max,
+                            "usuario":correo.strip().lower(),
                             "tipo":tipo_perfil,
                             "codigo_pago":"",
-                            "ultimo_cargo":"",
+                            "ultimo_cargo":ultimo_cargo,
                             "ultima_empresa":"",
+                            "numero_identificacion":documento,
                             "crystal":"",
                             "job_hacker":"",
+                            "cargos_aplica":cargos_aplica,
                             "ciudad":"",
                             "sector":"",
                             "representaciones":"",
                             "subsector":"",
                             "satisfaccion":"",
-                            "estado":"pendiente activacion cuenta",
+                            "convenio_busco":convenio,
+                            "estado":"pendiente activacion cuenta"
                             }
-                        load_mongo_client().personas.update({"id":int(w["id"])},{"$set":objeto_salida})
+                        load_mongo_client().personas.update_one({"id":int(w["id"])},{"$set":objeto_salida})
                         objeto_salida = process_data_json([objeto_salida])[0]
                         id_retorno = id_persona
                         accion = "create"
@@ -462,28 +525,38 @@ class create_update(object):
                 accion = "repeat"
             elif esta == 0:
                 #insert
+                convenio = ""
+                if "convenio[[" in parametro:
+                    convenio = parametro.split("convenio[[")[1].split("]]")[0].strip()
+                id_cv = ""
+                if "id_cv[[" in parametro:
+                    id_cv = parametro.split("id_cv[[")[1].split("]]")[0].strip()
                 id_persona =  load_mongo_client().personas.find_one(sort=[("id", -1)])["id"]+1
                 usuario_id = correo
                 objeto_salida = {
                     "id":id_persona,
                     "nombre":nombre,
-                    "telefono":"",
+                    "telefono":telefono,
                     "mail":correo,
                     "linkedin":parametro.split("linkedin[[")[1].split("]]")[0].strip(),
                     "area":"",
                     "aspiracion_min":"",
-                    "aspiracion_max":"",
-                    "usuario":usuario_id,
+                    "aspiracion_max":aspiracion_max,
+                    "usuario":usuario_id.strip().lower(),
                     "password_tmp":password,
+                    "password":"",
                     "tipo":tipo_perfil,
                     "codigo_pago":"",
                     "etiquetas":[],
-                    "ultimo_cargo":"",
+                    "ultimo_cargo":ultimo_cargo,
                     "ultima_empresa":"",
+                    "numero_identificacion":documento,
                     "crystal":"",
                     "job_hacker":"",
+                    "cargos_aplica":cargos_aplica,
                     "ciudad":"",
                     "sector":"",
+                    "convenio_busco":convenio,
                     "subsector":"",
                     "satisfaccion":"",
                     "estado":"pendiente activacion cuenta",
@@ -500,25 +573,41 @@ class create_update(object):
         if tipo == "editar_usuario":
             dato_solo = True
             #update
-            linkedin = parametro.split("linkedin[[")[1].split("]]")[0].strip()
             nombre = parametro.split("nombre[[")[1].split("]]")[0].strip()
-            cargo = parametro.split("cargo[[")[1].split("]]")[0].strip()
             id_persona = int(parametro.split("id[[")[1].split("]]")[0].strip())
+            
             objeto_salida_u = {
                 "nombre":nombre,
                 "telefono":parametro.split("telefono[[")[1].split("]]")[0].strip(),
                 "mail":parametro.split("mail[[")[1].split("]]")[0].strip(),
-                "linkedin":linkedin,
-                "ultimo_cargo":cargo,
-                "crystal":parametro.split("crystal[[")[1].split("]]")[0].strip(),
-                "ultima_empresa":parametro.split("empresa[[")[1].split("]]")[0].strip(),
-                "job_hacker":parametro.split("job_hacker[[")[1].split("]]")[0].strip(),
-                "estado":parametro.split("estado[[")[1].split("]]")[0].strip(),
-                "aspiracion_min":parametro.split("aspiracion_min[[")[1].split("]]")[0].strip(),
-                "aspiracion_max":parametro.split("aspiracion_max[[")[1].split("]]")[0].strip(),
-                "area":parametro.split("area[[")[1].split("]]")[0].strip(),
                 "fecha":parametro.split("fecha[[")[1].split("]]")[0].strip()
                 }
+            if "id_cv[[" in parametro:
+                objeto_salida_u["id_cv"] = parametro.split("id_cv[[")[1].split("]]")[0].strip()
+            if "linkedin[[" in parametro:
+                objeto_salida_u["linkedin"] = parametro.split("linkedin[[")[1].split("]]")[0].strip()
+            if "aspiracion_min[[" in parametro:
+                objeto_salida_u["aspiracion_min"] = parametro.split("aspiracion_min[[")[1].split("]]")[0].strip()
+            if "estado[[" in parametro:
+                objeto_salida_u["estado"] = parametro.split("estado[[")[1].split("]]")[0].strip()
+            if "area[[" in parametro:
+                objeto_salida_u["area"] = parametro.split("area[[")[1].split("]]")[0].strip()
+            if "crystal[[" in parametro:
+                objeto_salida_u["crystal"] = parametro.split("crystal[[")[1].split("]]")[0].strip()
+            if "ultima_empresa[[" in parametro:
+                objeto_salida_u["ultima_empresa"] = parametro.split("ultima_empresa[[")[1].split("]]")[0].strip()
+            if "job_hacker[[" in parametro:
+                objeto_salida_u["job_hacker"] = parametro.split("job_hacker[[")[1].split("]]")[0].strip()
+            if "telefono[[" in parametro:
+                objeto_salida_u["telefono"] = parametro.split("telefono[[")[1].split("]]")[0].strip()
+            if "numero_identificacion[[" in parametro:
+                objeto_salida_u["numero_identificacion"] = parametro.split("numero_identificacion[[")[1].split("]]")[0].strip()
+            if "ultimo_cargo[[" in parametro:
+                objeto_salida_u["ultimo_cargo"] = parametro.split("ultimo_cargo[[")[1].split("]]")[0].strip()
+            if "aspiracion_max[[" in parametro:
+                objeto_salida_u["aspiracion_max"] = parametro.split("aspiracion_max[[")[1].split("]]")[0].strip()
+            if "cargos_aplica[[" in parametro:
+                objeto_salida_u["cargos_aplica"] = parametro.split("cargos_aplica[[")[1].split("]]")[0].strip()
             load_mongo_client().personas.update_one(
                 {"id":id_persona},
                 {"$set":objeto_salida_u
@@ -652,10 +741,10 @@ class create_update(object):
             else :
                 cumple_param = parametro.split("cumple[[")[1].split("]]")[0].strip()
                 
-            ps2 = load_mongo_client().vacantes.find()
+            #ps2 = load_mongo_client().vacantes.find()
             esta = 0
             id_vacante = -1
-            for w in ps2:
+            """for w in ps2:
                 if link.strip() != "":
                     if compare_strings(w["link"],link,"link"):
                         if "oculta" in w:
@@ -669,6 +758,7 @@ class create_update(object):
                             esta = 1
                             objeto_salida = process_data_json([w])[0]
                             break
+            """
             prot_param = False
             oculta = False
             if esta == 1:
@@ -698,6 +788,7 @@ class create_update(object):
                     "tipo":parametro.split("tipo_oportunidad[[")[1].split("]]")[0].strip(),
                     "postulacion":parametro.split("postulacion[[")[1].split("]]")[0].strip(),
                     "recompensa":parametro.split("recompensa[[")[1].split("]]")[0].strip(),
+                    "servicio":cumple_param,
                     "obs":parametro.split("obs[[")[1].split("]]")[0].strip(),
                     "req":parametro.split("req[[")[1].split("]]")[0].strip(),
                     "fecha":parametro.split("fecha[[")[1].split("]]")[0].strip(),
@@ -880,25 +971,6 @@ class create_update(object):
             tmp = {"servicio":servicio,"fecha":param_fecha,"fecha_proceso":parametro.split("fecha_proceso[[")[1].split("]]")[0].strip(),"id":etiqueta,"label":"proceso","id_objeto":id_vacante,"id_persona":id_persona,"tipo_proceso":tipo_proceso,"obs":obs} 
         if tipo == "crear_observacion" or tipo == "editar_observacion":
             tmp = {"fecha":param_fecha,"id":etiqueta,"label":"observacion","valor":parametro.split("obs[[")[1].split("]]")[0].strip()}
-        if tipo == "crear_sesion":
-            dato_solo = True
-            num_sesion = int(parametro.split("num_sesion[[")[1].split("]]")[0].strip())
-            cont_preguntas = parametro.split("preguntas[[")[1].split("]]")[0].strip()
-            preguntas = cont_preguntas.split("pregunta_")
-            cont_prs = 0
-            load_mongo_client().personas.update( {"id":int(id_user)}, { "$pull": { "etiquetas": { "id_sesion": str(num_sesion) } } } )
-            load_mongo_client().personas.update( {"id":int(id_user)}, { "$pull": { "etiquetas": { "id_sesion": int(num_sesion) } } } )
-            print("borrando las sesiones con id:::::",str(num_sesion))
-
-            for o in preguntas :
-                if o.strip() != "":
-                    pregunta = o.split(str(cont_prs)+"+++")[1].split("+++")[0].strip()
-                    tmp = {"fecha":param_fecha,"id":etiqueta,"label":"sesion","id_sesion":num_sesion,"valor":pregunta}
-                    self.crear_actualizar_etiqueta(tmp,id_user,etiqueta,{"id_adm":id_adm})
-
-                    cont_prs = cont_prs+1
-            if cont_prs > 0:
-                object_update.append({"tipo":"personas","objeto":process_data_json(process_data_persona(json.loads(dumps(load_mongo_client().personas.find({"id":int(id_user)}))),-1))[0]})
         if accion != "repeat" and dato_solo == False:
             print("va a crear una etiqueta!!!...",id_user,etiqueta,data_persona)
             data_persona["id_adm"] = id_adm
@@ -907,6 +979,249 @@ class create_update(object):
         load_mongo_client().logs.insert_one({"fecha":param_fecha,"parametro":parametro,"accion":accion,"id_retorno":id_retorno,"tipo":tipo,"etiqueta":etiqueta,"id_user":id_user,"id_sesion":id_adm})
         salida_definitiva = {"accion":accion,"id":id_retorno,"object_create":objeto_salida,"object_update":object_update}
         return salida_definitiva
+    def crear_vacante(self,parametro):
+        if "link" in parametro:
+            link = parametro["link"]
+            if link.strip().lower() == "undefined":
+                link = ""
+        else:
+            link = ""
+        cargo = parametro["cargo"]
+        empresa = parametro["empresa"]
+        rango_mayor = 0
+        if "rango_mayor" in parametro:
+            rango_mayor = parametro["rango_mayor"]
+        if "confidencial" not in parametro:
+            parametro["confidencial"] = ""
+        id_user_opo = parametro["id"]
+        
+        parametro["obs"] = ""
+        if "obs" in parametro and parametro["obs"].strip() != "":
+            parametro["obs"] = parametro["obs"]
+        oculta = False
+        if "oculta" in parametro and parametro["oculta"] == 'true':
+            oculta = True
+        prot_param = False
+        postulacion = True
+        try:
+            if parametro["protegida"] == 'true':
+                id_user_opo = parametro["id"]
+                prot_param = True
+        except:
+            print("no es usuario admin")
+        id_vacante =  load_mongo_client().vacantes.find_one(sort=[("id", -1)])["id"]+1
+        objeto_salida = {
+            "id":id_vacante,
+            "empresa":empresa,
+            "cargo":cargo,
+            "link":link,
+            "ciudad":parametro["ciudad"],
+            "rango_mayor":rango_mayor,
+            "rango_menor":parametro["rango_menor"],
+            "tipo":parametro["tipo"],
+            "postulacion":postulacion,
+            "cargos_relacionado":parametro["cargos_relacionados"],
+            #"industrias":parametro["lista_industrias"],
+            "cumple":False,
+            "confidencial":parametro["confidencial"],
+            "recompensa":"",
+            "servicio":parametro["servicio"],
+            "obs":parametro["obs"],
+            "lista_reqs":parametro["lista_reqs"],
+            "lista_cats":parametro["lista_cats"],
+            "fecha":parametro["fecha"],
+            "id_user":id_user_opo,
+            "oculta":oculta
+            }
+        load_mongo_client().vacantes.insert_one(objeto_salida)
+        objeto_salida = process_data_json([objeto_salida])[0]
+        data_persona = {}
+        data_persona["cargo"] = cargo
+        data_persona["empresa"] = empresa
+        data_persona["id_adm"]= parametro["id"]
+        tmp = {"fecha":parametro["fecha"],"id":-1,"label":"oportunidad","id_objeto":id_vacante,"protegido":prot_param,"cumple":"false"} 
+        self.crear_actualizar_etiqueta(tmp,parametro["id"],0,data_persona)
+        return {"id":id_vacante,"accion":"create"}
+    
+    def editar_usuario(self,parametro):
+        
+        #update
+        id_persona = int(parametro["id"])
+        objeto_salida_u = {}
+        if "carrera" in parametro:
+            objeto_salida_u["carrera"] = parametro["carrera"]
+        if "telefono" in parametro:
+            objeto_salida_u["telefono"] = parametro["telefono"]
+        if "mail" in parametro:
+            objeto_salida_u["mail"] = parametro["mail"]
+        if "convenio" in parametro:
+            objeto_salida_u["convenio_busco"] = parametro["convenio"]
+        if "nombre" in parametro:
+            objeto_salida_u["nombre"] = parametro["nombre"]
+        if "mail" in parametro:
+            objeto_salida_u["mail"] = parametro["mail"]
+        if "id_cv" in parametro:
+            objeto_salida_u["id_cv"] = parametro["id_cv"]
+        if "linkedin" in parametro:
+            objeto_salida_u["linkedin"] = parametro["linkedin"]
+        if "aspiracion_min" in parametro:
+            objeto_salida_u["aspiracion_min"] = parametro["aspiracion_min"]
+        if "estado" in parametro:
+            objeto_salida_u["estado"] = parametro["estado"]
+        if "area" in parametro:
+            objeto_salida_u["area"] = parametro["area"]
+        if "crystal" in parametro:
+            objeto_salida_u["crystal"] = parametro["crystal"]
+        if "cargos_aspira" in parametro:
+            objeto_salida_u["cargos_aspira"] = parametro["cargos_aspira"]
+        if "relocaliza" in parametro:
+            objeto_salida_u["relocaliza"] = parametro["relocaliza"]
+        if "ultima_empresa" in parametro:
+            objeto_salida_u["ultima_empresa"] = parametro["ultima_empresa"]
+        if "job_hacker" in parametro:
+            objeto_salida_u["job_hacker"] = parametro["job_hacker"]
+        if "telefono" in parametro:
+            objeto_salida_u["telefono"] = parametro["telefono"]
+        if "numero_identificacion" in parametro:
+            objeto_salida_u["numero_identificacion"] = parametro["numero_identificacion"]
+        if "ultimo_cargo" in parametro:
+            objeto_salida_u["ultimo_cargo"] = parametro["ultimo_cargo"]
+        if "aspiracion_max" in parametro:
+            objeto_salida_u["aspiracion_max"] = parametro["aspiracion_max"]
+        if "cargos_aplica" in parametro:
+            objeto_salida_u["cargos_aplica"] = parametro["cargos_aplica"]
+        if "edad" in parametro:
+            objeto_salida_u["edad"] = parametro["edad"]
+        objeto_salida_u["fecha"] = parametro["fecha"]
+        
+        load_mongo_client().personas.update_one(
+            {"id":id_persona},
+            {"$set":objeto_salida_u
+            }
+        )
+        
+        accion = "update"
+        return {"id":id_persona,"accion":accion}
+    def crear_usuario(self,parametro):
+        nombre = parametro["nombre"]
+        correo = parametro["mail"].strip().lower()
+        password = parametro["pass"]
+        
+        tipo_perfil = 8
+        
+        telefono = ""
+        if "telefono" in parametro:
+            telefono = parametro["telefono"]
+        numero_identificacion = ""
+        if "numero_identificacion" in parametro:
+            numero_identificacion = parametro["numero_identificacion"]
+        ultimo_cargo = ""
+        if "ultimo_cargo" in parametro:
+            ultimo_cargo = parametro["ultimo_cargo"]
+        ultima_empresa = ""
+        if "ultima_empresa" in parametro:
+            ultima_empresa = parametro["ultima_empresa"]
+        aspiracion_max = ""
+        if "aspiracion_max" in parametro:
+            aspiracion_max = parametro["aspiracion_max"]
+        aspiracion_min = ""
+        if "aspiracion_min" in parametro:
+            aspiracion_min = parametro["aspiracion_min"]
+        convenio = ""
+        if "convenio" in parametro:
+            convenio = parametro["convenio"]
+        carrera = ""
+        if "carrera" in parametro:
+            carrera = parametro["carrera"]
+        cargos_aplica = ""
+        if "cargos_aplica" in parametro:
+            cargos_aplica = parametro["cargos_aplica"]
+        cargos_aspira = []
+        if "cargos_aspira" in parametro:
+            cargos_aspira = parametro["cargos_aspira"]
+        relocaliza = []
+        if "relocaliza" in parametro:
+            relocaliza = parametro["relocaliza"]
+        ciudad = ""
+        if "ciudad" in parametro:
+            ciudad = parametro["ciudad"]
+        nivel_ingles = ""
+        if "nivel_ingles" in parametro:
+            nivel_ingles = parametro["nivel_ingles"]
+        nivel_estudio = ""
+        if "nivel_estudio" in parametro:
+            nivel_estudio = parametro["nivel_estudio"]
+        linkedin = ""
+        if "linkedin" in parametro:
+            linkedin = parametro["linkedin"]
+        etiquetas = []
+        id_persona =  load_mongo_client().personas.find_one(sort=[("id", -1)])["id"]+1
+        ps2 = load_mongo_client().personas.find()
+        esta = 0
+        id_monday = ""
+        for w in ps2:
+            if str(w["mail"]).strip().lower() == correo:
+                
+                if int(w["tipo"]) != 4:
+                    esta = 1
+                    id_persona = w["id"]
+                    if "id_monday" in w:
+                        id_monday = w["id_monday"]
+                    parametro["id"] = id_persona
+
+                    break
+                else:
+                    id_persona = w["id"]
+                    etiquetas = w["etiquetas"]
+                    load_mongo_client().personas.delete_one({"id":id_persona})
+                    
+        if esta == 1:
+            #update
+            self.editar_usuario(parametro)
+            accion = "repeat"
+        elif esta == 0:
+            objeto_salida = {
+                "id":id_persona,
+                "nombre":nombre,
+                "telefono":telefono,
+                "mail":correo,
+                "linkedin":linkedin,
+                "area":"",
+                "carrera":carrera,
+                "aspiracion_min":aspiracion_min,
+                "aspiracion_max":aspiracion_max,
+                "usuario":correo,
+                "password_tmp":password,
+                "password":"",
+                "nivel_ingles":nivel_ingles,
+                "nivel_estudio":nivel_estudio,
+                "tipo":tipo_perfil,
+                "codigo_pago":"",
+                "etiquetas":etiquetas,
+                "ultimo_cargo":ultimo_cargo,
+                "ultima_empresa":ultima_empresa,
+                "numero_identificacion":numero_identificacion,
+                "crystal":"",
+                "cargos_aspira":cargos_aspira,
+                "relocaliza":relocaliza,
+                "job_hacker":"",
+                "cargos_aplica":cargos_aplica,
+                "ciudad":ciudad,
+                "sector":"",
+                "convenio_busco":convenio,
+                "subsector":"",
+                "satisfaccion":"",
+                "estado":"pendiente activacion cuenta",
+                "fecha":parametro["fecha"]
+                }
+            load_mongo_client().personas.insert_one(objeto_salida)
+            objeto_salida = process_data_json([objeto_salida])[0]
+            
+            accion = "create"
+            
+        return {"id":id_persona,"accion":accion,"usuario":correo,"password_tmp":password,"id_monday":id_monday}
+    
+
     def conector_crear_actualizar_etiqueta(self,parametro,id_user,etiqueta,id_adm = -3):
         object_salida = {}
         data_persona = {}
@@ -1030,7 +1345,7 @@ class create_update(object):
                     max_id = int(i["id"])
             max_id = max_id+1
             tmp["id"] = max_id
-            load_mongo_client().personas.update({"id":int(id_user)},{"$push":{"etiquetas" : tmp}})
+            load_mongo_client().personas.update_one({"id":int(id_user)},{"$push":{"etiquetas" : tmp}})
             accion = "insert"
             id_retorno = max_id 
             print(tmp)
@@ -1063,7 +1378,7 @@ class create_update(object):
                 max_id = max_id +1
             tmp["id"] = int(etiqueta)
             print("ID_MAXIMO!!!...",max_id)
-            load_mongo_client().personas.update({"id":int(id_user)},{"$set":{"etiquetas."+str(max_id) : tmp}})
+            load_mongo_client().personas.update_one({"id":int(id_user)},{"$set":{"etiquetas."+str(max_id) : tmp}})
             accion = "update"
             id_retorno = tmp["id"]
             if tmp["label"] == "proceso" and "analisis" in tmp["servicio"]:
@@ -1096,7 +1411,7 @@ class delete(object):
         return mongo_client.aleja_bd
     def eliminar_comentario(self,id,id_et,id_com,id_user):
         
-        load_mongo_client().personas.update({"id":int(id_user),"etiquetas.id":int(id_et)},{"$pull":{"etiquetas.$.comentarios" : {"id":int(id_com)}}})
+        load_mongo_client().personas.update_one({"id":int(id_user),"etiquetas.id":int(id_et)},{"$pull":{"etiquetas.$.comentarios" : {"id":int(id_com)}}})
         load_mongo_client().logs.insert_one({"parametro":{},"accion":"delete","id_retorno":id_et,"tipo":"comentario","etiqueta":id_et,"comentario":id_com,"id_user":id_user,"id_sesion":id_user})
         ret = load_mongo_client().personas.find_one({"id":int(id)})
         for o in ret["etiquetas"]:
@@ -1108,7 +1423,7 @@ class delete(object):
 
     def eliminar_etiqueta(self,id_user,id_etiqueta):
         
-        load_mongo_client().personas.update({"id":int(id_user)},{"$pull":{"etiquetas" : {"id":int(id_etiqueta)}}})
+        load_mongo_client().personas.update_one({"id":int(id_user)},{"$pull":{"etiquetas" : {"id":int(id_etiqueta)}}})
         self.eliminar_servicio(int(id_user),int(id_etiqueta))
         load_mongo_client().logs.insert_one({"parametro":{},"accion":"delete","id_retorno":id_etiqueta,"tipo":"etiqueta","etiqueta":id_etiqueta,"id_user":id_user,"id_sesion":id_user})
         
@@ -1196,7 +1511,54 @@ def read_servicios(id_sesion):
         print("error lectura servicios")
         json_data = {"return":"error"}
     return json_data
-
+def postulacion(obj_pass):
+    import gc
+    gc.collect()
+    rcm = create_update()
+    obj = rcm.postulacion(obj_pass);
+    json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
+    return json_data
+"""def enviar_pregunta(obj):
+    import gc
+    gc.collect()
+    rcm = create_update()
+    obj = rcm.enviar_pregunta(obj);
+    print(obj)
+    json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
+    return json_data
+"""
+def read_postulaciones_usuario(obj):
+    import gc
+    gc.collect()
+    rcm = read()
+    obj = rcm.read_postulaciones_usuario(obj);
+    print(obj)
+    json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
+    return json_data
+"""
+def enviar_respuesta(obj):
+    import gc
+    gc.collect()
+    rcm = create_update()
+    obj = rcm.enviar_respuesta(obj);
+    print(obj)
+    json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
+    return json_data
+"""
+def crear_usuario(obj_pass):
+    import gc
+    gc.collect()
+    rcm = create_update()
+    obj = rcm.crear_usuario(obj_pass);
+    json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
+    return json_data
+def crear_vacante(obj_pass):
+    import gc
+    gc.collect()
+    rcm = create_update()
+    obj = rcm.crear_vacante(obj_pass);
+    json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
+    return json_data
 def read_personas(id_sesion):
     import gc
     print("read_personas_tm220:", datetime.now().strftime("%H:%M:%S"))
@@ -1241,11 +1603,11 @@ def read_vacantes(id_sesion):
     return json_data
 
 
-def guarda_datos_perfil(id,params):
+def guarda_datos_perfil(obj):
     import gc
     gc.collect()
     rcm = create_update()
-    obj = rcm.guarda_datos_perfil(id,params);
+    obj = rcm.editar_usuario(obj);
     json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
     return json_data
 
@@ -1257,6 +1619,7 @@ def crear_comentario(fecha,texto,id,id_et,id_adm):
     obj = rcm.crear_comentario(fecha,texto,id,id_et,id_adm);
     json_data = json.dumps({"return":obj}, sort_keys=False, ensure_ascii=False) 
     return json_data
+
 def eliminar_comentario(id,id_et,id_com,id_adm):
     import gc
     gc.collect()

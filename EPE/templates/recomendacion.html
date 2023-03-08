@@ -1,0 +1,198 @@
+{% load static %}
+{% load versioned_static %}
+
+<html>
+<head>
+
+
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/reset.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/style.css' %}">
+
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleja</title>
+	<meta property="og:title" content="Aleja"/>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+
+
+
+
+</head>
+<body id="index_page">
+	<div id="div_contenedor_menu" class="div_menu" >
+		<!--<button class="close_corner menu" onclick="close_menu()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>-->
+		<div id="logo_aleja" >
+			<!--Aleia<h3>beta</h3>-->
+			<img src="/static/imgs/logo_aleja_2.png" class="logo_aleja_img">
+			<input v-if="tipo == 6" type="image" src="/static/imgs/menu/brand/compensar.png" class="external_brand">
+		</div>
+		<div class="titulo_contenedor">
+			[[nombre_usuario]]
+
+		</div>
+
+		<a class="link_externo_top_right desktop" href="admin" v-if="sesion.data.admin == 1">
+			<button class="opcion_menu" >
+				<input type="image" src="/static/imgs/menu/home.png" class="opcion_img_menu">
+				Administrador
+			</button>
+		</a>
+		<a href="app">
+		<button id="tab_contenedor_busquedas_vacantes"  class="opcion_menu">
+			<input type="image" src="/static/imgs/menu/job.png" class="opcion_img_menu">
+			Vacantes
+		</button>
+		</a>
+		<a href="content">
+			<button id="tab_contenedor_contenidos" class="opcion_menu" >
+				<input type="image" src="/static/imgs/menu/play.png" class="opcion_img_menu">
+				Consejos de Aleia
+			</button>
+		</a>
+
+		<div class="contenedor_menu_inferior">
+			<a class="link_externo_top_right" href="profile">
+				<button class="opcion_menu" >
+					<input type="image" src="/static/imgs/menu/user2.png" class="opcion_img_menu">
+					Mi perfil
+				</button>
+			</a>
+			<button id="sincronizar_externos" class="opcion_menu" onclick="actualizar_integracion()" v-if="sesion.data.admin == 1">Sincronizar</button>
+
+
+			<button class="opcion_menu logout" onclick="close_session()">
+				<input type="image" src="/static/imgs/menu/logout.png" class="opcion_img_menu">
+				Cerrar sesión
+			</button>
+			<div id="brand">
+				<div style="width:100%;height: 10;position:relative;float:left;text-align: center;">
+					<h3 style="/* width: 10; *//* position: relative; *//* float: left; */">by</h3>
+				</div> 
+				<div style="width:100%;height: 10;position:relative;float:left;text-align: center;">
+					<a href="https://www.seligo.co/" target="_blank">
+						<img src="/static/imgs/logo_seligo.png" class="brand_img">
+					</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="loading" class="loading_show">
+		<div class="loadingio-spinner-ellipsis-cbdgjz18cd"><div class="ldio-dlo8blsimq">
+			<div></div><div></div><div></div><div></div><div></div>
+		</div></div>
+		<div class="div_texto_loading">
+			<h1 id="texto_loading">Cargando datos de Aleia</h1>
+		</div>
+	</div>
+
+	<div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+	<div id="div_contenedor_iframe_hv" class="div_contenedor_popup hide" style="display: none;">
+		<div id="contenedor_popup_iframe_hv" class="contenedor_popup_pregunta">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<iframe id="iframe_hv"
+			width="65%"
+			style="position: relative; float:left; position: relative;border: 0px; "
+			height="100%"
+			>
+		</iframe>
+		<div class="palabras_encontradas">
+			Palabras encontradas <br><br>Proximamente...
+		</div>
+		<div class="botones_popup_recoms">
+		<button :id="'pcandidato_'+id" class="gusta popupr" onclick="guardar_eliminar_candidato_popup(this,'guardar')">Guardar candidato</button>
+		<button :id="'pcandidatoe_'+id" class="no_gusta popupr" onclick="guardar_eliminar_candidato_popup(this,'eliminar')">No me gustó</button>
+	</div>
+	</div>
+</div>
+<div class="contenedor_total_info">
+	<div class="div_input_vac">
+
+		Nombre de la vacante
+		<div style="
+		width: 100%;
+		height: 75px;
+		"><input placeholder="Nombre" class="input_nom_vac" /></div>
+		Diligencia a continuación la descripción de la vacante que quieres buscar
+		<textarea placeholder="Ingresa la descripcion" id="input_vac"></textarea>
+		<button id="buscar_recoms"onclick="get_recoms()">Obtener recomendaciones</button>
+		<button style="border: 1px solid purple;
+		margin: 0 7px;
+		float: right;
+		background: #fbecfb;
+		margin-top: 15px;">Guardar</button>
+	</div>
+	<div id="contenedor_candidatos" class="contenedor_candidatos">
+		<div class="contenedor_opciones">
+			<button id="tab_div_lista_recom"  class="opcion_pestania lista selected"  onclick="tab_contenedor(this)">Recomendaciones</button>
+			<button id="tab_div_lista_recom_guardado" class="opcion_pestania lista" onclick="tab_contenedor(this)">Candidatos guardados ([[guardados.length]])</button>
+
+
+
+		</div>
+		<div id="div_lista_recom" class="contenedor_etiquetas div_recomendaciones">
+
+			<div class="resultado"  v-for="(o,i) in resultados">
+				<div class="ranking">#[[i+1]]</div>
+				<h1>[[o.id]] - [[o.nombre]]</h1>
+				<h2>[[o.cargo]]</h2>
+				<h2>[[o.empresa]]</h2>
+				<h3 v-show="o.telefono != ''"><a :href="'https://api.whatsapp.com/send?phone=571'+o.telefono" target="_blank">[[o.telefono]]</a></h3>
+				<h3>[[o.mail]]</h3>
+				
+
+				<button :id="'candidato_'+o.id" class="gusta" onclick="guardar_candidato_recoms(this)">Guardar candidato</button>
+				<button :id="o.id_file+'____'+o.id" class="ver_hv" onclick="visualiza_hv(this)">Ver hoja de vida</button>
+				<button :id="'candidatoe_'+o.id" class="no_gusta" onclick="eliminar_candidato_recoms(this)">No me gustó</button>
+			</div>
+		</div>
+		<div id = "div_lista_recom_guardado" class="contenedor_etiquetas div_recomendaciones hide" >
+			<div class="resultado"  v-for="(o,i) in guardados">
+				<div class="ranking">#[[i+1]]</div>
+				<h1>[[o.id]] - [[o.nombre]]</h1>
+				<h2>[[o.cargo]]</h2>
+				<h2>[[o.empresa]]</h2>
+				<h3 v-show="o.telefono != ''"><a :href="'https://api.whatsapp.com/send?phone=571'+o.telefono" target="_blank">[[o.telefono]]</a></h3>
+				<h3>[[o.mail]]</h3>
+				
+
+				
+				<button :id="o.id_file+'____'+o.id" class="ver_hv" onclick="visualiza_hv(this)">Ver hoja de vida</button>
+				<button :id="'candidatog_'+o.id" class="no_gusta"  onclick="eliminar_candidato_guardado(this)">Eliminar</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+<script  src="{% versioned_static 'js/fuzzball_lite.umd.min.js'%}"></script>
+<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+<script  src="{% versioned_static 'js/global.js'%}"></script>
+<script  src="{% versioned_static 'js/business.js'%}"></script>
+<script  src="{% versioned_static 'js/render.js'%}"></script>
+
+
+<script type="text/javascript">
+</script>
+
+</html>

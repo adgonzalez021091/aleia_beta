@@ -1,0 +1,324 @@
+{% load static %}
+
+{% load versioned_static %}
+<div id="div_contenedor_popup_servicios" class="div_contenedor_popup hide" style="display: none;">
+<div id="contenedor_popup_servicios" class="contenedor_popup hide popup_contendor_servicios">
+	<button id = "close_contenedor_right_s" class="close_corner" onclick="close_popup(this)"><img type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+	<a href="wa.link/cwd4mu" target="_blank">
+		<button class="call2action_recarga"><img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}" style="top: 6px;" />Obtén créditos aquí</button>
+	</a>
+	<div id="contenedor_popup_servicios_proceso"  v-show="label == 'proceso'">
+		<div id="titulo_contenedor2" class="titulo_contenedor_servicios">
+			[[titulo]]
+		</div>
+		<div class="opciones_servicios">
+			<div class="opcion_servicio"  >
+
+				<div class="titulo_superior_servicio">
+					Contenido GRATIS
+				</div>
+				<div class="titulo_servicio">
+					Carga tu entrevista para ver el video <br><spam style="color:red">¿Cómo presentar las mejores entrevistas?</spam>
+				</div>
+
+				<div class="call2action_servicio">
+					<button class="button_call2action_servicio" onclick="crear('proceso')">Da clic aquí</button>
+
+				</div>
+
+			</div>
+			<div class="opcion_servicio" style="background: white;" >
+				<div class="precio_servicio">
+					<img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+					1 crédito
+				</div>
+				<div class="titulo_superior_servicio">
+					Preparate para generar impacto
+				</div>
+				<div class="titulo_servicio">
+					Analiza el estilo de comunicación de tu entrevistador
+				</div>
+
+				<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('analisis_comunicacion')">
+					<img type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.analisis_comunicacion.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.analisis_comunicacion.titulo]]</div>
+				</button>	
+				<button class="button_call2action_servicio" onclick="crear('proceso')" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">Solicitar análisis</button>
+
+				<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+
+
+			</div>
+
+		</div>
+	</div>
+	<div id="contenedor_popup_servicios_asesoria" v-show="label == 'asesoria'">
+		<div id="titulo_contenedor2" class="titulo_contenedor_servicios">
+			[[titulo]]
+		</div>
+		<div class="opciones_servicios">
+			<div  class="opcion_servicio" >
+				<div class="titulo_superior_servicio">
+					¡Creamos contenidos todo el tiempo para que logres tu objetivo!
+				</div>
+
+
+				<div class="call2action_servicio">
+					<a href="https://www.youtube.com/channel/UClMNkFB20wVSt0IAHBo-Dig" target="_blank">
+						<img type="image" src="/static/imgs/youtube.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+						<button class="button_call2action_servicio secundario">Ve a nuestro canal</button>
+					</a>
+
+				</div>
+
+
+			</div>
+			<div class="opcion_servicio" style="background: white;" >
+				<div class="titulo_superior_servicio">
+					Opción 1
+				</div>
+				<div class="titulo_servicio">
+					Solicita asistencia cuando quieras
+				</div>
+				<div class="call2action_servicio">
+					<a href="https://wa.link/iz0b9s" target="_blank">
+						<img type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+						<button class="button_call2action_servicio secundario" >Abrir chat</button>
+					</a>
+				</div>
+			</div>
+			<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo == 5" >
+
+				<div class="titulo_superior_servicio">
+					Opción 2
+				</div>
+				<div class="titulo_servicio">
+					Llamada con un Job Hacker
+				</div>
+
+
+				Solicitala directo por chat
+				<div class="call2action_servicio">
+					<a href="https://wa.link/iz0b9s" target="_blank">
+						<img type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+						<button class="button_call2action_servicio secundario" >Abrir chat</button>
+					</a>
+				</div>
+
+
+			</div>
+			<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo != 5">
+				<div class="precio_servicio">
+					<img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+					3 créditos
+				</div>
+				<div class="titulo_superior_servicio">
+					Opción 2
+				</div>
+				<div class="titulo_servicio">
+					Llamada con un Job Hacker
+				</div>
+
+				<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('job_hacker')">
+					<img type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.job_hacker.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.job_hacker.titulo]]</div>
+				</button>
+				<a href="wa.link/w2jt70r" target="_blank" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">
+					<button class="button_call2action_servicio" >Solicitar llamada</button>
+				</a>
+				<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+
+
+			</div>
+
+			<div class="opcion_servicio" style="background: #3b3744;color: white;" >
+				<div class="precio_servicio">
+					<img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+					Servicio VIP
+				</div>
+				<div class="titulo_superior_servicio" style="color: #f8f7fb;">
+					Opción 3
+				</div>
+				<div class="titulo_servicio" >
+					Sesión estratégica personalizada
+				</div>
+				<div style="display: none">
+					Sesiones de 2 horas con tu asesor experto asignado donde construirá el diagnóstico de tu búsqueda de empleo, las estrategias para mejorarla, te asignará retos y hará seguimiento a tu proceso.
+				</div>
+				<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('asesoria_personalizada')">
+					<img type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.asesoria_personalizada.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.asesoria_personalizada.titulo]]</div>
+				</button>
+
+				<a href="https://calendly.com/sesiones_seligo/agenda" v-show="tipo_user == 5 || tipo_user == 11" target="_blank">
+					<button  class="button_call2action_servicio">Agendar sesión ahora</button>
+				</a>
+
+				<a v-show="tipo_user != 5 && tipo_user != 11" href="https://wa.link/tr2rjn" target="_blank">
+					<button class="button_call2action_servicio" >Obtén una asesoría</button>
+				</a>
+
+			</div>
+
+
+		</div>
+	</div>
+	<div id="contenedor_popup_servicios_vacante" v-show="label == 'oportunidad'">
+
+		<div id="titulo_contenedor1" class="titulo_contenedor_servicios">
+			[[titulo]]
+		</div>
+
+		<div class="opciones_servicios" >
+				<!--<div  class="opcion_servicio" >
+					<div class="precio_servicio">
+						<img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+						1 crédito
+					</div>
+					<div id="desc_serv_postulacion" class="contenedor_servicio">
+						
+
+						<div class="titulo_superior_servicio">
+							Antes de postularte...
+						</div>
+						<div class="titulo_servicio">
+							<spam class="servicio_pop">Ajusta tu hoja de vida a la vacante</spam>
+						</div>
+						
+						
+						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('analisis_postulacion')">
+							<img type="image" src="/static/imgs/play.png" class="img_contenido">
+							<div class="num_boton_contenido">Consejo #[[contenidos.analisis_postulacion.numero_consejo]] de Aleia</div>
+							<div class="tit_boton_contenido">[[contenidos.analisis_postulacion.titulo]]</div>
+						</button>
+						<button class="button_call2action_servicio" onclick="load_cv_serv(1)" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">Solicitar revisión</button>
+						<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+					</div>
+					<div id="load_serv_postulacion" class="contenedor_upload_cv oculto" style="display: none">
+						<div class="contenedor_opcion_load_serv">
+							<form class="post-form servicio" enctype="multipart/form-data"  id="forma_test">  
+								{% csrf_token %}
+								{{formap}}
+								<button  name="anap" class="button_load_servicio principal" type="submit">Subir y enviar hoja de vida</button>  
+							</form>  
+
+						</div>
+						<div class="contenedor_opcion_load_serv" v-show="typeof usuario.id_last_cv != 'undefined'">
+							<button class="button_load_servicio terciario" onclick="descarga_perfil()">Descargar última hoja de vida</button>
+							<button class="button_load_servicio principal" onclick="loading_service_nofile('analisis')">Enviar última hoja de vida</button>
+
+						</div>
+						<button class="button_load_servicio secundario" style="color: red" onclick="load_cv_serv(2)">Cancelar</button>
+					</div>
+				</div>
+				<div class="opcion_servicio" style="background: white;">
+					
+					<div class="titulo_superior_servicio">
+						Opción 1
+					</div>
+					<div class="titulo_servicio">
+					Postulate directo por Aleia					</div>
+					
+					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('postulacion_Aleia')">
+						<img type="image" src="/static/imgs/play.png" class="img_contenido">
+						<div class="num_boton_contenido">Consejo #[[contenidos.postulacion_Aleia.numero_consejo]] de Aleia</div>
+						<div class="tit_boton_contenido">[[contenidos.postulacion_Aleia.titulo]]</div>
+					</button>
+					<button class="button_call2action_servicio" onclick="enviar_postulacion()" v-show="postulacion == 'true'">Postulate aquí</button>
+					<div class="servicio_no_disponible" v-show="postulacion != 'true'">
+						La vacante no recibe postulación directa por Aleia.
+					</div>
+				</div>
+				
+				<div class="opcion_servicio" style="background: white;" >
+					
+					<div class="titulo_superior_servicio">
+						Opción 2
+					</div>
+					<div class="titulo_servicio">
+						Postulate en un link externo
+					</div>
+					
+					<button :id="link"  onclick="open_link(this)" class="button_call2action_servicio" v-show="valid_url(link)">Abrir link</button>
+					<div class="servicio_no_disponible"  v-show="!valid_url(link)">
+						La vacante no tiene link externo
+					</div>
+				</div>
+			-->
+
+
+				<!--
+				<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo != 5">
+					<div class="precio_servicio">
+						<img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+						3 créditos
+					</div>
+					<div class="titulo_superior_servicio">
+						Opción 1
+					</div>
+					<div class="titulo_servicio">
+						Agendate con un Job Hacker
+					</div>
+					
+					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('job_hacker')">
+						<img type="image" src="/static/imgs/play.png" class="img_contenido">
+						<div class="num_boton_contenido">Consejo #[[contenidos.job_hacker.numero_consejo]] de Aleia</div>
+						<div class="tit_boton_contenido">[[contenidos.job_hacker.titulo]]</div>
+					</button>
+					<a href="https://www.seligo.co/job-hacker" target="_blank" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">
+						<button class="button_call2action_servicio" >Solicitar agenda</button>
+					</a>
+					<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+
+					
+				</div>
+			-->
+			<div class="opcion_servicio"  style="background: white;">
+				<div class="precio_servicio">
+					<img type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+					1 crédito
+				</div>
+				<div id="desc_serv_representacion" class="contenedor_servicio">
+					<div class="titulo_superior_servicio">
+						Opción 2
+					</div>
+					<div class="titulo_servicio">
+						Postulate con una <spam class="servicio_pop">Representación</spam>
+					</div>
+
+					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('representacion_Aleia')">
+						<img type="image" src="/static/imgs/play.png" class="img_contenido">
+						<div class="num_boton_contenido">Consejo #[[contenidos.representacion_Aleia.numero_consejo]] de Aleia</div>
+						<div class="tit_boton_contenido">[[contenidos.representacion_Aleia.titulo]]</div>
+					</button>
+					<button class="button_call2action_servicio" onclick="load_cv_serv(3)" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">Solicitar representación</button>
+					<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+					<a href="https://aleia.app/login" target="_blank" v-show="typeof usuario.representaciones != 'undefined'">
+						<button class="button_call2action_servicio deshabilitado" >Iniciar sesión</button>
+					</a>
+				</div>
+				<div id="load_serv_representacion" class="contenedor_upload_cv oculto" style="display: none">
+					<div class="contenedor_opcion_load_serv">
+						<form class="post-form servicio" enctype="multipart/form-data"  id="forma_test2">  
+							{% csrf_token %}
+							{{formre}}
+							<button  name="anap" class="button_load_servicio principal" type="submit">Subir y enviar hoja de vida</button>  
+						</form>  
+
+					</div>
+					<div class="contenedor_opcion_load_serv" v-show="typeof usuario.id_last_cv != 'undefined'">
+						<button class="button_load_servicio terciario" onclick="descarga_perfil()">Descargar última hoja de vida</button>
+						<button class="button_load_servicio principal" onclick="loading_service_nofile('representacion')">Enviar última hoja de vida</button>
+
+					</div>
+					<button class="button_load_servicio secundario" style="color: red" onclick="load_cv_serv(4)">Cancelar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+</div>

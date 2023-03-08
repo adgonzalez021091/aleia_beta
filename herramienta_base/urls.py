@@ -21,10 +21,21 @@ from django.conf.urls import url
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', v.index),
-    url(r'^app', v.app),
+    path('', v.app),
+    #url(r'^app', v.app),
+    url(r'^buscador_index', v.index),
     url(r'^content', v.content),
     url(r'^recomendacion', v.recomendacion),
+    url(r'^popup', v.popup),
+    url(r'^acuerdo', v.acuerdo),
+    url(r'^menu_opciones', v.menu_opciones),
+    url(r'^loading', v.loading),
+    url(r'^tarjeta', v.tarjeta),
+    url(r'^services', v.servicios),
+    url(r'^loadjobs', v.loadjobs),
+    url(r'^myjobs', v.myjobs),
+    url(r'^tarjeta_guardada', v.tarjeta_guardada),
+    url(r'^buscador', v.buscador),
     url(r'^people', v.people),
     url(r'^test_epayco', v.test_epayco),
     url(r'^index', v.index),

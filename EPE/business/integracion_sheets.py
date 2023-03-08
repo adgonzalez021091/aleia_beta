@@ -45,7 +45,7 @@ class control_atencion(object):
         current_file_path = __file__
         current_file_dir = os.path.dirname(__file__)
         other_file_path = os.path.join(current_file_dir, "config.txt")
-        obj = {"sheet_control_vacantes":"","sheet_clientes_aleja":"","sheet_control_entrevistas":"","sheet_servicios_aleja":""}
+        obj = {"sheet_postulaciones":"","sheet_control_vacantes":"","sheet_clientes_aleja":"","sheet_control_entrevistas":"","sheet_servicios_aleja":""}
         f=open(other_file_path, "r")
         if f.mode == 'r':
             contents =f.read()
@@ -53,6 +53,7 @@ class control_atencion(object):
             obj["sheet_servicios_aleja"] = contents.split("sheet_servicios_aleja[")[1].split("]")[0]
             obj["sheet_control_entrevistas"] = contents.split("sheet_control_entrevistas[")[1].split("]")[0]
             obj["sheet_clientes_aleja"] = contents.split("sheet_clientes_aleja[")[1].split("]")[0]
+            obj["sheet_postulaciones"] = contents.split("sheet_postulaciones[")[1].split("]")[0]
         return obj
     def carga_servicio(self,data):
         db = logic.load_mongo_client()
@@ -396,7 +397,7 @@ class integraciones(object):
         current_file_path = __file__
         current_file_dir = os.path.dirname(__file__)
         other_file_path = os.path.join(current_file_dir, "config.txt")
-        obj = {"sheet_control_vacantes":"","sheet_clientes_aleja":"","sheet_control_entrevistas":""}
+        obj = {"sheet_postulaciones":"","sheet_control_vacantes":"","sheet_clientes_aleja":"","sheet_control_entrevistas":""}
         f=open(other_file_path, "r")
         if f.mode == 'r':
             contents =f.read()
@@ -404,6 +405,7 @@ class integraciones(object):
             obj["sheet_registro_ingresos"] = contents.split("sheet_registro_ingresos[")[1].split("]")[0]
             obj["sheet_control_entrevistas"] = contents.split("sheet_control_entrevistas[")[1].split("]")[0]
             obj["sheet_clientes_aleja"] = contents.split("sheet_clientes_aleja[")[1].split("]")[0]
+            obj["sheet_postulaciones"] = contents.split("sheet_postulaciones[")[1].split("]")[0]
         return obj
     def registro_ingreso_epayco(self,data):
         current_file_dir = os.path.dirname(__file__)
@@ -440,6 +442,7 @@ class integraciones(object):
             
         sheet.append_row(salida)
         print(salida,"todo perfecto")
+    
 
     def activacion_usuario_sheet(self,id,estado,password):
         import os
@@ -580,6 +583,43 @@ class integraciones(object):
 
         sheet.append_row(salida,value_input_option='USER_ENTERED')
         print(salida,"todo perfecto")
+    def registro_postulacion(self,obj):
+        current_file_dir = os.path.dirname(__file__)
+        other_file_path = os.path.join(current_file_dir, 'integracion aleja-a7c070957142.json')
+        scope = ['https://spreadsheets.google.com/feeds',
+                 'https://www.googleapis.com/auth/drive']
+        creds = ServiceAccountCredentials.from_json_keyfile_name(other_file_path,scope)
+        client = gspread.authorize(creds)
+        filet = self.load_sheet_confs()
+        print(filet)
+        file = filet["sheet_postulaciones"]
+        sheet = client.open(file).sheet1
+        obj_vac = logic.load_mongo_client().vacantes.find_one({"id":int(obj["id_vac"])})
+        o={
+        "id_postulacion":obj["id"],
+        "nombre":obj["nombre"],
+        "telefono":obj["telefono"],
+        "mail":obj["mail"],
+        "aspiracion_max":obj["aspiracion_max"],
+        "aspiracion_min":obj["aspiracion_min"],
+        "link_hv":"https://drive.google.com/file/d/"+obj["id_cv"],
+        "contenido_hv":obj["contenido_cv"],
+        "id_vacante":obj["id_vac"],
+        "cargo_vacante":obj_vac["cargo"],
+        "empresa_vacante":obj_vac["empresa"],
+        "tiene_convenio":obj["convenio"],
+        "vacante_agentes":obj_vac["servicio"],
+        "fecha_envio":obj["fecha"],
+        "nombre agente":"--"
+        }
+        salida = []
+        values_list = sheet.row_values(1)
+
+        for u in values_list:
+            salida.append(o[u])
+        
+        sheet.append_row(salida,value_input_option='USER_ENTERED')
+        
     def integra_usuarios(self):
 
         db = logic.load_mongo_client()
@@ -591,9 +631,12 @@ class integraciones(object):
         client = gspread.authorize(creds)
         file = self.load_sheet_confs()["sheet_clientes_aleja"]
         sheet = client.open(file).worksheet("clientes")
-        sheett = client.open(file).worksheet("Teachable")
-        listat = sheett.get_all_records()
+        sheet2 = client.open(file).worksheet("Teachable")
         lista = sheet.get_all_records()
+        lista2 = sheet2.get_all_records()
+        correos = []
+        for m in lista2:
+            correos.append(m["email"].lower().strip())
         row = 1
         for o in lista:
             print(o)
@@ -627,7 +670,22 @@ class integraciones(object):
 
                 fecha_arr = fecha_tmp.split('/')
                 fecha = str(fecha_arr[2])+"-"+str(fecha_arr[1])+"-"+str(fecha_arr[0])
+            personas = db.personas.find()
+            cambia_a_convenio = False
+            repetido = False
+            id_repetido = ''
             if o['id'] == '':
+                for u in personas:
+                    if u["mail"].lower().strip() == o['mail'].lower().strip():
+                        if o["id"] == '' and u["convenio_busco"] != "si" and o["convenio_busco"] == "si":
+                            cambia_a_convenio =True
+                        repetido = True
+                        id_repetido = u["id"]
+                        sheet.update_cell(row, 2, "repetido")
+                        sheet.update_cell(row, 3, id_repetido)
+                        break
+            if o['id'] == '' and repetido == False:
+
                 id_persona = db.personas.find_one(sort=[("id", -1)])["id"]+1
                 ets = []
                 if tipo == 5:
@@ -641,7 +699,7 @@ class integraciones(object):
                             "area":o['area'],
                             "aspiracion_min":o['aspiracion_min'],
                             "aspiracion_max":o['aspiracion_min'],
-                            "usuario":o['usuario'].strip(),
+                            "usuario":o['usuario'].strip().lower(),
                             "password":o['password'],
                             "cargos_aplica":o['cargos_aplica'],
                             "tipo":tipo,
@@ -661,35 +719,40 @@ class integraciones(object):
 
                             })
                 logic.envio_correo("creacion_usuario",id_persona,{"tipo":tipo,"nombre":o["nombre"].split(" ")[0].strip(),"usuario":o['usuario'].strip().lower(),"password":o['password']},o["mail"])
-                
+                print(id_persona)
                 sheet.update_cell(row, 3, id_persona)
                 if tipo == 5:
                     sheet.update_cell(row, 33, "-1")
                 if tipo != 8 or (tipo == 8 and o["convenio_busco"].strip().lower() == 'si'):
-                    sheet2 = client.open(file).worksheet("Teachable")
+                    
                     sheet2.append_row([o["mail"],o["nombre"],o["password"],id_persona])
                 
             else:
-                id = int(o['id'])
+                if repetido == False:
+                    id = int(o['id'])
+                else:
+                    id = id_repetido
+                    #sheet.update_cell(row, 2, "repetido")
+                    ##sheet.update_cell(row, 3, id)
                 o.pop('id', None)
                 o2 = copy.deepcopy(o)
+                #if o["mail"] not in correos and id > 11000:
+                #    sheet2.append_row([o["mail"],o["nombre"],o["password"],id])
                 for w in o2:
                     if "__" in w:
                         o.pop(w,None)
                 o['fecha'] = fecha
                 o['tipo'] = tipo
-                print(id,o)
-                print('------------------------')
+                #print(id,o)
+                o["usuario"] = o["usuario"].strip().lower()
+                
+                #print('------------------------')
                 db.personas.update_one({"id":id},{"$set":o})
-                if o["convenio_busco"] == "si":
-                    estat = False
-                    for mm in listat:
-                        if o["mail"].strip().lower() == mm["email"].strip().lower():
-                            estat = True
-                    if estat == False:
-                        sheet2 = client.open(file).worksheet("Teachable")
-                        sheet2.append_row([o["mail"],o["nombre"],o["password"],id])
-
+                #sheet.update_cell(row, 3, id)
+                #if cambia_a_convenio == True:
+                #    logic.envio_correo("actualizacion_convenio",id_persona,{"tipo":tipo,"nombre":o["nombre"].split(" ")[0].strip(),"usuario":o['usuario'].strip().lower(),"password":o['password']},o["mail"])   
+                
+                #print("nada")
     def integra_satisfaccion(self,config,nombre,stopers):
         current_file_dir = os.path.dirname(__file__)
         other_file_path = os.path.join(current_file_dir, 'integracion aleja-a7c070957142.json')
@@ -748,6 +811,17 @@ class integraciones(object):
                         sheet.update_cell(row,col_sync, "si")
                     else:
                         sheet.update_cell(row,col_sync, "usuario no encontrado")
+"""
+METODO EN DESUSO POR INTEGRACION MONDAY
+
+def registro_postulacion(obj):
+    import gc
+    gc.collect()
+    rcm = integraciones()
+    rcm.registro_postulacion(obj)
+    json_data = json.dumps({"return":"ok"}, sort_keys=False, ensure_ascii=False) 
+    return json_data
+"""
 def activacion_usuario_sheet(id,estado,password):
     import gc
     gc.collect()
@@ -924,7 +998,7 @@ def integra_satisfaccion_programa():
     print("integra_satisfaccion_programa:sale:", datetime.now().strftime("%H:%M:%S"))
     return json_data
 
-def get_file(file_id):
+"""def get_file(file_id):
     current_file_dir = os.path.dirname(__file__)
     other_file_path = os.path.join(current_file_dir, 'integracion aleja-a7c070957142.json')
     scope = ['https://www.googleapis.com/auth/drive']
@@ -960,10 +1034,11 @@ def get_file(file_id):
     os.remove(os.path.join("/home/ec2-user/temp_downloads/",filename) + extension)
     print("archivo eliminado del servidor")
     return {"file":data,"name":file_name,"mime":mime}
+"""
 def get_last_cv(id):
     res = logic.load_mongo_client().personas.find_one({"id":int(id)})
     if "id_last_cv" in res:
-        return get_file(res["id_last_cv"])
+        return logic.get_file(res["id_last_cv"])
     else:
         return "NaN"
 def load_file(file,id,name=""):
@@ -975,38 +1050,34 @@ def load_file(file,id,name=""):
     file_name = str(file)
     extension = file_name.split(".")[len(file_name.split("."))-1]
     mime = mimetypes.MimeTypes().guess_type(file_name)[0]
-    print("Uploading file " + file_name + "...")
+    print("Uploading file " + file_name + "..."+str(id))
     res = logic.load_mongo_client().personas.find_one({"id":int(id)})
     datetimen = datetime.now() - timedelta(hours=5)
     if name == "":
         nw_file_name = "AC"+str(res["id"])+"VG "+res["nombre"].lower()+"_"+datetimen.strftime("%Y_%m_%d_%H_%M_%S")+"."+extension
     else:
         nw_file_name = "AC"+name+"VS "+res["nombre"].lower()+"."+extension
-    id_folder_cv = ""
-    """if "id_folder_cv" in res:
-        id_folder_cv = res["id_folder_cv"]
-    else:  
-        file_metadata = {
-        'name': str(id)+' '+res["nombre"],
-        'parents':["1TzwJzpVIeA1RD2lMu0zRv3L17m8mRvsE"],
-        'mimeType': 'application/vnd.google-apps.folder'
-        }
-        f = drive_api.files().create(body=file_metadata, fields='id').execute()
-        id_folder_cv = f.get('id')
-        logic.load_mongo_client().personas.update({"id":int(id)},{"$set":{"id_folder_cv":id_folder_cv}})
-    """
     body = {'name': nw_file_name, 'mimeType':mime, 'parents':["1TzwJzpVIeA1RD2lMu0zRv3L17m8mRvsE"]}    
     media = MediaIoBaseUpload(io.BytesIO(file.read()), mimetype=mime, resumable=True)
     fiahl = drive_api.files().create(body=body, media_body=media).execute()
     file_id = fiahl.get("id")
-    logic.load_mongo_client().personas.update({"id":int(id)},{"$set":{"id_last_cv":file_id}})
+    perm_body ={
+        'role':'reader',
+        'type':'anyone'
+    }
+    resperm = drive_api.permissions().create(fileId=file_id,body=perm_body).execute()
+    print(resperm)
+    reslink = drive_api.files().get(fileId = file_id,fields='webViewLink').execute()
+    print(reslink)
+    logic.load_mongo_client().personas.update_one({"id":int(id)},{"$set":{"id_last_cv":file_id}})
     try:
         id_cv =  logic.load_mongo_client().cvs.find_one(sort=[("id", -1)])["id"]+1
     except:
         id_cv = 1
     
     logic.load_mongo_client().cvs.insert_one({"id":id_cv,"id_file":file_id,"fecha":date.today().strftime("%Y-%m-%d"),"hora":datetimen.strftime("%H:%M:%S"),"id_user":int(id),"original_name":file_name,"name":nw_file_name})
-    return file_id
+    res_doc_pr = logic.extraer_contenido_archivo(file_id)
+    return {"id":file_id,"contenido":res_doc_pr["contenido"]}
 
 
 def integra_satisfaccion_sesiones():

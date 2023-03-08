@@ -1,0 +1,76 @@
+{% load static %}
+
+{% load versioned_static %}
+<!--<div id="banner_usuario" onclick="show_acuerdo()" class="contenedor_etiqueta">
+	
+	<h1 style="
+    margin-top: 13%;
+    color: #6a1e6c;
+">
+	
+	¿Quieres un agente que te consiga tu siguiente empleo?
+	</h1>	<img type="image" class="banner_agente" src="{% static 'imgs/agentes.png'%}"  />
+</div>-->
+<div :id="'share_etiqueta_'+obj.data.id" :id_et="obj.id" onclick="share_item(this,'oportunidad',event)" class="contenedor_etiqueta" v-for="obj in lista.vacantes">
+
+	<div class="botonera etiqueta">
+		
+		<button :id_et="obj.id" v-show="usuario.tipo == 5 && obj.texto_cumple == 'Guardada'" class="opcion_vacante nivel1" :id="'repre_postulame_share_etiqueta_'+obj.data.id" onclick="share_item(this,'oportunidad',event)">
+			<img type="image" class="opcion_img" src="{% static 'imgs/n_rocket2.png'%}"  />
+			Hackear vacante
+		</button>
+		<button class="opcion_vacante" :id="'delete_etiqueta_'+obj.id" onclick="show_message_popup(this,true,'delete_etiqueta')">
+			<img type="image" class="opcion_img" src="{% static 'imgs/popup/delete.png'%}"  />
+			Borrar
+		</button>
+
+
+
+	</div>
+	<div class="info_servicio" :style="{background:obj.color_cumple}" v-show="obj.texto_cumple != 'Guardada'">
+		[[obj.texto_cumple]]
+	</div>
+	<div class="div_etiqueta">
+		
+		<div class="etiqueta_coincidencia total"  v-show="obj.data.coincidencia == 100 && obj.data.coincidencia > 0">
+			<h3 class="coincide total" >coincidencia completa</h3>
+			
+		</div>
+		<div class="etiqueta_coincidencia parcial"  v-show="obj.data.coincidencia < 100 && obj.data.coincidencia > 0">
+		<h3 class="coincide parcial" >recomendado</h3>
+	</div>
+	</div>
+	<div class="div_contenido">
+		<div class="div_contenido_titulo_tarjeta">
+			<h2 style="width:100%;"><span class="empresa">[[obj.data.empresa]]</span> busca</h2>
+			<h1 class="titulo_vacante">[[obj.data.cargo]]</h1>
+		</div>
+			
+			<div   class="div_etiqueta_info etiqueta_tipo_servicio" :class="{color_agentes:obj.data.servicio == 'gratuito', color_reclutamiento:obj.data.servicio == 'pago',color_externo:obj.data.servicio == 'no'}" >
+				
+				<h3 class="etiqueta_sin_img">[[get_texto_servicio(obj.data.servicio)]]</h3>
+				
+			</div>
+			<div   class="div_etiqueta_info" >
+				<img type="image" src="/static/imgs/saved.png" class="img_de_etiqueta">
+				<h2 class="etiqueta_con_img">Guardada el [[obj.fecha]]</h2>
+				
+			</div>
+			
+
+			<div   class="div_etiqueta_info">
+				<img type="image" src="/static/imgs/location.png" class="img_de_etiqueta">
+				<h2 v-show="obj.data.ciudad != ''" class="etiqueta_con_img">[[obj.data.ciudad]]</h2>
+				<h2 v-show="obj.data.ciudad == ''" class="etiqueta_con_img">Sin especificar</h2>
+			</div>
+			<div   class="div_etiqueta_info">
+				<img type="image" src="/static/imgs/calendar.png" class="img_de_etiqueta">
+				<h2 class="etiqueta_con_img">[[obj.data.fecha]]</h2>
+				
+			</div>
+
+		</div>
+	</div>
+
+	<div class="ver_mas_inferior" onclick="valida_mas_items('vacantes')" v-show="indices_lista.total_vacantes > lista.vacantes.length">Ver más</div>
+</div>

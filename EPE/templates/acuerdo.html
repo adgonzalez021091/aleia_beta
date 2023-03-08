@@ -1,0 +1,196 @@
+{% load static %}
+
+{% load versioned_static %}
+
+<div id="div_popup_convenio" class="div_contenedor_popup convenio hide" style="display: none">
+    <div class="contenedor_popup extenso" >
+        <div v-show="etapa == 1">
+            <div class="botonera_popup">
+                <button class="opcion_popup principal" onclick="acuerdo_next()"><!--</button>onclick="acepta_acuerdo()">-->
+                <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/right.png'%}"  />
+                Quiero aceptar el acuerdo</button>
+                <button class="opcion_popup" onclick="close_popup(14)">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/close.png'%}"  />
+                    No, gracias.
+                </button>
+            </div>
+            
+        </div>
+        <!--<iframe class="div_iframe_convenio" src="https://www.aleia.app/banner-agentes-aleia" v-show="etapa == 1"></iframe>-->
+        <form class="post-form servicio" enctype="multipart/form-data"  id="envio_acuerdo_form" v-show="etapa == 2"> 
+            {% csrf_token %}
+            <div class="campos_convenio formulario" >
+                <div class="titulo_formulario">
+                    Confirma tus datos
+                </div>	
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span><span v-show="usuario.return == 'error'">Correo </span><h3 v-show="usuario.return != 'error'">Para modificar tu correo debes ir a <a href="profile" target="_blank"> Mi perfil</a></h3></div>
+                    <input id="correo_convenio"  name="mail"  :class="{readonly:usuario.return != 'error'}" placeholder="Correo"  v-model="correo"  :readonly="usuario.return != 'error'"/>
+                    
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>Nombre completo</div>
+                    <input id="nombre_convenio" name="nombre"   placeholder="Por favor ingresa tu nombre completo"  v-model="nombre" />
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>Teléfono</div>
+                    <input id="telefono_convenio" name="telefono"   placeholder="Diligencia los telefonos a los que te podemos contactar"  v-model="telefono" />
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>Número de identificación</div>
+                    <input id="identificacion_convenio" name="numero_identificacion" v-model="numero_identificacion" placeholder="Especifica el tipo. Ej CE123123"/>
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>¿Cuál fue tu ultimo cargo?</div>
+                    <input id="cargo_convenio" name="ultimo_cargo" placeholder="Ejemplo: Gerente general"  v-model="ultimo_cargo" />
+                </div>
+                
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>¿Cuál fue tu ultima empresa?</div>
+                    <input id="empresa_convenio" name="ultima_empresa" placeholder="Ejemplo: Rappi"  v-model="ultima_empresa" />
+                </div>
+                <div  class="info_popup parcial">
+                    <div class="label_info">
+                        <span class="required">* </span>Selecciona en que ciudad vives
+                    </div>
+                    <div>
+                        <multiselect
+                        v-model="value_citys"
+                        placeholder="Escribe una ciudad"
+                        label="name" track-by="name"
+                        :options="options_citys"
+                        :multiple="false"
+                        :close-on-select="true"
+                        :preserve-search="false"
+                        :searchable="true"
+                        ></multiselect>
+                    </div>
+                </div>
+                <div  class="info_popup parcial">
+                    <div class="label_info">
+                        <span class="required">* </span>Selecciona a qué ciudades estarias dispuesto a mudarte
+                    </div>
+                    <div>
+                        <multiselect
+                        v-model="value_citys_move"
+                        placeholder="Escribe una ciudad"
+                        label="name" track-by="name"
+                        :options="options_citys_move"
+                        :multiple="true"
+                        :close-on-select="false"
+                        :preserve-search="false"
+                        :searchable="true"
+                        ></multiselect>
+                    </div>
+                </div>
+                <div  class="info_popup parcial">
+                    <div class="label_info">
+                        <span class="required">* </span>Selecciona tu carrera
+                    </div>
+                    <div>
+                        <multiselect
+                        v-model="value_carreras"
+                        placeholder="Escribe una carrera"
+                        label="name" track-by="name"
+                        :options="options_carreras"
+                        :multiple="false"
+                        :close-on-select="true"
+                        :preserve-search="false"
+                        :searchable="true"
+                        ></multiselect>
+                    </div>
+                </div>
+                
+                <div  class="info_popup parcial">
+                    <div class="label_info">
+                        <span class="required">* </span>Selecciona a quá cargo aspiras
+                    </div>
+                    <div>
+                        <multiselect
+                        v-model="value_cargos"
+                        label="name" track-by="name"
+                        :options="options_cargos"
+                        :multiple="false"
+                        :close-on-select="true"
+                        :preserve-search="false"
+                        :searchable="true"
+                        ></multiselect>
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>¿Cuál es tu aspiración salarial?</div>
+                    <input id="aspiracion_max" @keypress="isNumber($event)" name="aspiracion_max" placeholder=""  v-model="usuario.aspiracion_max" />
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info" ><span class="required">* </span>¿Cuál es tu salario actual?</div>
+                    <input id="salario_actual" @keypress="isNumber($event)" name="aspiracion_min" placeholder=""  v-model="usuario.aspiracion_min" />
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info">
+                        <span class="required">* </span>Nivel de estudio
+                    </div>
+                    <select v-model="nivel_estudio" name = "nivel_estudio" class="input select" >
+                        <option value="Técnico">Técnico</option>
+                        <option value="Bachiller">Bachiller</option>
+                        <option value="Tecnólogo">Tecnólogo</option>
+                        <option value="Profesional">Profesional</option>
+                        <option value="Especiaista">Especiaista</option>
+                        <option value="Magister">Magister</option>
+                        <option value="Doctorado">Doctorado</option>
+                        
+                    </select>
+                    
+                </div>
+                <div class="info_popup parcial">
+                    <div class="label_info">
+                        <span class="required">* </span>Nivel de inglés
+                    </div>
+                    <select v-model="nivel_ingles" name="nivel_ingles" class="input select">
+                        <option value="Avanzado">Avanzado</option>
+                        <option value="Intermedio">Intermedio</option>
+                        <option value="Básico">Básico</option>
+                        <option value="Sin inglés">Sin inglés</option>
+                        
+                    </select>
+                    
+                </div>
+                
+                
+                <div class="info_popup parcial" v-show="usuario.return == 'error' || (usuario.return != 'error' && !check_last_cv)">
+                    <div class="label_info">
+                        <span class="required">* </span>Hoja de vida
+                    </div>
+                    <div class="data_info">
+                        <input type="file" name="file_convenio" :required="usuario.return == 'error' || (usuario.return != 'error' && !check_last_cv)" id="file_acuerdo">
+                    </div>
+                </div>
+                <div class="info_popup parcial" v-show="usuario.return == 'error'">
+                    <div class="label_info" ><span class="required">* </span>Crea tu contraseña de Aleia</div>
+                    <input id="password" name="pass" placeholder=""  v-model="password" />
+                </div>
+                <div class="info_popup" style="width: 97%;" v-show="usuario.return != 'error' && typeof usuario.id_last_cv != 'undefined' && usuario.id_last_cv != ''">
+                    
+                    <input type="checkbox" v-model="check_last_cv" id="check_last_cv_convenio" name="check_last_cv_convenio">
+                    <div class="check_postula">Enviar mi ultima hoja de vida</div>
+                </div>
+                <button type="button" v-show="usuario.return != 'error' && typeof usuario.id_last_cv != 'undefined' && usuario.id_last_cv != ''" class="descarga_cv_postulacion" onclick="descarga_perfil()" >Descargar mi ultima hoja de vida</button>
+                
+                <h3 v-show="usuario.return != 'error'">Los cambios en esta información se verán reflejados en tu perfil de usuario</h3>
+            </div>
+            
+            <div class="botonera_popup">
+                <button class="opcion_popup like" type="submit" >
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/up.png'%}"  />
+                    Enviar aceptación
+                </button>
+                <button class="opcion_popup" onclick="acuerdo_back()" type="button">
+                    <img type="image" class="img_opcion popup" src="{% static 'imgs/popup/left.png'%}"  />
+                    Atras
+                </button>
+            </div>
+        </form>
+    </div>
+</div> 

@@ -1,0 +1,6 @@
+url_bd[mongodb://%s:%s@3.137.57.40]
+sheet_control_entrevistas[Control entrevistas]
+sheet_control_vacantes[Control atencion vacantes]
+sheet_clientes_aleja[Clientes activos Aleja]
+sheet_registro_ingresos[Registro ingresos Seligo]
+sheet_servicios_aleja[Control servicios Séligo]
