@@ -1,0 +1,241 @@
+{% load static %}
+{% load versioned_static %}
+
+<html>
+<head>
+
+
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/reset.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/style.css' %}">
+
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleja</title>
+	<meta property="og:title" content="Aleja"/>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Transfer-Encoding" content="chunked"/>
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+
+
+
+
+</head>
+<body id="index_page">
+	<div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
+		<div id="contenedor_popup_pregunta" class="contenedor_popup_pregunta">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<span id="mensaje_popup_pregunta"></span>
+		</div>
+	</div>
+	<div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+	
+
+	<div id="div_contenedor_menu" class="div_menu" >
+		<button class="close_corner menu" onclick="close_menu()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+		<div id="logo_aleja" >
+			<div id="brand" >
+				<h3>from</h3> <a href="https://www.seligo.com.co/" target="_blank"><img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img"></a>
+			</div>
+			<img src="/static/imgs/logo_aleja_2.png" class="logo_aleja_img">
+			<input v-if="sesion.data.tipo == 6" type="image" src="/static/imgs/menu/brand/compensar.png" class="external_brand">
+		</div>
+		<div class="titulo_contenedor">
+			<h1>Mi perfil</h1>
+		</div>
+
+		<!--<div class="etiqueta_usuario"><h3>[[get_tipo_usuario(sesion.data.tipo)]]</h3></div>-->
+		
+		<a class="link_externo_top_right desktop" href="app">
+			<button class="opcion_menu" >
+				<input type="image" src="/static/imgs/menu/home.png" class="opcion_img_menu">
+				Volver a mi traza
+			</button>
+		</a>
+
+		<div class="contenedor_menu_inferior">
+			<button id="sincronizar_externos" class="opcion_menu" onclick="actualizar_integracion()" v-if="sesion.data.admin == 1">Sincronizar</button>
+
+
+			<button id="video_manual_usuario" class="opcion_menu" onclick="show_popup_video(this)">
+				<input type="image" src="/static/imgs/menu/about.png" class="opcion_img_menu">
+				Manual de Aleja
+			</button>
+			<a class="link_externo_top_right" href="https://forms.gle/3znu7bLsFgpA5n7n9" target="_blank">
+				<button class="opcion_menu" >
+					<input type="image" src="/static/imgs/menu/about.png" class="opcion_img_menu">
+					Comentarios y sugerencias
+				</button>
+			</a>
+			<button class="opcion_menu logout" onclick="close_session()">
+				<input type="image" src="/static/imgs/menu/logout.png" class="opcion_img_menu">
+				Cerrar sesión
+			</button>
+		</div>
+
+	</div>
+
+	<div id="loading" class="loading_show">
+		<div class="loadingio-spinner-ellipsis-cbdgjz18cd"><div class="ldio-dlo8blsimq">
+			<div></div><div></div><div></div><div></div><div></div>
+		</div></div>
+		<div class="div_texto_loading">
+			<h1 id="texto_loading">Cargando datos de Aleja</h1>
+		</div>
+	</div>
+	<div id="div_contenedor_video" class="div_contenedor_popup hide" style="display: none">
+		
+	</div>
+	<div class="contenedor_profile" id="contenedor_profile">
+		<div class="info_fija">
+			<div class="nombre_titulo">
+				<div class="nombre_info">[[name]]</div>
+				<div class="sub_info">ID de usuario: [[id]]</div>
+				<div class="sub_info">Usuario: [[usuario]]</div>
+			</div>
+			<div class="nombre_titulo">
+				[[estado]]
+				<br>
+				[[fecha]]
+			</div>
+		</div>
+		<div class="info_dinamica">
+			<div class="contenedor_campo">
+				<div class="label_campo">Último cargo</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="ultimo_cargo_perfil" placeholder="Ej. Gerente de proyecto"  >
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Última empresa</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="ultima_empresa_perfil"  placeholder="Ej. Rappi"> 
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo_criterios">Criterios por los que quieres que te encuentren</div>
+				<div class="valor_campo textarea">
+					<textarea class="input_comentario" id = "cargos_aplica" placeholder="Cuando un reclutador busque en Aleja te va a encontrar por estas palabras. Pueden ser las herramientas que manejas (ej. Excel, Salesforce), los cargos a los que aspiras (ej. Jefe de mantenimiento) o tu profesión (ej. Ingeniero de sistemas)"></textarea>
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo_criterios" style="color: ">Si estas buscando empleo o un cambio laboral cuentanos que crees que te hace falta para lograr tu objetivo</div>
+				<div class="valor_campo textarea">
+					<textarea class="input_comentario" id = "faltante_busqueda" placeholder="Esto nos permite crear mejores soluciónes para tu búsqueda de empleo"></textarea>
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo_criterios">Logros</div>
+				<div class="valor_campo textarea">
+					<textarea class="input_comentario" id = "logros_perfil" placeholder="Escribe una lista de logros que te hagan más interesante que cualquier persona que pueda tener tus mismas palabras clave. Ej: En Séligo logré aumentar en 3 meses un 80% el número de usuarios satisfechos con la plataforma liderando un equipo de 7 desarrolladores."></textarea>
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Telefono</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="telefono_perfil">
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Mail</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="mail_perfil">
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">LinkedIn</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="linkedin_perfil">
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Area</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id = "area_perfil"   placeholder="Ej. Finanzas">
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Aspiración salarial minima</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="aspiracion_min_perfil">
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Aspiración salarial máxima</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="aspiracion_max_perfil">
+				</div>
+			</div>
+			<div class="contenedor_campo">
+				<div class="label_campo">Ciudad</div>
+				<div class="valor_campo">
+					<div class="recomendaciones">
+						<button :id="'ciudad_perfil_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('ciudad',this)">
+							[[o]]
+						</button>
+					</div>
+					<input id="ciudad_perfil" onblur="remove_recom('ciudad')" onkeydown="explore_recom(event,'ciudad',this)" oninput="recomendaciones('ciudad',this)" class="input" placeholder="Ej. Bogotá" />
+				</div>
+			</div>
+			
+			<div class="contenedor_campo">
+				<div class="label_campo">Sector(es) donde has trabajado</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="sector_perfil"  placeholder="Ej. Consumo masivo">
+				</div>
+			</div>
+			<div class="contenedor_campo" style="display: none">
+				<div class="label_campo">Sub sector</div>
+				<div class="valor_campo">
+					<input type="text" class="input_campo" id="subsector_perfil"  placeholder="Ej. Lacteos">
+				</div>
+			</div>
+
+			<form method="POST" class="post-form" enctype="multipart/form-data" id="form_test_profile">  
+				{% csrf_token %}
+				<div class="label_campo">Hoja de vida</div>
+				{{form}}
+				<!--<button type="submit" class="save btn btn-default">Envíar archivo</button>  -->
+			</form>  
+			<button class="boton_crear_objeto principal save_profile" onclick="guarda_perfil()">Guardar</button>
+
+			<!--<a :href="'EPE/get_last_cv?id='+id" target="_blank">-->
+				<button class="boton_crear_objeto secundario save_profile" onclick="descarga_perfil()" >Descargar mi ultima hoja de vida</button>
+				<!--</a>-->
+			</div>
+
+		</div>
+		<div id="banner_opciones_mobile" class="banner_opciones mobile" style="display: none">
+
+
+			<div class="opcion_banner" onclick="javascript:window.location.href = 'app'">Volver a mi traza</div>
+
+
+			<!--<div class="opcion_banner otros" onclick="show_opciones_cargar()">...</div>-->
+		</div>
+	</body>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+	<script  src="{% versioned_static 'js/fuzzball_lite.umd.min.js'%}"></script>
+
+	<script  src="{% versioned_static 'js/render_profile.js'%}"></script>
+	<script  src="{% versioned_static 'js/business.js'%}"></script>
+	<script  src="{% versioned_static 'js/global.js'%}"></script>
+	<script type="text/javascript">
+		check_session_profile();
+	</script>
+
+	</html>

@@ -1,0 +1,59 @@
+<html>
+  <header>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.min.css">
+  </header>
+
+  <body>
+    <a id="linkedin-button" class="btn btn-block btn-social btn-linkedin">
+      <i class="fa fa-linkedin"></i> Sign in with Linkedin
+    </a>
+    <h2 id="nombre"> </h2>
+    <script>
+var test = null;
+      $('#linkedin-button').on('click', function() {
+        // Initialize with your OAuth.io app public key
+        OAuth.initialize('PdaUm6gKB288jhaQJy4xrADP81I');
+        // Use popup for oauth
+        OAuth.popup('linkedin2').then(linkedin => {
+          console.log('linkedin:',linkedin);
+          // Prompts 'welcome' message with User's email on successful login
+          // #me() is a convenient method to retrieve user data without requiring you
+          // to know which OAuth provider url to call
+          test = linkedin;
+          linkedin.me().then(data => {
+            console.log('me data:', data);
+            document.getElementById("nombre").innerHTML = "Hola "+data.name;
+          })
+          // Retrieves user data from OAuth provider by using #get() and
+          // OAuth provider url
+          
+        });
+      })
+    </script>
+    <iframe id="vm-player" src="https://player.vimeo.com/video/439024581?api=1&player_id=vm-player" width="1000" height="564" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <script type="text/javascript">
+      var iframe = $('#vm-player')[0];
+  var vmPlayer = $f(iframe);
+  function ready(player_id) {
+    // Keep a reference to Froogaloop for this player
+    var vmPlayer = $f(player_id);
+  }
+
+  $(window).bind('ready', function() {
+      //Attach the ready event to the iframe
+      $f(document.getElementById('vm-player')).addEvent('ready', ready);
+    });
+  function playVmVideo(id) {
+    $('#vm-player').attr('src',
+                         'http://player.vimeo.com/video/'
+                         + id + '?api=1&player_id=vm-player');
+    $('#vm-player').load(function(e) { vmPlayer.api('play'); });
+  }
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,156 @@
+{% load static %}
+{% load versioned_static %}
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleia</title>
+    <meta property="og:title" content="Aleia"/>
+    
+    <meta http-equiv="Content-Length" content="1"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
+    <script  src="{% versioned_static 'js/login.js'%}"></script>
+
+
+
+</head>
+<body style="background: white">
+    <div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
+        <div id="contenedor_popup" class="contenedor_popup mensaje">
+            <button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+            <span id="mensaje_popup_pregunta"></span>
+        </div>
+    </div>
+    <div id="div_contenedor_popup" class="div_contenedor_popup hide" style="display: none;">
+        <div id="contenedor_popup" class="contenedor_popup mensaje">
+            <button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+        
+            <h1>Ingresa tu correo para enviarte tu contraseña. Recuerda que este correo debe estar asociado a tu cuenta de Aleia.</h1>
+            <div class="div_input">
+                <input id="mail_pass" class="input" placeholder="Correo de recuperación"/>
+
+            </div>
+            <button class="request_pass" onclick="request_pass()"> Recuperar contraseña</button>
+            <h2 id="mensaje_popup"></h2>
+        </div>
+    </div>
+
+    <div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+
+    <div id="login_info" >
+        <img src="{% static 'imgs/intro_new.jpg'%}" style="margin-top: 8%;width: 100%;">
+    </div>
+    <div id="login_datos" class="ingreso_datos_login">
+        <div class="top_marca_aleja top_login" >
+    <div id="logo_titulo">
+        <img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+    </div>
+    
+</div>
+
+        <div class="form_login" >
+            <h1>Login</h1>
+            <div class="div_input">
+                <input id="usuario" class="input" placeholder="Usuario o correo"/>
+
+            </div>
+            <div class="div_input">
+                <input type="password" id="password" class="input" placeholder="Contraseña" />
+                <button class="opcion_input" onclick="show_password(this)">
+                    <input type="image" class="img_pass showp" src="{% static 'imgs/index/eye.png'%}"  />
+                    <input style="display: none" type="image" class="img_pass hidep" src="{% static 'imgs/index/hide.png'%}"  />
+                </button>
+            </div>
+            <div class="send_login">
+                <div class="forgot_pass">
+                    <button class="olvide_pass" onclick="forgot_pass()">Olvidé mi contraseña</button>
+                    <h3><a href="login?type=registro" >Crear cuenta</a></h3>
+                </div>
+                <div class="login_action">
+                    <button id="iniciar_sesion" class="boton_call2action" onclick="iniciar_sesion()">Iniciar sesión</button>
+                </div>
+            </div>
+            <div id="div_mensaje_error" style="display: none;">
+                <h3 id="mensaje_error" class="mensaje_error">Usuario o contraseña incorrecta</h3>
+            </div>
+        </div>
+    </div>
+    <div id="registro_datos" class="ingreso_datos_login" style="display: none">
+        <div class="top_marca_aleja top_login" >
+    <div id="logo_titulo">
+        <img src="/static/imgs/logo_aleia_grande.png" style=" width: 200px;">
+    </div>
+    
+</div>
+
+        <div class="form_login" >
+            <h1>Registro</h1>
+            
+            <div class="div_input">
+                <input id="nombre" class="input" placeholder="Nombre completo"/>
+                
+
+            </div>
+            <div class="div_input">
+                <input id="mail" class="input" placeholder="Correo electrónico"/>
+            </div>
+            <div class="div_input">
+                <input type="password" id="pass" class="input" placeholder="Contraseña"/>
+                <button class="opcion_input" onclick="show_password(this)">
+                    <input type="image" class="img_pass showp" src="{% static 'imgs/index/eye.png'%}"  />
+                    <input style="display: none" type="image" class="img_pass hidep" src="{% static 'imgs/index/hide.png'%}"  />
+                </button>
+            </div>
+           
+            <div class="div_input">
+                <input id="linkedin" class="input" placeholder="Link de LinkedIn"/>
+            </div>
+            <div class="div_input" >
+
+                <div class="titulo_select" style="width: 60%"><h2>¿Quieres un perfil de empresa?</h2></div>
+                <select id="perfil_empresa" class="input select" style="width: 30%" onchange="perfil_empresa()">
+                    <option value = ""></option>
+                    <option value = "true">Si</option>
+                    <option value = "false">No</option>
+                </select>
+                <button class="opcion_input" onclick="show_message_popup(this)">
+                    <input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+                </button>
+            </div>
+            <div id="div_empresa" class="div_input" style="display: none">
+                <input id="empresa" class="input" placeholder="Nombre de la empresa"/>
+            </div>
+            <div id = "div_telefono" class="div_input" style="display: none">
+                <input id="telefono" class="input" placeholder="Celular"/>
+            </div>
+            <div class="div_input">
+                <h3>Al registarte en Aleia autorizas a Séligo sobre tus datos acorde a las politicas definidas en <a href="https://www.seligo.co/politicadatos">www.seligo.co/politicadatos</a>
+                </div>
+                <div class="send_login">
+                    <div class="forgot_pass">
+
+                        <h3><a href="login" >Iniciar sesión</a></h3>
+                    </div>
+                    <div class="login_action">
+                        <button id="iniciar_sesion" class="boton_call2action" onclick="registro()">Crear cuenta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="brand" >
+            by <img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img">
+        </div>
+    </body>
+    <script  src="{% versioned_static 'js/registro.js'%}"></script>
+    </html>
+

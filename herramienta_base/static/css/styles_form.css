@@ -1,0 +1,28 @@
+.contenedor{
+	height:100%;
+	width:100%;
+	background: grey;
+}
+.contenedor_form.e1{
+	transition: all .2s ease-in-out;
+	top: -100%;
+}
+.contenedor_form.e2{
+	transition: all .2s ease-in-out;
+	top: -200%;
+}
+.contenedor_form.e3{
+	transition: all .2s ease-in-out;
+	top: -300%;
+}
+.contenedor_form{
+	transition: all .2s ease-in-out;
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+body{
+	    overflow: hidden;
+    margin: 0;
+}

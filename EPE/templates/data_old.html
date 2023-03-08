@@ -1,0 +1,19 @@
+{% load static %}
+{% load versioned_static %}
+
+<html>
+<head>
+</head>
+
+<body>
+    <div id="app" width="1440" height="743">
+        <d3-network ref='net' :net-nodes="nodes" :net-links="links" :options="options" />
+
+    </div>   
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>     
+    <style src="vue-d3-network/dist/vue-d3-network.css"></style>
+    <script src="{% versioned_static 'js/render_data.js'%}"></script>
+</body>
+
+</html>
+

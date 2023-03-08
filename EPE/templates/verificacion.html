@@ -1,0 +1,161 @@
+
+{% load versioned_static %}
+{% load static %}
+
+<html>
+
+<head>
+
+
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo.s3.us-east-2.amazonaws.com/img_pg.png"/><title>Aleja beta</title>
+	<meta property="og:title" content="Aleja"/>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Transfer-Encoding" content="chunked"/>
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_check.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_check_mobile.css' %}">
+
+
+
+
+</head>
+<body id="index_page">
+	<div id="brand_aleja" >
+		Aleja<h3 class="beta">beta</h3>
+		
+	</div>
+	<div id="brand" >
+		<h3 style="
+		margin: 0;
+		">from</h3> <a href="https://www.seligo.com.co/" target="_blank"><img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img"></a>
+	</div>
+	<div class="div_mensaje" id="mensaje_ok" style="display:none;">
+		<p></p><h1 style="
+		font-size: 22px;
+		font-weight: normal;
+		">
+		<h2 id="mensaje_ok_text">Hola! Nos alegra que respondas la solicitud de tu contacto. ¿Que tan cercano consideras que es</h2>
+		<br><br>
+		
+		<p></p>
+		<div id="opciones" class="opciones">
+			<h2>¿Qué tan cercanos consideras que son?</h2>
+			<div id="opcion_2" onclick="send_response(this)" class="opcion" style="    background: #ffb394;">
+				<div class="titulo_opcion" style="color: #943822;">Conocido</div>
+				<div class="cont_opcion">
+					Es una persona que te reconoce pero no tienes seguridad si te haría un favor sin pensarlo.<br><br>Por ejemplo, un compañero de algún trabajo en el que estuviste que tengas guardado en tu celular pero nada mas.
+				</div>
+			</div>
+			<div id="opcion_3" onclick="send_response(this)" class="opcion" style="background: #fff2354f">
+				<div class="titulo_opcion" style="color: #948d1f;">De confianza</div>
+				<div class="cont_opcion">
+					Es una persona en quien confiarías algo valioso para ti, pero con quien no tienes un contacto constante.<br><br>Por ejemplo, un amigo con el que hables de vez en cuando de temas personales.
+				</div>
+			</div>
+			<div id="opcion_4" onclick="send_response(this)" class="opcion" style="background: #a6ff354f">
+				<div class="titulo_opcion" style="color:#5d8e1f">Muy cercano</div>
+				<div class="cont_opcion">
+					Es una persona de tu total confianza y tienen un contacto constante o la conoces desde hace mucho tiempo.<br><br>Por ejemplo, tu pareja o alguien con quien hayas trabajado por muchos años y tengan espacios fuera del trabajo.
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="div_mensaje" id="mensaje_err" style=" display:none;">
+		Error no controlado, recarga esta página en un momento o escribenos a a.gonzalez@seligo.com.co para que podamos atender tu solicitúd.
+	</div>
+
+</body>
+<script type="text/javascript">
+	var getParams = function (url) {
+		var params = {};
+		var parser = document.createElement('a');
+		parser.href = url;
+		var query = parser.search.substring(1);
+		var vars = query.split('&');
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split('=');
+			params[pair[0]] = decodeURIComponent(pair[1]);
+		}
+		return params;
+	};
+	trans = getParams(window.location.href);
+
+	if(trans.hasOwnProperty("ids")){
+		if(trans.type == "ok"){
+			console.log(trans["ids"],trans["idt"],trans["type"])
+			document.getElementById("mensaje_ok").style.display = "block";
+			document.getElementById("mensaje_ok_text").innerHTML = "Hola "+trans["n1"]+"! Nos alegra que respondas la solicitud de "+trans["n2"]+". Para verificar que se conocen por favor elige alguna de las siguientes opciones";
+		}else if(trans.type == "notok"){
+			send_not_response();
+			console.log(trans["ids"],trans["idt"],trans["type"])
+			document.getElementById("mensaje_ok").style.display = "block";
+			document.getElementById("opciones").style.display = "none";
+			document.getElementById("mensaje_ok_text").innerHTML = "Hola "+trans["n1"]+". No te preocupes, tu seguridad y la de todas las personas es nuestra prioridad, asi que te eliminaremos como contacto de "+trans["n2"]+" en la plataforma.<br><br> Si quieres saber más sobre nosotros o tienes alguna duda por favor escribenos a a.gonzalez@seligo.com.co para que podamos resolver todas tus inquietudes.";
+
+			
+		}
+	}else{
+		document.getElementById("mensaje_err").style.display = "block";
+	}
+	function send_not_response(){
+		trans = getParams(window.location.href);
+		
+		$.ajax({
+			url:'EPE/envio_respuesta_verificacion',
+			type:'POST',
+			async: false,
+			data:{ 
+				'nivel':1,
+				'id':trans.ids,
+				'idt':trans.idt,
+			},
+			success: function(ret){
+				console.log("sesion verificada...",ret)
+				alert("información verificada! Gracias.")
+			},
+			error: function(xhr, errmsg, err) {
+				document.getElementById("mensaje_ok").style.display="none";            
+				document.getElementById("mensaje_err").style.display="block";            
+			}
+
+		});
+	}
+	function send_response(o){
+		trans = getParams(window.location.href);
+		var x = parseInt(o.id.split("opcion_")[1])
+		$.ajax({
+			url:'EPE/envio_respuesta_verificacion',
+			type:'POST',
+			async: false,
+			data:{ 
+				'nivel':x,
+				'id':trans.ids,
+				'idt':trans.idt,
+			},
+			success: function(ret){
+				console.log("sesion verificada...",ret)
+				alert("información verificada! Gracias.")
+			},
+			error: function(xhr, errmsg, err) {
+				document.getElementById("mensaje_ok").style.display="none";            
+				document.getElementById("mensaje_err").style.display="block";            
+			}
+
+		});
+	}
+</script>
+</html>

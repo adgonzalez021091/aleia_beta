@@ -1,0 +1,11 @@
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles.css
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles_index.css
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/loading.css
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles_index_mobile.css
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/global.js
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/business.js
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/render.js
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles.css
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: css/styles_mobile.css
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/login.js
+django_versioned_static_url.templatetags.versioned_static - WARNING - Could not find static file: js/registro.js

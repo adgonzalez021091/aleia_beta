@@ -1,0 +1,93 @@
+{% load versioned_static %}
+{% load static %}
+
+<html>
+
+<head>
+
+
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo.s3.us-east-2.amazonaws.com/img_pg.png"/><title>Aleja beta</title>
+	<meta property="og:title" content="Aleja"/>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Transfer-Encoding" content="chunked"/>
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_check.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_check_mobile.css' %}">
+
+
+</head>
+<body id="index_page">
+	<div id="brand_aleja" >
+		Aleja<h3 class="beta">beta</h3>
+	</div>
+	<div id="brand" >
+		<h3 style="
+    margin: 0;
+">from</h3> <a href="https://www.seligo.com.co/" target="_blank"><img src="{% static 'imgs/logo_seligo.png'%}" class="brand_img"></a>
+	</div>
+	<div class="div_mensaje" id="mensaje_ok" style=" display:none;">
+		<p></p><h1 style="
+		font-size: 22px;
+		font-weight: normal;
+		">¡Felicitaciones, tu cuenta ha sido activada exitosamente!</h1><br><br>
+		Inicia sesión en Aleja dando clic <a href="login">aquí</a><br>
+		<p></p>
+	</div>
+	<div class="div_mensaje" id="mensaje_err" style=" display:none; ">
+		Error no controlado, intentalo de nuevo desde el link del correo o escribenos a a.gonzalez@seligo.com.co.
+	</div>
+
+</body>
+<script type="text/javascript">
+	var getParams = function (url) {
+		var params = {};
+		var parser = document.createElement('a');
+		parser.href = url;
+		var query = parser.search.substring(1);
+		var vars = query.split('&');
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split('=');
+			params[pair[0]] = decodeURIComponent(pair[1]);
+		}
+		return params;
+	};
+	trans = getParams(window.location.href);
+	if(trans.hasOwnProperty("id")){
+		$.ajax({
+			url:'EPE/activacion_usuario',
+			type:'POST',
+			async: false,
+			data:{ 'id':trans.id},
+			success: function(ret){
+				console.log("sesion verificada...",ret)
+				if(ret.retorno == "ok"){
+					document.getElementById("mensaje_ok").style.display="block";
+
+				}else{
+					document.getElementById("mensaje_err").style.display="block";            
+				}
+			},
+			error: function(xhr, errmsg, err) {
+					document.getElementById("mensaje_err").style.display="block";            
+			}
+
+		});
+	}
+	
+</script>
+</html>

@@ -1,0 +1,477 @@
+{% load static %}
+{% load versioned_static %}
+
+<html>
+<head>
+	
+
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/reset.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/style.css' %}">
+
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleia</title>
+	<meta property="og:title" content="Aleia"/>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Transfer-Encoding" content="chunked"/>
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+
+
+
+
+</head>
+<body id="index_page">
+	<div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
+		<div id="contenedor_popup_pregunta" class="contenedor_popup_pregunta">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<span id="mensaje_popup_pregunta"></span>
+		</div>
+	</div>
+	<div id="div_contenedor_popup_perfil" class="div_contenedor_popup hide" style="display: none;">
+		
+		<div id="contenedor_popup_perfil" class="contenedor_popup_perfil">
+			<button  class="close_corner" onclick="close_popup(10)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<div class="mensaje_popup_perfil">
+
+				<p style="color: rgb(115, 54, 179); font-size: 30">Permite que las empresas te encuentren en Aleia</p>
+				<h1 style="color: #6d6471;">
+					Cuando un reclutador busque candidatos en Aleia te va a encontrar por los datos que diligencias acá.
+					<br><br>
+					<div class="botonera_popup_perfil">
+						
+						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('perfil_usuario')">
+							<input type="image" src="/static/imgs/play.png" class="img_contenido">
+							<div class="num_boton_contenido">Consejo #[[contenidos.perfil_usuario.numero_consejo]] de Aleia</div>
+							<div class="tit_boton_contenido">[[contenidos.perfil_usuario.titulo]]</div>
+						</button>
+						
+
+					</div>	 
+				</h1>
+				
+			</div>
+			<div class="form_popup_perfil">
+				<div class="titulo_contenedor popup_profile">
+					Tus datos básicos
+				</div>
+				<div class="contenedor_campo" style="width: 65%;">
+					<div class="label_campo" style="width: 100%;">Último cargo</div>
+					<div class="valor_campo" style="width: 90%;">
+						<input type="text" class="input_campo" id="ultimo_cargo_perfil" placeholder="Ej. Gerente de proyecto"  >
+					</div>
+				</div>
+				<div class="contenedor_campo" style="width: 35%;">
+					<div class="label_campo" style="width: 100%;">Última empresa</div>
+					<div class="valor_campo" style="width: 100%;">
+						<input type="text" class="input_campo" id="ultima_empresa_perfil"  placeholder="Ej. Rappi"> 
+					</div>
+				</div>
+				
+				<div class="div_input" style="margin-bottom: 20px;">
+
+					<div class="desde">
+						Rango salarial desde
+					</div>
+					<div class="desde2">
+						<input id="aspiracion_min_perfil" class="input" placeholder="$" />
+					</div>
+					<div class="hasta">
+						hasta
+					</div>
+					<div class="hasta2">
+						<input id="aspiracion_max_perfil" class="input" placeholder="$" />
+					</div>
+				</div>
+				<form method="POST" class="post-form" enctype="multipart/form-data" id="form_test_profile">  
+					{% csrf_token %}
+					<div class="label_campo">Hoja de vida</div>
+					{{form_cv}}
+				</form> 
+				<div class="div_input">
+					<div class="label_campo" style="width: 90%; color: red" >Si estas buscando empleo o un cambio laboral cuentanos que crees que te hace falta para lograr tu objetivo</div>
+					<textarea placeholder="Esto nos permite crear mejores soluciones para tu búsqueda de empleo." id="faltante_busqueda"></textarea>
+				</div>
+				<div class="contenedor_botones_perfil">
+				
+				<button  class="boton_call2action job_resume" onclick="guarda_perfil()" >Cargar mis datos en Aleia!</button>
+			</div>
+			</div>
+			
+		</div>
+	</div>
+	<div id="loading" class="loading_show">
+		<div class="loadingio-spinner-ellipsis-cbdgjz18cd"><div class="ldio-dlo8blsimq">
+			<div></div><div></div><div></div><div></div><div></div>
+		</div></div>
+		<div class="div_texto_loading">
+			<h1 id="texto_loading">Cargando datos de Aleia</h1>
+		</div>
+	</div>
+	<div id="div_contenedor_video" class="div_contenedor_popup hide" style="display: none">
+		<button  class="close_corner video" onclick="close_popup(5)"><input type="image" class="corner_img video" src="{% static 'imgs/cancel_c.png'%}"  />
+		Cerrar video</button>
+		<div id="player"></div>
+		<div id="sorry">
+			¡Lo siento! Este consejo aun no está disponible.
+			<br><br>
+			Tenemos un equipo de Job Hackers creando los mejores consejos para que cambies tu búsqueda de empleo y tu futuro profesional.
+			<br><br>
+			A medida que lanecemos los consejos te notificaremos al correo, así que esta atento.
+		</div>
+		<div class="botonera_popup_video">
+			<div class="boton_popup_video">
+				<button class="boton_popup_video_b">Ver consejos de Aleia</button>
+			</div>
+			<div class="boton_popup_video">
+				<a href="https://www.seligo.co" target="_blank">
+				<button  class="boton_popup_video_b">Obtén créditos de Aleia</button>
+			</a>
+			</div>
+		</div>
+		<!--<iframe class="iframe_video_yt" :src="link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
+	</div>
+
+
+
+	<div id="div_contenedor_menu" class="div_menu" >
+		<!--<button class="close_corner menu" onclick="close_menu()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>-->
+		<div id="logo_aleja" >
+			<!--Aleia<h3>beta</h3>-->
+			<img src="/static/imgs/logo_aleja_2.png" class="logo_aleja_img">
+			<input v-if="tipo == 6" type="image" src="/static/imgs/menu/brand/compensar.png" class="external_brand">
+		</div>
+		<div class="titulo_contenedor">
+			[[nombre_usuario]]
+
+		</div>
+		
+
+		<a class="link_externo_top_right desktop" href="admin" v-if="sesion.data.admin == 1">
+			<button class="opcion_menu" >
+				<input type="image" src="/static/imgs/menu/home.png" class="opcion_img_menu">
+				Administrador
+			</button>
+		</a>
+		<a href="app">
+			<button id="tab_contenedor_busquedas_vacantes"  class="opcion_menu">
+				<input type="image" src="/static/imgs/menu/job.png" class="opcion_img_menu">
+				Vacantes
+			</button>
+		</a>
+		<a href="people">
+			<button id="tab_contenedor_busquedas_contactos"  onclick="cambiar_contenedor(this)" class="opcion_menu">
+				<input type="image" src="/static/imgs/menu/network.png" class="opcion_img_menu">
+				Networking
+			</button>
+		</a>
+
+		
+		<button id="tab_contenedor_contenidos" class="opcion_menu selected" >
+			<input type="image" src="/static/imgs/menu/play.png" class="opcion_img_menu">
+			Consejos de Aleia
+		</button>
+		
+
+		<div class="contenedor_menu_inferior">
+			<a class="link_externo_top_right" href="profile">
+				<button class="opcion_menu" >
+					<input type="image" src="/static/imgs/menu/user2.png" class="opcion_img_menu">
+					Mi perfil
+				</button>
+			</a>
+			<button id="sincronizar_externos" class="opcion_menu" onclick="actualizar_integracion()" v-if="sesion.data.admin == 1">Sincronizar</button>
+
+
+	<!--<button id="video_manual_usuario" class="opcion_menu" onclick="show_popup_video('')">
+		<input type="image" src="/static/imgs/menu/about.png" class="opcion_img_menu">
+		Manual de Aleia
+		<div class="alerta_intermitente show" id="alerta_manual_aleja">nuevo</div>
+	</button>
+	<a class="link_externo_top_right" href="https://forms.gle/3znu7bLsFgpA5n7n9" target="_blank">
+		<button class="opcion_menu" >
+			Comentarios y sugerencias
+		</button>
+	</a>-->
+	<button class="opcion_menu logout" onclick="close_session()">
+		<input type="image" src="/static/imgs/menu/logout.png" class="opcion_img_menu">
+		Cerrar sesión
+	</button>
+	<div id="brand">
+		<div style="width:100%;height: 10;position:relative;float:left;text-align: center;">
+			<h3 style="/* width: 10; *//* position: relative; *//* float: left; */">by</h3></div> 
+			<div style="width:100%;height: 10;position:relative;float:left;text-align: center;"><a href="https://www.seligo.com.co/" target="_blank"><img src="/static/imgs/logo_seligo.png" class="brand_img"></a>
+			</div></div>
+		</div>
+
+	</div>
+
+	<div id="banner_servicios" class="banner_servicios" >
+		
+		<div class="contenido_banner_servicios div_contenedor">
+			<div class="titulo_contenedor servicios">
+				<div class="info_tipo_servicio">
+					<input type="image" src="/static/imgs/boost.png" class="img_info_tipo_servicio" >
+					Servicios
+					<br>
+					[[servicios.length]]
+				</div>
+				<div class="info_tipo_servicio">
+					<input type="image" src="/static/imgs/coin.png" class="img_info_tipo_servicio" >	
+					Créditos
+					<br>
+					[[creditos]]
+					
+				</div>
+			</div>
+			<div class="sin_servicios" v-if="servicios.length == 0 && usuario.tipo == 13">
+				Muy pronto...
+
+			</div>
+			<div class="sin_servicios" v-if="servicios.length == 0 && usuario.tipo != 13">
+				<div style="margin-bottom:20px">
+					Aún no has solicitado tu primer servicio
+				</div>
+				<button  class="boton_contenido"  onclick="show_popup_video('video_general')">
+					<input type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.video_general.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.video_general.titulo]]</div>
+				</button>
+			</div>
+			<div :class="'div_servicio '+o.estatus" v-for="o in servicios" v-if="servicios.length > 0">
+				<div class="descripcion_servicio">
+					<button v-show="o.estatus == 'abierto'" :id="'delete_etiqueta_'+o.id" onclick="show_message_popup(this,true,'delete_servicio')" class="opcion servicio"><input type="image" src="/static/imgs/popup/delete.png" class="img_opcion"></button>
+					[[o.desc]]
+					<br>
+					[[o.estatus]]
+				</div>
+				<div class="etiqueta_servicio">
+					[[o.data1]]
+				</div>
+				<div class="etiqueta_servicio">
+					[[o.data2]]
+				</div>
+				<div class="etiqueta_servicio">
+					[[o.fecha_hora]]
+				</div>
+
+
+			</div>
+		</div>
+		<div class="botonera_banner_servicios">
+
+			<button  class="opcion_vacante nivel1 boton_asesoria" onclick="habilitar_opciones(this,'asesoria','',event)">
+				<input type="image" class="opcion_img_asesoria" src="{% static 'imgs/chat.png'%}"  />
+				<div class="opcion_txt_asesoria">Recibe ayuda con tu búsqueda de empleo</div>
+			</button>
+
+			<!--<button v-if="sesion.data.tipo != 13" class="opcion_vacante nivel1 boton_asesoria" onclick="crear('proceso')">
+				<input type="image" class="opcion_img_asesoria" src="{% static 'imgs/fire.png'%}"  />
+				<div class="opcion_txt_asesoria">Necesito tips para una entrevista</div>
+			</button>-->
+		</div>
+	</div>
+
+	<div id="contenedor_total" >
+	<div id="contenedor_contenidos" class="contenedor_top stats" >
+		<div class="titulo_contenedor_top">Contenidos</div>
+		<div class="link_contenido" v-for="(o,k) in videos">
+			<button  class="boton_contenido contents"  v-on:click="show_popup_video(o.k)">
+				<input type="image" src="/static/imgs/play.png" class="img_contenido">
+				
+				<div class="num_boton_contenido">Consejo #[[o.numero_consejo]] de Aleia</div>
+				<div class="tit_boton_contenido">[[o.titulo]]</div>
+			</button>
+		</div>
+	</div>
+	</div>
+
+	<div id="div_contenedor_popup_servicios" class="div_contenedor_popup hide" style="display: none;">
+		<div id="contenedor_popup_servicios" class="contenedor_popup hide popup_contendor_servicios">
+			<button id = "close_contenedor_right_s" class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<a href="https://www.seligo.co" target="_blank">
+			<button class="call2action_recarga"><input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}" style="top: 6px;" />Obtén créditos aquí</button>
+		</a>
+
+			<div id="contenedor_popup_servicios_asesoria" v-show="label == 'asesoria'">
+				<div id="titulo_contenedor2" class="titulo_contenedor_servicios">
+					[[titulo]]
+				</div>
+				<div class="opciones_servicios">
+					<div  class="opcion_servicio" >
+						<div class="titulo_superior_servicio">
+							¡Creamos contenidos todo el tiempo para que logres tu objetivo!
+						</div>
+						
+						<div class="call2action_servicio">
+							<a href="https://www.youtube.com/channel/UClMNkFB20wVSt0IAHBo-Dig" target="_blank">
+								<input type="image" src="/static/imgs/youtube.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+								<button class="button_call2action_servicio secundario">Ve a nuestro canal</button>
+							</a>
+
+						</div>
+
+
+					</div>
+					<div class="opcion_servicio" style="background: white;" >
+						<div class="titulo_superior_servicio">
+							Opción 1
+						</div>
+						<div class="titulo_servicio">
+							Solicita asistencia cuando quieras
+						</div>
+						<div class="call2action_servicio">
+							<a href="https://wa.link/iz0b9s" target="_blank">
+								<input type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+								<button class="button_call2action_servicio secundario" >Abrir chat</button>
+							</a>
+						</div>
+					</div>
+					<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo != 5">
+						<div class="precio_servicio">
+							<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+							3 créditos
+						</div>
+						<div class="titulo_superior_servicio">
+							Opción 2
+						</div>
+						<div class="titulo_servicio">
+							Llamada con un Job Hacker
+						</div>
+
+						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('job_hacker')">
+							<input type="image" src="/static/imgs/play.png" class="img_contenido">
+							<div class="num_boton_contenido">Consejo #[[contenidos.job_hacker.numero_consejo]] de Aleia</div>
+							<div class="tit_boton_contenido">[[contenidos.job_hacker.titulo]]</div>
+						</button>
+						<a href="https://www.seligo.co/job-hacker" target="_blank" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">
+							<button class="button_call2action_servicio" >Solicitar llamada</button>
+						</a>
+						<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+
+
+					</div>
+					<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo == 5" >
+					
+					<div class="titulo_superior_servicio">
+						Opción 2
+					</div>
+					<div class="titulo_servicio">
+						Llamada con un Job Hacker
+					</div>
+					
+					
+					Solicitala directo por chat
+					<div class="call2action_servicio">
+					<a href="https://wa.link/iz0b9s" target="_blank">
+							<input type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+							<button class="button_call2action_servicio secundario" >Abrir chat</button>
+						</a>
+					</div>
+
+					
+				</div>
+					<div class="opcion_servicio" style="background: #3b3744;color: white;" >
+						<div class="precio_servicio">
+							<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+							Servicio VIP
+						</div>
+						<div class="titulo_superior_servicio" style="color: #f8f7fb;">
+							Opción 3
+						</div>
+						<div class="titulo_servicio" >
+							Sesión estratégica personalizada
+						</div>
+						<div style="display: none">
+							Sesiones de 2 horas con tu asesor experto asignado donde construirá el diagnóstico de tu búsqueda de empleo, las estrategias para mejorarla, te asignará retos y hará seguimiento a tu proceso.
+						</div>
+						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('asesoria_personalizada')">
+							<input type="image" src="/static/imgs/play.png" class="img_contenido">
+							<div class="num_boton_contenido">Consejo #[[contenidos.asesoria_personalizada.numero_consejo]] de Aleia</div>
+							<div class="tit_boton_contenido">[[contenidos.asesoria_personalizada.titulo]]</div>
+						</button>					
+						<a href="https://calendly.com/sesiones_seligo/agenda" v-show="tipo_user == 5 || tipo_user == 11" target="_blank">
+							<button  class="button_call2action_servicio">Agendar sesión ahora</button>
+						</a>
+
+						<a v-show="tipo_user != 5 && tipo_user != 11" href="https://www.seligo.co/servicios" target="_blank">
+							<button class="button_call2action_servicio" >Obtén una asesoría</button>
+						</a>
+
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+
+	<div id="banner_opciones_mobile" class="banner_opciones mobile" style="display: none">
+	<!--<div id="opciones_cargar" class="opciones_cargar">
+		<button  class="close_corner" onclick="close_opciones_cargar()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+		<button class="opcion_cargar" onclick="crear('proceso')"><h1>Crear entrevista</h1></button>
+
+	</div>-->
+	<div class="opcion_banner" onclick="cambiar('menu')">
+		<input type="image" class="menu_img" src="{% static 'imgs/menu.png'%}"  /><div class="texto_opcion_mobile">Menú</div></div>
+
+		<div class="opcion_banner" onclick="cambiar('inicio')">
+			<input type="image" class="menu_img" src="{% static 'imgs/inicio.png'%}"  /><div class="texto_opcion_mobile">
+				Inicio
+			</div>
+		</div>
+		<div class="opcion_banner" onclick="cambiar('servicios')">
+			<input type="image" class="menu_img" src="{% static 'imgs/services.png'%}"  /><div class="texto_opcion_mobile">
+				Servicios
+			</div>
+		</div>
+
+	</div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+<script  src="{% versioned_static 'js/fuzzball_lite.umd.min.js'%}"></script>
+<script  src="{% versioned_static 'js/global.js'%}"></script>
+
+<script  src="{% versioned_static 'js/business.js'%}"></script>
+<script  src="{% versioned_static 'js/graph.js'%}"></script>
+
+<script src="{% versioned_static 'js/viz.js' %}"></script>
+<script  src="{% versioned_static 'js/render.js'%}"></script>
+<script >
+	var getParams = function (url) {
+		var params = {};
+		var parser = document.createElement('a');
+		parser.href = url;
+		var query = parser.search.substring(1);
+		var vars = query.split('&');
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split('=');
+			params[pair[0]] = decodeURIComponent(pair[1]);
+		}
+		return params;
+	};
+	trans = getParams(window.location.href);
+	console.log("punto controladoooo....",trans)
+	if(trans.hasOwnProperty("id_vacante")){
+
+		console.log(trans["id_vacante"])
+		share_item_fijo(trans["id_vacante"])
+
+	}
+</script>
+</html>

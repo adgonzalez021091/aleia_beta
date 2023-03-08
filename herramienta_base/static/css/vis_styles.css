@@ -1,0 +1,12 @@
+.not_vis{
+	display:none;
+}
+.bloque3{
+	width: 6% !important;
+}
+.container_left.show{
+	width: 55%;
+}
+.vis{
+	display: block !important;
+}

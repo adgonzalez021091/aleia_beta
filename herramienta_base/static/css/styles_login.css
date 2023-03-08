@@ -1,0 +1,30 @@
+html, body, head{
+    margin: 0px 0px 0px 0px;
+  }
+
+#titulo{
+	margin-top:100px;
+	margin-bottom: 55px;
+	font-size: 70px;
+}
+#imagen{
+	height: 100%;
+	float: left;
+}
+.info{
+	width: 70%;
+	margin-left: 15%;
+	margin-right: 15%;
+}
+#iniciar_sesion{
+	width: 60%;
+	margin-left: 20%;
+	margin-right: 20%;
+}
+#login_datos{
+	width: 50%;
+	float: left;
+}
+#top_titulo{
+	-z-index: 10;
+}

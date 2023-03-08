@@ -1,0 +1,10 @@
+@media only screen and (max-device-width : 450px) {
+	.div_mensaje{
+		width: 73%;
+		margin-top: 5%;
+		margin-left: 5%;
+	}
+	.opcion {
+		width: 93%;
+	}
+}

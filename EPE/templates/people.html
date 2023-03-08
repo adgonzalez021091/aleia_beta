@@ -1,0 +1,1498 @@
+{% load static %}
+{% load versioned_static %}
+
+<html>
+<head>
+	
+
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/reset.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/network/style.css' %}">
+
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><link rel="shortcut icon" type="image/png" href="https://seligo2.s3.us-east-2.amazonaws.com/logo_aleja_2.png"/><title>Aleia</title>
+	<meta property="og:title" content="Aleia"/>
+	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Transfer-Encoding" content="chunked"/>
+	<meta http-equiv="Content-Length" content="1"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/><!-- Open Graph-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/styles_mobile.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% versioned_static 'css/loading.css' %}">
+
+
+
+
+</head>
+<body id="index_page">
+	<div id="div_contenedor_popup_pregunta" class="div_contenedor_popup hide" style="display: none;">
+		<div id="contenedor_popup_pregunta" class="contenedor_popup_pregunta">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<span id="mensaje_popup_pregunta"></span>
+		</div>
+	</div>
+	<div id="div_contenedor_popup_perfil" class="div_contenedor_popup hide" style="display: none;">
+		
+		<div id="contenedor_popup_perfil" class="contenedor_popup_perfil">
+			<button  class="close_corner" onclick="close_popup(10)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<div class="mensaje_popup_perfil">
+
+				<p style="color: rgb(115, 54, 179); font-size: 30">Permite que las empresas te encuentren en Aleia</p>
+				<h1 style="color: #6d6471;">
+					Cuando un reclutador busque candidatos en Aleia te va a encontrar por los datos que diligencias acá.
+					<br><br>
+					<div class="botonera_popup_perfil">
+						
+						<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('perfil_usuario')">
+							<input type="image" src="/static/imgs/play.png" class="img_contenido">
+							<div class="num_boton_contenido">Consejo #[[contenidos.perfil_usuario.numero_consejo]] de Aleia</div>
+							<div class="tit_boton_contenido">[[contenidos.perfil_usuario.titulo]]</div>
+						</button>
+						
+
+					</div>	 
+				</h1>
+				
+			</div>
+			<div class="form_popup_perfil">
+				<div class="titulo_contenedor popup_profile">
+					Tus datos básicos
+				</div>
+				<div class="contenedor_campo" style="width: 65%;">
+					<div class="label_campo" style="width: 100%;">Último cargo</div>
+					<div class="valor_campo" style="width: 90%;">
+						<input type="text" class="input_campo" id="ultimo_cargo_perfil" placeholder="Ej. Gerente de proyecto"  >
+					</div>
+				</div>
+				<div class="contenedor_campo" style="width: 35%;">
+					<div class="label_campo" style="width: 100%;">Última empresa</div>
+					<div class="valor_campo" style="width: 100%;">
+						<input type="text" class="input_campo" id="ultima_empresa_perfil"  placeholder="Ej. Rappi"> 
+					</div>
+				</div>
+				
+				<div class="div_input" style="margin-bottom: 20px;">
+
+					<div class="desde">
+						Rango salarial desde
+					</div>
+					<div class="desde2">
+						<input id="aspiracion_min_perfil" class="input" placeholder="$" />
+					</div>
+					<div class="hasta">
+						hasta
+					</div>
+					<div class="hasta2">
+						<input id="aspiracion_max_perfil" class="input" placeholder="$" />
+					</div>
+				</div>
+				<form method="POST" class="post-form" enctype="multipart/form-data" id="form_test_profile">  
+					{% csrf_token %}
+					<div class="label_campo">Hoja de vida</div>
+					{{form_cv}}
+				</form> 
+				<div class="div_input">
+					<div class="label_campo" style="width: 90%; color: red" >Si estas buscando empleo o un cambio laboral cuentanos que crees que te hace falta para lograr tu objetivo</div>
+					<textarea placeholder="Esto nos permite crear mejores soluciones para tu búsqueda de empleo." id="faltante_busqueda"></textarea>
+				</div>
+				<div class="contenedor_botones_perfil">
+
+					<button  class="boton_call2action job_resume" onclick="guarda_perfil()" >Cargar mis datos en Aleia!</button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<div id="loading" class="loading_show">
+		<div class="loadingio-spinner-ellipsis-cbdgjz18cd"><div class="ldio-dlo8blsimq">
+			<div></div><div></div><div></div><div></div><div></div>
+		</div></div>
+		<div class="div_texto_loading">
+			<h1 id="texto_loading">Cargando datos de Aleia</h1>
+		</div>
+	</div>
+	<div id="div_contenedor_video" class="div_contenedor_popup hide" style="display: none">
+		<button  class="close_corner video" onclick="close_popup(5)"><input type="image" class="corner_img video" src="{% static 'imgs/cancel_c.png'%}"  />
+		Cerrar video</button>
+		<div id="player"></div>
+		<div id="sorry">
+			¡Lo siento! Este consejo aun no está disponible.
+			<br><br>
+			Tenemos un equipo de Job Hackers creando los mejores consejos para que cambies tu búsqueda de empleo y tu futuro profesional.
+			<br><br>
+			A medida que lanecemos los consejos te notificaremos al correo, así que esta atento.
+		</div>
+		<div class="botonera_popup_video">
+			<div class="boton_popup_video">
+				<button class="boton_popup_video_b">Ver consejos de Aleia</button>
+			</div>
+			<div class="boton_popup_video">
+				<a href="https://www.seligo.co" target="_blank">
+					<button  class="boton_popup_video_b">Obtén créditos de Aleia</button>
+				</a>
+			</div>
+		</div>
+		
+	</div>
+	<div id="div_contenedor_popup" class="div_contenedor_popup hide" style="display: none;">
+		<div id="contenedor_popup" class="contenedor_popup extenso">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<div id="sub_contenedor_popup_datos" class="sub_contenedor_popup datos">
+				<div id="subpopup_superior" class="subpopup superior">
+					<div id="subpopup_superior_izq" class="imagen_popup">
+						<img :src="imagen" class="popup_img"/>
+					</div>
+					<div id="subpopup_superior_der" class="div_titulo_popup">
+						<h2 class="titulo_popup">[[titulo]]. <span style="color:grey">ID [[id]]</span></h2>
+						<h1>[[subtitulo]] en <b class="empresa">[[subtitulo2]]</b></h1>
+					</div>
+				</div>
+				<div id="subpopup_inferior" class="subpopup inferior">
+					<div id="subpopup_inferior_vac" v-show="label == 'oportunidad'" class="subpopup_data">
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Tipo de oportunidad</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly  :value="tipo_oportunidad">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Rango de sueldos</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="rango_salario">
+							</div>
+						</div>
+					</div>
+					<div id="subpopup_inferior_per"  v-show="label == 'contacto' || label == 'proceso'" class="subpopup_data">
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Aspiración salarial</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="rango_salario">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Profesión</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="profesion">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Ultima búsqueda</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="ultimo_login">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Ciudad</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="ciudad">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Sector</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="sector">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Subector</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="subsector">
+							</div>
+						</div>
+						<div class="info_popup">
+							<div class="label_info">
+								<h2>Area</h2>
+							</div>
+							<div class="data_info">
+								<input class="input_data_popup" readonly :value="area">
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div id="sub_contenedor_popup_detalle" class="sub_contenedor_popup detalle">
+				<div id="subpopup_detalle_vac"  v-show="label == 'oportunidad'" class="subpopup_data">
+					<h1 style="color: #7837ba">[[titulo_texto1]]</h1><br>
+					<h2>[[texto1]]</h2>
+					<br><br>
+					<h1 style="color: #7837ba">[[titulo_texto2]]</h1><br>
+					<h2>[[texto2]]</h2>
+				</div>
+				<div id="subpopup_detalle_con"  v-show="label == 'contacto' || label == 'proceso' " class="subpopup_data">
+					<h1 style="color: #7837ba">Datos de contacto</h1><br>
+					<h2>[[datos_contacto]]</h2>
+					<br><br>
+					<h1 style="color: #7837ba">[[titulo_texto1]]</h1><br>
+					<h2>[[texto1]]</h2>
+					<br><br>
+					<h1 style="color: #7837ba">Logros</h1><br>
+					<h2>[[logros]]</h2>
+					<br><br>
+					<h1 style="color: #7837ba">[[titulo_texto2]]</h1><br>
+					<h2>[[texto2]]</h2>
+				</div>
+
+			</div>
+
+			<div id="sub_contenedor_popup_red" class="sub_contenedor_popup red" style="display: none">
+				<button class="cerrar_popup_red" onclick="show_detalle()">
+					Volver a la info del contacto
+				</button>
+				<div class="contenedor_red_grafico">
+					<div class="contenedor_zoom">
+						<button id="zoom_in" class="boton_zoom"><input type="image" class="img_opcion" src="{% static 'imgs/zoom-in.svg'%}"  /></button>
+						<button id="zoom_out" class="boton_zoom"><input type="image" class="img_opcion" src="{% static 'imgs/zoom-out.svg'%}"  /></button>
+					</div>					
+					<svg id="svg_network" style="width: 100%;height: 100%;" ></svg>
+				</div>
+				<div class="contenedor_red_lista">
+					<div class="contenedor_item_red" v-for="(item,index) in rutas" >
+						<h1 class="item_paso">[[index+1]]º ruta para contactar a [[pnombre]]</h1>
+						<div class="contenedor_items_ruta" v-for="(item2,index2) in item.r">
+							<h2 class="item_paso">Paso [[index2+1]]</h2>
+							<h2 class="info_item_paso">[[get_info_red(index2,item.r,item2.n).t]]</h2>
+							<div class="etiqueta_complemento ruta" :style="{background:get_info_complemento(item2.v,'contacto').color}"><h3>[[get_info_complemento(item2.v,'contacto').texto]]</h3></div>
+							<h3 class="info_item_paso_source">[[get_info_red(index2,item.r,item2.n).s]]</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="sub_contenedor_popup_botonera" class="sub_contenedor_popup botonera">
+				<div class="sub_contenedor_botonera">
+				<!--<button  v-show="valid_url(link)" :id="link" class="opcion_popup" onclick="open_link(this)">
+					<input type="image" src="/static/imgs/popup/link.png" class="img_opcion popup" >Abrir link
+				</button>-->
+				<button :id="contenido" class="opcion_popup" onclick="open_link(this)" v-show="sesion.data.tipo != 13">
+					<input type="image" src="/static/imgs/popup/play.png" class="img_opcion popup">Quiero orientación
+				</button>
+				<button class="opcion_popup" v-show="id_et == -1 &&  label == 'oportunidad'" :id="'pp_add_vacante_'+id" onclick="add_vacante(this,event)">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/save.png'%}"  />Guardar
+				</button>
+				<button class="opcion_popup principal" v-show="id_et == -1 && label == 'oportunidad' " :id="'pp_aplicar_servicio_'+id" onclick="habilitar_opciones(this,'oportunidad','crear_oportunidad',event)">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/arrow.png'%}"  />Postulate
+				</button>
+				<button class="opcion_popup" v-show="id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="popup_envio_solicitud(this,event)">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Invitar a Aleia
+				</button>
+				<button class="opcion_popup" v-show="id_et != -1 && label == 'contacto'" :id="'invite_etiqueta_'+id_et" onclick="descarga_perfil_usuario()">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Descargar HV
+				</button>
+				
+				<button class="opcion_popup" v-show="id_et != -1" :id="'delete_etiqueta_'+id_et" onclick="show_message_popup(this,true,'delete_etiqueta')">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/delete.png'%}"  />Borrar
+				</button>
+				<button class="opcion_popup" v-show="id_et != -1" :id="'edit_etiqueta_'+id_et" onclick="edit_etiqueta(this,event)" >
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/edit.png'%}"  />Editar
+				</button>
+				<button class="opcion_popup" v-show="id_et == -1 && label == 'contacto' && sesion.data.tipo != 13" :id="'show_net_'+id" onclick="show_rutas(this,event)">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/location.png'%}"  />[[rutas.length]] ruta(s) para conectar
+				</button>
+				<button id="guardar_objeto" v-show="sesion.data.tipo == 13 && id_et == -1" class="opcion_popup" onclick="guardar_candidato()">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/invitation.png'%}"  />Guardar candidato
+				</button>
+				<button id="copiar_objeto" v-show="sesion.data.admin == 1 && id_et != -1 " class="opcion_popup" onclick="copiar_objeto()">
+					<input type="image" class="img_opcion popup" src="{% static 'imgs/popup/copy.png'%}"  />[[estado_copy]]
+				</button>
+
+
+
+			</div>
+			<div id="sub_contenedor_popup_comentarios" class="sub_contenedor_popup comentarios" style="display: none">
+				<div class="contenendor_comentarios">
+					<div class="contenedor_comentario"  v-for="o in comentarios">
+						<button :id = "'eliminar_comentario_'+o.id" class="eliminar_comentario" onclick="eliminar_comentario(this)"><input type="image" class="eliminar_comentario_img" src="{% static 'imgs/delete.png'%}"  />
+						</button>
+						<h3>[[o.fecha]]</h3>
+						<h2>[[o.comentario]]</h2>
+					</div>
+				</div>
+				<div class="contenedor_input_comentario">
+					<textarea class="input_comentario" placeholder="Escribe un comentario" id="input_comentario">
+
+					</textarea>
+
+					<button onclick="enviar_comentario()" class="enviar_comentario" >Subir
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+</div>
+<div id="div_contenedor_popup_servicios" class="div_contenedor_popup hide" style="display: none;">
+	<div id="contenedor_popup_servicios" class="contenedor_popup hide popup_contendor_servicios">
+		<button id = "close_contenedor_right_s" class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+		<a href="https://www.seligo.co" target="_blank">
+			<button class="call2action_recarga"><input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}" style="top: 6px;" />Obtén créditos aquí</button>
+		</a>
+		<div id="contenedor_popup_servicios_asesoria" v-show="label == 'asesoria'">
+			<div id="titulo_contenedor2" class="titulo_contenedor_servicios">
+				[[titulo]]
+			</div>
+			<div class="opciones_servicios">
+				<div  class="opcion_servicio" >
+					<div class="titulo_superior_servicio">
+						¡Capacitate para buscar empleo!
+					</div>
+					<div class="titulo_servicio">
+						Contenidos GRATIS en <spam style="color:red"> YouTube</spam>
+					</div>
+					
+					<div class="call2action_servicio">
+						<a href="https://www.youtube.com/channel/UClMNkFB20wVSt0IAHBo-Dig" target="_blank">
+							<input type="image" src="/static/imgs/youtube.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+							<button class="button_call2action_servicio secundario">Ve a nuestro canal</button>
+						</a>
+						
+					</div>
+					
+					
+				</div>
+				<div class="opcion_servicio" style="background: white;" >
+					<div class="titulo_superior_servicio">
+						Opción 1
+					</div>
+					<div class="titulo_servicio">
+						Solicita asistencia cuando quieras
+					</div>
+					<div class="call2action_servicio">
+						<a href="https://wa.link/iz0b9s" target="_blank">
+							<input type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+							<button class="button_call2action_servicio secundario" >Abrir chat</button>
+						</a>
+					</div>
+				</div>
+				<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo != 5" >
+					<div class="precio_servicio">
+						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+						3 créditos
+					</div>
+					<div class="titulo_superior_servicio">
+						Opción 2
+					</div>
+					<div class="titulo_servicio">
+						Llamada con un Job Hacker
+					</div>
+					
+					
+					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('job_hacker')">
+						<input type="image" src="/static/imgs/play.png" class="img_contenido">
+						<div class="num_boton_contenido">Consejo #[[contenidos.job_hacker.numero_consejo]] de Aleia</div>
+						<div class="tit_boton_contenido">[[contenidos.job_hacker.titulo]]</div>
+					</button>
+					<a href="https://www.seligo.co/job-hacker" target="_blank" v-show="usuario.representaciones != 0 && usuario.representaciones != ''">
+						<button class="button_call2action_servicio" >Solicitar llamada</button>
+					</a>
+					<button class="button_call2action_servicio deshabilitado" v-show="usuario.representaciones == 0 || usuario.representaciones == ''">No tienes créditos</button>
+
+					
+				</div>
+				<div class="opcion_servicio" style="background: white;" v-if="usuario.tipo == 5" >
+					
+					<div class="titulo_superior_servicio">
+						Opción 2
+					</div>
+					<div class="titulo_servicio">
+						Llamada con un Job Hacker
+					</div>
+					
+					
+					Solicitala directo por chat
+					<div class="call2action_servicio">
+					<a href="https://wa.link/iz0b9s" target="_blank">
+							<input type="image" src="/static/imgs/whatsapp.png" class="img_precio_servicio" style="top: 5px;opacity: 0.8;">
+							<button class="button_call2action_servicio secundario" >Abrir chat</button>
+						</a>
+					</div>
+
+					
+				</div>
+				<div class="opcion_servicio" style="background: #3b3744;color: white;" >
+					<div class="precio_servicio">
+						<input type="image" class="img_precio_servicio" src="{% static 'imgs/coin.png'%}"  />
+						Servicio VIP
+					</div>
+					<div class="titulo_superior_servicio" style="color: #f8f7fb;">
+						Opción 3
+					</div>
+					<div class="titulo_servicio" >
+						Sesión estratégica personalizada
+					</div>
+					<div style="display: none">
+						Sesiones de 2 horas con tu asesor experto asignado donde construirá el diagnóstico de tu búsqueda de empleo, las estrategias para mejorarla, te asignará retos y hará seguimiento a tu proceso.
+					</div>
+					
+					<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('asesoria_personalizada')">
+						<input type="image" src="/static/imgs/play.png" class="img_contenido">
+						<div class="num_boton_contenido">Consejo #[[contenidos.asesoria_personalizada.numero_consejo]] de Aleia</div>
+						<div class="tit_boton_contenido">[[contenidos.asesoria_personalizada.titulo]]</div>
+					</button>
+					
+					<a href="https://calendly.com/sesiones_seligo/agenda" v-show="tipo_user == 5 || tipo_user == 11" target="_blank">
+						<button  class="button_call2action_servicio">Agendar sesión ahora</button>
+					</a>
+
+					<a v-show="tipo_user != 5 && tipo_user != 11" href="https://www.seligo.co/servicios" target="_blank">
+						<button class="button_call2action_servicio" >Obtén una asesoría</button>
+					</a>
+					
+				</div>
+				
+				
+			</div>
+		</div>
+		
+
+	</div>
+</div>
+<div id="div_contenedor_popup_share" class="div_contenedor_popup hide" style="display: none;">
+	<div id="contenedor_popup_share" class="contenedor_popup share hide">
+		<button id = "close_contenedor_right2" class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+
+		<div id="bloque1_popup" class="bloque_popup">
+			<h1 class="titulo_popup">[[titulo]]</h1>
+			<h1>[[subtitulo]]</h1>
+		</div>
+		<div id="bloque2_popup" class="bloque_popup">
+			<div class="div_buscador popup">
+				<input id="buscador_usuarios_popup" class="buscador" placeholder="Escribe lo que buscas y oprime Enter" oninput="buscar_general(1)"/>
+				<input type="image" src="/static/imgs/menu/search.png" class="opcion_img_buscador">
+
+			</div>
+			<button :id="'opcion_usuario_'+obj.id" onclick="usuario_seleccionado(this)" class="contenedor_opcion_usuario boton" v-for="obj in usuarios_filtrado">
+				<h2>[[obj.nombre]]</h2>
+			</button>
+
+		</div>
+		<div id="bloque3_popup" class="bloque_popup">
+			<div class="contenedor_opcion_usuario" v-for="obj in usuarios_seleccionados" >
+				<h2>[[obj.nombre]]</h2>
+				<button :id = "'eliminar_opcion_usuario_'+obj.id" class="close_option" onclick="eliminar_opcion_usuario(this)"><input type="image" class="close_img_popup" src="{% static 'imgs/delete.png'%}"  /></button>
+			</div>
+		</div>
+		<button v-show="usuarios_seleccionados.length > 0" id="boton_call2action_many" style="right: 25px;bottom: 25;" class="boton_call2action" onclick="call2action_many()" >Asociar datos</button>
+	</div>
+</div>
+
+
+
+
+<div id="div_contenedor_menu" class="div_menu" >
+	<!--<button class="close_corner menu" onclick="close_menu()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>-->
+	<div id="logo_aleja" >
+		<!--Aleia<h3>beta</h3>-->
+		<img src="/static/imgs/logo_aleja_2.png" class="logo_aleja_img">
+		<input v-if="tipo == 6" type="image" src="/static/imgs/menu/brand/compensar.png" class="external_brand">
+	</div>
+	<div class="titulo_contenedor">
+		[[nombre_usuario]]
+
+	</div>
+	
+
+	<a class="link_externo_top_right desktop" href="admin" v-if="sesion.data.admin == 1">
+		<button class="opcion_menu" >
+			<input type="image" src="/static/imgs/menu/home.png" class="opcion_img_menu">
+			Administrador
+		</button>
+	</a>
+	<a href="app">
+		<button id="tab_contenedor_busquedas_vacantes" onclick="cambiar_contenedor(this)" class="opcion_menu">
+			<input type="image" src="/static/imgs/menu/job.png" class="opcion_img_menu">
+			Vacantes
+		</button>
+	</a>
+
+	<button id="tab_contenedor_busquedas_contactos"  class="opcion_menu selected">
+		<input type="image" src="/static/imgs/menu/network.png" class="opcion_img_menu">
+		Networking
+	</button>
+	<!--
+	<button id="tab_contenedor_novedades" onclick="cambiar_contenedor(this)" class="opcion_menu" >
+		<input type="image" src="/static/imgs/menu/feed.png" class="opcion_img_menu">
+		Novedades
+	</button>
+
+<button id="tab_contenedor_estadisticas" onclick="cambiar_contenedor(this)" class="opcion_menu desktop" >
+	<input type="image" src="/static/imgs/menu/stats.png" class="opcion_img_menu">
+	Estadísticas
+</button>-->
+<a href="content">
+	<button id="tab_contenedor_contenidos" class="opcion_menu" >
+		<input type="image" src="/static/imgs/menu/play.png" class="opcion_img_menu">
+		Consejos de Aleia para buscar empleo
+	</button>
+</a>
+
+<div class="contenedor_menu_inferior">
+	<a class="link_externo_top_right" href="profile">
+		<button class="opcion_menu" >
+			<input type="image" src="/static/imgs/menu/user2.png" class="opcion_img_menu">
+			Mi perfil
+		</button>
+	</a>
+	<button id="sincronizar_externos" class="opcion_menu" onclick="actualizar_integracion()" v-if="sesion.data.admin == 1">Sincronizar</button>
+
+
+	<button class="opcion_menu logout" onclick="close_session()">
+		<input type="image" src="/static/imgs/menu/logout.png" class="opcion_img_menu">
+		Cerrar sesión
+	</button>
+	<div id="brand">
+		<div style="width:100%;height: 10;position:relative;float:left;text-align: center;">
+			<h3 style="/* width: 10; *//* position: relative; *//* float: left; */">by</h3></div> 
+			<div style="width:100%;height: 10;position:relative;float:left;text-align: center;"><a href="https://www.seligo.com.co/" target="_blank"><img src="/static/imgs/logo_seligo.png" class="brand_img"></a>
+			</div></div>
+		</div>
+
+	</div>
+
+	<div id="banner_servicios" class="banner_servicios" >
+		
+		<div class="contenido_banner_servicios div_contenedor">
+			<div class="titulo_contenedor servicios">
+				<div class="info_tipo_servicio">
+					<input type="image" src="/static/imgs/boost.png" class="img_info_tipo_servicio" >
+					Servicios
+					<br>
+					[[servicios.length]]
+				</div>
+				<div class="info_tipo_servicio">
+					<input type="image" src="/static/imgs/coin.png" class="img_info_tipo_servicio" >	
+					Créditos
+					<br>
+					[[creditos]]
+					
+				</div>
+			</div>
+			<div class="sin_servicios" v-if="servicios.length == 0 && usuario.tipo == 13">
+				Muy pronto...
+
+			</div>
+			<div class="sin_servicios" v-if="servicios.length == 0 && usuario.tipo != 13">
+				<div style="margin-bottom:20px">
+					Aún no has solicitado tu primer servicio
+				</div>
+				<button  class="boton_contenido" id="serv_video_manual_usuario" onclick="show_popup_video('video_general')">
+					<input type="image" src="/static/imgs/play.png" class="img_contenido">
+					<div class="num_boton_contenido">Consejo #[[contenidos.video_general.numero_consejo]] de Aleia</div>
+					<div class="tit_boton_contenido">[[contenidos.video_general.titulo]]</div>
+				</button>
+			</div>
+			<div :class="'div_servicio '+o.estatus" v-for="o in servicios" v-if="servicios.length > 0">
+				<div class="descripcion_servicio">
+					<button v-show="o.estatus == 'abierto'" :id="'delete_etiqueta_'+o.id" onclick="show_message_popup(this,true,'delete_servicio')" class="opcion servicio"><input type="image" src="/static/imgs/popup/delete.png" class="img_opcion"></button>
+					[[o.desc]]
+					<br>
+					[[o.estatus]]
+				</div>
+				<div class="etiqueta_servicio">
+					[[o.data1]]
+				</div>
+				<div class="etiqueta_servicio">
+					[[o.data2]]
+				</div>
+				<div class="etiqueta_servicio">
+					[[o.fecha_hora]]
+				</div>
+
+
+			</div>
+		</div>
+		<div class="botonera_banner_servicios">
+
+			<button  class="opcion_vacante nivel1 boton_asesoria" onclick="habilitar_opciones(this,'asesoria','',event)">
+				<input type="image" class="opcion_img_asesoria" src="{% static 'imgs/chat.png'%}"  />
+				<div class="opcion_txt_asesoria">Recibe ayuda con tu búsqueda de empleo</div>
+			</button>
+
+			<!--<button v-if="sesion.data.tipo != 13" class="opcion_vacante nivel1 boton_asesoria" onclick="crear('proceso')">
+				<input type="image" class="opcion_img_asesoria" src="{% static 'imgs/fire.png'%}"  />
+				<div class="opcion_txt_asesoria">Necesito tips para una entrevista</div>
+			</button>-->
+		</div>
+	</div>
+	<div id="hidden_linkedin" style="display: none">
+		<div id="sub_linkedin" class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="es_ES" data-type="horizontal" data-theme="light" ><a class="LI-simple-link" href='https://co.linkedin.com/in/alvaro-diego-gonzalez-vesga?trk=profile-badge'>Alvaro Diego Gonzalez Vesga</a></div>
+	</div>
+	<div id="contenedor_total">
+		<div id="contenedor_estadisticas" class="contenedor_top left hidden" >
+			<div class="sub_contenedor_estadisticas">
+				<p style="color: #a35fb8;font-size: 30;">Estamos remodelando</p>
+
+				<h1>Estamos construyendo una nueva versión de las estadisticas, 100% orientada a ti. <br><br>Cuentanos que caracteristicas quisieras para poder optimizar al máximo tu búsqueda de empleo.</h1>
+				<br>
+				<input type="image" src="/static/imgs/funnel.svg" class="img_estats">
+				<a href="https://forms.gle/aAx4zEPPZPQa61JW8" target="_blank">
+					<button class="boton_stats" >
+						Quiero hacer parte del cambio
+					</button>
+				</a>
+			</div>
+		<!--<div class="sub_contenedor_stats1">
+			<h1>[[nombre_usuario]], estas son tus estadísticas.</h1>
+			<svg id="svg_general" class="svg_general"></svg>
+			<div class="leyenda_network">
+				<div class="leyenda">
+					<div class="div_color_label" :style="{background: config['oportunidad'].color}"></div> <h3>Vacantes</h3>
+				</div>
+				<div class="leyenda">
+					<div class="div_color_label" :style="{background: config['contacto'].color}"></div> <h3>Contactos</h3>
+				</div>
+				<div class="leyenda">
+					<div class="div_color_label" :style="{background: config['proceso'].color}"></div> <h3>Procesos</h3>
+				</div>
+			</div>
+		</div>
+		<div class="sub_contenedor_stats1">
+			<h1>Así esta tu networking</h1>
+			<svg id="svg_barras" class="svg_general"></svg>
+			<div class="botonera stats">
+				<a :href="contenido" target="_blank">
+					<button class="opcion_popup">
+						<input type="image" src="/static/imgs/popup/play.png" class="img_opcion popup">
+						[[texto_contenido]]
+					</button>
+				</a>
+
+			</div>
+
+		</div>-->
+	</div>
+	<!---<div id="contenedor_novedades" class="contenedor_top stats hidden" >
+		<div class="titulo_contenedor_top">Servicios</div>
+		<div class="contenedor_input_novedad">
+			<textarea class="input_comentario" placeholder="¡Cuentanos algo nuevo!" id="input_novedad"></textarea>
+
+			<button onclick="cargar_novedad()" class="enviar_comentario" >Enviar</button>
+		</div>
+		<div class="div_contenedor_novedades">
+			<div class="observacion" v-for="o in lista.novedades">
+				<h3>[[o.fecha]]</h3>
+				<h2>[[o.valor]]</h2>
+			</div>
+		</div>
+	</div>--->
+	<div id="contenedor_contenidos" class="contenedor_top stats hidden" >
+		<div class="titulo_contenedor_top">Contenidos</div>
+		<div class="link_contenido" v-for="o in videos" v-if="o.src == 'teachable'">
+			<a :href="link_teachable+''+o.id" target="_blank">
+				<button class="boton_video_contenido">
+					<input type="image" src="/static/imgs/popup/play.png" class="img_opcion popup">
+					[[o.titulo_video]]<br><br>
+					<h3>
+						[[o.descripcion_video]]	
+					</h3>
+				</button>
+			</a>
+		</div>
+	</div>
+
+
+	<div id="contenedor_busquedas_contactos" class="contenedor_top left">
+
+		<button id="boton_back" class="back" v-show="(sesion.data.admin == 1 && usuario.id != sesion.data.id)" onclick="regresar_vista_admin()"><input type="image" class="img_menu" src="{% static 'imgs/back.png'%}"  /></button>
+
+		<div class="contenedor_buscador busquedas">
+			<div class="div_buscador">
+				<input :id="div" onkeypress="keyword_selected(event,this)" class="buscador" placeholder="Escribe lo que buscas y oprime Enter"/>
+				<input type="image" src="/static/imgs/menu/search.png" class="opcion_img_buscador">
+				<div class="filtro_seleccionado atributo" v-show="att_tmp != ''">
+					<h2>[[att_tmp]]</h2><button :id="div+'_att_tmp'" class="borrar_filtro" onclick="borrar_att_tmp(this)"><input type="image" class="filter_img" src="{% static 'imgs/cancel_w.png'%}"  /></button>
+				</div>
+			</div>
+			<div class="div_filtro">
+				<button class="filtro" :id="div+'_popup_filtro_show'" onclick="show_popup_atts(this)"><input type="image" class="img_filter" src="{% static 'imgs/filter2.png'%}"  /><h2 class="desktop">Filtros avanzados</h2></button>
+				<div :id="div+'_popup_filtro'" class="popup_atts hidden">
+					<button :id="div+'_popup_filtro_close'" class="close_corner atts" onclick="close_popup_atts(this)"><input type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+					<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_filtro">
+
+						<div class="att" v-for="att in obj">
+							<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_att(this)"><h2>[[att.texto]]</h2></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="div_filtro">
+				<div :id="div+'_popup_orden'" class="popup_atts hidden">
+					<button :id="div+'_popup_orden_close'" class="close_corner atts" onclick="close_popup_atts(this)"><input type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+					<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_orden">
+
+						<div class="att" v-for="att in obj">
+							<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_order(this)"><h2>[[att.texto]]</h2></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="filtros">
+				<h3 class="titulo_filtros">[[filtros.length]] filtro(s):</h3>
+
+				<div class="filtro_seleccionado" v-for="(fil,index) in filtros">
+					<h2>[[fil]]</h2><button :id="'borrar_'+div+'-'+index" class="borrar_filtro" onclick="borrar_filtro(this)"><input type="image" class="filter_img" src="{% static 'imgs/cancel_w.png'%}"  /></button>
+				</div>
+				<div class="order">
+					<h2>[[order]]</h2><button :id="'sort_'+div" class="borrar_filtro"><input v-show="asc == 0" type="image" class="filter_img" src="{% static 'imgs/up3.png'%}"  /><input v-show="asc == 1" type="image" class="filter_img" src="{% static 'imgs/down3.png'%}"  /></button>
+				</div>
+			</div>
+
+		</div>
+		<div class="contenedor_listas left">
+			<div class="contenedor_opciones">
+				<button id="tab_contenedor_full_contactos" onclick="tab_contenedor(this)" class="opcion_pestania lista selected" >Contactos que puedo llegar a conocer</button>
+				<button id="tab_contenedor_etiquetas_contactos" class="opcion_pestania lista" onclick="tab_contenedor(this)" >Mis contactos cercanos</button>
+				<button class="boton_crear_objeto principal" onclick="crear('contacto')"><input type="image" class="opcion_img_objeto" src="{% static 'imgs/add.png'%}"  />Cargar contacto</button>
+
+
+
+			</div>
+			<div id="contenedor_etiquetas_contactos" class="contenedor_etiquetas hide contactos">
+				<h3 class="texto_resultados">
+					[[get_texto_resultados(lista.contactos.length,lista.contactos.length)]]
+				</h3>
+				<div :id="'share_etiqueta_'+obj.id" onclick="share_etiqueta(this,event)" class="contenedor_etiqueta contacto" v-for="obj in lista.contactos" v-if="obj.label != 'sesion'">
+
+					<div class="botonera etiqueta contacto">
+
+						<button class="opcion" v-if="obj.label != 'observacion'" ><h2>Más info</h2></button>
+						<button class="opcion" :id="'delete_etiqueta_'+obj.id" onclick="show_message_popup(this,true,'delete_contacto')"><input type="image" class="img_opcion" src="{% static 'imgs/popup/delete.png'%}"  /></button>
+						
+						<a :href="obj.link" target="_blank" id="link_etiqueta" v-show="valid_url(obj.link)"><input type="image" class="img_opcion opcion" src="{% static 'imgs/popup/link.png'%}"  /></a>
+
+
+					</div>
+					<div class="etiqueta_coincidencia" v-show="obj.coincidencia > 0"><h4 class="coincide total" v-show="obj.coincidencia == 100">coincidencia completa</h4><h4 class="coincide parcial" v-show="obj.coincidencia < 100">recomendado</h4></div>
+
+					<div class="div_contenido contacto">
+						<h1>[[obj.titulo]]</h1>
+						<h2 >[[obj.valor]]</h2>
+						<h3 class="empresa">[[obj.valor2]]</h3>
+						<h3 v-if="usuario.tipo == 13">Fecha ultima búsqueda en Aleia:[[obj.data.ultimo_login]]</h3>
+
+						<div class="etiqueta_complemento" v-show="obj.complemento != ''" :style="{background:get_info_complemento(obj.complemento,obj.label).color}"><h3>[[get_info_complemento(obj.complemento,obj.label).texto]]</h3></div>
+						<div class="etiqueta_complemento" v-if="obj.verificado != undefined && obj.verificado && obj.nivel_verificado > 1"><h3>Verificado</h3></div>
+						<div class="etiqueta_complemento" v-if="obj.oculto != undefined && obj.oculto"><h3>Oculto</h3></div>
+
+
+					</div>
+				</div>
+
+			</div>
+			<div id="contenedor_full_contactos" class="contenedor_etiquetas contactos">
+				<div class="mensaje_no_contactos" v-show="num_contactos < 5 && sesion.data.tipo != 13">
+					<h1 class="mensaje_no_contactos texto_mensaje">
+						[[sesion.pnombre]], para poder tener acceso a la red de personas que puedes conocer necesitas crear por lo menos 5 contactos que sean conocidos, de confianza o muy cercanos. 
+						<br><br>
+						Asocia tus contactos más estrategicos y accede a una red de más de 600 personas que puedes llegar a conocer efectivamente!
+					</h1>
+				</div>
+				<div class="mensaje_no_contactos" v-show="total_items > 0 && lista.full_contactos.length == 0">
+					<h1 class="mensaje_no_contactos texto_mensaje">
+						No se encontraron resultados para tu búsqueda.
+					</h1>
+				</div>
+				<div class="mensaje_no_contactos" v-show="total_items == 0 && num_contactos >= 5 && lista.full_contactos.length == 0">
+					<h1 class="mensaje_no_contactos texto_mensaje">
+						[[sesion.pnombre]], al parecer ninguno de tus contactos se encuentra registrado en Aleia, por lo cual no podrás ver las personas que ellos han cargado y que te pueden llegar a presentar.
+						<br><br>
+						Te recomendamos invitarlos a unirse a Aleia dando clic en "Mis contactos", da clic en el contacto a invitar y luego en "Invitar". Ahí podrás copiar el link al que tu contacto tiene que acceder para que se registre y puedas tener acceso a una red real de networking de tus personas cercanas.
+					</h1>
+				</div>
+				<h3 class="texto_resultados" v-show="((num_contactos >= 5 && sesion.data.tipo != 13) || (sesion.data.tipo == 13))">
+					[[get_texto_resultados(lista.full_contactos.length,indices_lista.total_full_contactos)]]
+				</h3>
+				<div class="div_order" v-show="((num_contactos >= 5 && sesion.data.tipo != 13) || (sesion.data.tipo == 13))">
+					<button class="order_boton" :id="div+'_popup_orden_show'" onclick="show_popup_atts(this)">
+						<input type="image" class="img_filter_order" src="{% static 'imgs/sort2.png'%}"  />
+						<h3 class="desktop">Ordenar por [[order]]</h3>
+					</button>
+					<div :id="div+'_popup_orden'" class="popup_atts hidden">
+
+						<button :id="div+'_popup_orden_close'" class="close_corner atts" onclick="close_popup_atts(this)"><input type="image" class="corner_img atts" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+						<div class="contenedor_interno_atts" v-for="(obj,key) in lista_atts_orden">
+
+							<div class="att" v-for="att in obj">
+								<button :id="div+'_att_'+att.id" class="boton_atts" onclick="selecciona_order(this)"><h2>[[att.texto]]</h2></button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div  :id="'share_etiqueta_'+obj.id" onclick="share_item(this,'contacto',event)" class="contenedor_etiqueta contacto" v-for="obj in lista.full_contactos"   v-show="((num_contactos >= 5 && sesion.data.tipo != 13) || (sesion.data.tipo == 13) ) && lista.full_contactos.length > 0  ">
+
+					<div class="botonera etiqueta contacto">
+
+						<button class="opcion" v-if="obj.label != 'observacion'" ><h2>Más info</h2></button>
+						<a :href="obj.linkedin" target="_blank" id="link_etiqueta" v-show="valid_url(obj.linkedin)"><input type="image" class="img_opcion opcion" src="{% static 'imgs/popup/link.png'%}"  /></a>
+
+					</div>
+					<div class="etiqueta_coincidencia" v-show="obj.coincidencia > 0"><h4 class="coincide total" v-show="obj.coincidencia == 100">coincidencia completa</h4><h4 class="coincide parcial" v-show="obj.coincidencia < 100">recomendado</h4></div>
+
+					<div class="div_contenido contacto">
+						<h1>[[obj.nombre]]</h1>
+						<h2>[[obj.ultimo_cargo]]</h2>
+						<h3 class="empresa">[[obj.ultima_empresa]]</h3>
+						<h3 v-if="usuario.tipo == 13">Fecha ultima búsqueda en Aleia:[[obj.ultimo_login]]</h3>
+					</div>
+				</div>
+				<div class="ver_mas_inferior" onclick="get_more_items('contactos')" v-show="indices_lista.total_full_contactos > lista.full_contactos.length && ((num_contactos >= 5 && sesion.data.tipo != 13) || (sesion.data.tipo == 13))">Ver más</div>
+			</div>
+		</div>
+
+
+	</div>
+	
+
+	<div id="contenedor_verifica_persona" class="div_contenedor_popup hide">
+		<div id="contenedor_popup_persona_verifica" class="contenedor_popup">
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+
+			<button class="opcion_persona" onclick="crear('contacto')">
+				<h1>Cargue básico</h1>
+				<input type="image" class="opcion_persona_img" src="{% static 'imgs/popup/uno.png'%}"  />
+				<h2>Si ya conoces a la persona que vas a cargar, tienes sus datos y no necesitas evaluar su perfil, esta es la mejor opción.</h2>
+			</button>
+			<button class="opcion_persona" onclick="crear('contacto_perfil')">
+				<h1>Cargue con evaluación de perfil</h1>
+				<input type="image" class="opcion_persona_img" src="{% static 'imgs/popup/perfil.png'%}"  />
+				<h2>Si tienes una entrevista o quieres prepararte para hacer contacto con una persona, en esta opción puedes obtener una evaluación del perfil de comunicación a partir de su link en LinkedIn. Puede tomar hasta 30 segundos.</h2>
+			</button>
+			<button style="display: none;" class="opcion_persona" onclick="crear('contacto_masivo')">
+				<h1>Cargue de varias personas</h1>
+				<input type="image" class="opcion_persona_img" src="{% static 'imgs/popup/varios.png'%}"  />
+				<h2>Si quieres cargar una varias personas desde un excel de forma rapida y sencilla puedes cargar un archivo con extensión CSV en esta opción. Acá te explicamos cómo.</h2>
+			</button>
+		</div>
+	</div>
+	<div id="contenedor_right" class="div_contenedor_popup hide">
+
+
+		<div id="contenedor_popup_formularios" class="contenedor_popup">
+			<h1 id="titulo_contenedor_right"></h1>
+			<button  class="close_corner" onclick="close_popup(this)"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+			<div id="div_mensaje_retorno" class="mensaje_retorno invisible">
+				<input id="mensaje_retorno_img" type="image" class="mensaje_retorno_img"/>
+				<h2 id="mensaje_retorno"></h2>
+				<div id = "decision_retorno" class="decision_retorno">
+					<button class="eleccion_respuesta" onclick="ocultar_mensaje()">Cancelar</button>
+					<button class="eleccion_respuesta" onclick="asociar_previo()">Asociar sin reemplazar datos</button>
+					<button class="eleccion_respuesta" onclick="reenviar_actualizar()">Reemplazar datos</button>
+				</div> 
+			</div>
+
+			<div id="div_crear_oportunidad" class="div_contenedor_formulario" style="display: none;">
+
+				<div class="div_input id">
+					<input id="id_oportunidad" class="id" readonly />
+
+				</div>
+				<div class="div_input">
+					<input id="empresa_oportunidad" class="input" placeholder="Empresa" />
+
+				</div>
+				<div class="div_input">
+					<input id="cargo_oportunidad" class="input" placeholder="Cargo" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13 || sesion.data.admin == 1">
+					<input id="req1" class="input" placeholder="¿Cual es el primer criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13 || sesion.data.admin == 1">
+					<input id="req2" class="input" placeholder="¿Cual es el segundo criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13 || sesion.data.admin == 1"> 
+					<input id="req3" class="input" placeholder="¿Cual es el tercer criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13 || sesion.data.admin == 1">
+					<input id="req4" class="input" placeholder="¿Cual es el cuarto criterio que el cargo debe cumplir? (obligatorio)" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13 || sesion.data.admin == 1">
+					<input id="req5" class="input" placeholder="¿Cual es el quinto criterio que el cargo debe cumplir?" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13">
+					<div class="titulo_select">
+						¿Quieres apoyo para encontrar candidatos?
+					</div>
+					<select id="tipo_servicio" class="input select" onchange="selecciona_tipo_servicio()">
+						<option value="empresa_ayuda">Si</option>
+						<option value="no" selected>No</option>
+						<option value="empresa_llamada">Quiero hablar con un asesor primero</option>
+					</select>
+				</div>
+				<div id="div_recompensa" class="div_input" v-show="usuario.tipo == 13" style="display: none;">
+					<input id="recompensa" class="input" placeholder="¿Cuanto es tu presupuesto para pagarle al candidato?" />
+				</div>
+				<div class="div_input">
+					<textarea placeholder="Describe o copia y pega la info de la vacante, por ejemplo, los requisitos" id="obs_oportunidad"></textarea>
+				</div>
+				<div class="div_input">
+					<div class="recomendaciones">
+						<button :id="'ciudad_oportunidad_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('ciudad',this)">
+							[[o]]
+						</button>
+					</div>
+					<input id="ciudad_oportunidad" onblur="remove_recom('ciudad')" onkeydown="explore_recom(event,'ciudad',this)" oninput="recomendaciones('ciudad',this)" class="input" placeholder="Ciudad" />
+
+				</div>
+				<div class="div_input">
+					<input id="link_oportunidad" class="input" placeholder="Link externo de postulación" />
+
+				</div>
+				<div class="div_input" v-show="usuario.tipo == 13">
+
+					<div class="titulo_select">Quiero que se puedan postular por Aleia</div>
+					<input type="checkbox" id="postulacion_oportunidad">
+					<button class="opcion_input" onclick="show_message_popup(this)">
+						<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+					</button>
+				</div>
+				<div class="div_input">
+
+					<div class="desde">
+						Rango salarial desde
+					</div>
+					<div class="desde2">
+						<input id="rango_menor_oportunidad" class="input" placeholder="$" />
+					</div>
+					<div class="hasta">
+						hasta
+					</div>
+					<div class="hasta2">
+						<input id="rango_mayor_oportunidad" class="input" placeholder="$" />
+					</div>
+				</div>
+				<div class="div_input">
+					<div class="titulo_select">
+						Tipo de oportunidad:
+					</div>
+					<select id="tipo_oportunidad" class="input select" placeholder="Tipo de relación">
+						<option value="1">Empleado</option>
+						<option value="2">Consultoria</option>
+						<option value="4">Otro</option>
+					</select>
+
+				</div>
+
+
+				<!--<div class="div_input" v-show="sesion.data.admin == 1">
+					<textarea placeholder="Escribe las palabras clave de la vacante separadas por punto (Ej: Experiencia de 3 años. Maestria o especialización en economia. Gerente de ventas.)" id="req_oportunidad"></textarea>
+				</div>-->
+				<div class="div_input" style="display: none">
+
+					<div class="titulo_select">Protegido</div>
+					<input type="checkbox" id="oportunidad_protegido">
+				</div>
+
+				<!--<div class="div_input" v-show="usuario.representaciones != '' && typeof usuario.representaciones != 'undefined' && usuario.tipo != 13">-->
+					<div class="div_input" style="display: none">
+						<div class="titulo_select">¿Quieres ayuda con esta vacante?</div>
+						<select id="cumplimiento_100" class="input select">
+							<option value = "" selected></option>
+							<option value = "true">Si, quiero ser representado</option>
+							<option value = "analisis">Si, quiero un análsis de postulación</option>
+							<option value = "false">No quiero</option>
+						</select>
+						<button class="opcion_input" onclick="show_message_popup(this)">
+							<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+						</button>
+					</div>
+					<div class="div_input" v-show="usuario.tipo != 13">
+
+						<div class="titulo_select">Vacante confidencial</div>
+						<input type="checkbox" id="oportunidad_oculto">
+					</div>
+					<div style="display: none" class="div_input" v-if="usuario.tipo != 13" v-show="usuario.representaciones == '' || typeof usuario.representaciones == 'undefined'">
+						<h2 style="color:#0c26e8">Si quieres ayuda con esta vacante, da clic <a href="https://www.seligo.co/servicios4" target="_blank">aquí</a>. Si ya adquiriste créditos y no te aparecen cargados, da clic <a href="https://wa.me/message/6EGDW7WK4K7FL1" target="_blank">aquí</a> </h2>
+					</div>
+				</div>
+			<!--
+			<div id="div_crear_sesion" class ="div_carga hide" style="display: none">
+				<div class="div_input">
+					<div class="titulo_select">
+						<h2>Sesión:</h2>
+					</div>
+					<select id="sesion" class="input select" placeholder="Tipo de relación" oninput="selecciona_sesion()">
+						<option value = 1>Diagnostico</option>
+						<option value = 2>Sesión 2</option>
+						<option value = 3>Sesión 3</option>
+						<option value = 4>Sesión 4</option>
+						<option value = 5>Sesión 5</option>
+						<option value = 6>Sesión final</option>
+					</select>
+
+				</div>
+				<div id="preguntas" class="preguntas">
+					<div class="pregunta" v-for="(obj, index) in preguntas">
+						<div class="div_input"  v-if="obj.tipo == 'texto'">
+							<input :value="obj.valor_prev" :id="'pregunta_'+index" class="input" :placeholder="obj.texto"/>
+						</div>
+						<div class="div_input" v-if="obj.tipo == 'texto_largo'">
+							<textarea :value="obj.valor_prev" :id="'pregunta_'+index" :placeholder="obj.texto" ></textarea>
+						</div>
+						<div class="div_input" v-if="obj.tipo == 'lista'">
+							<div class="titulo_select">
+								<h2>[[obj.texto]]</h2>
+							</div>
+							<select :value="obj.valor_prev" :id="'pregunta_'+index" class="input select">
+								<option v-for="o in obj.valores" :value="o">[[o]]</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		-->
+		<div id="div_crear_job_hacker" class ="div_carga hide" style="display: none;">
+			<div class="div_input id">
+				<input id="id_job_hacker" class="id" readonly/>
+
+			</div>
+			<div class="div_input">
+				<input id="linkedin_job_hacker" class="input" placeholder="Linkedin"  onblur="search_profile('job_hacker')"/>
+
+			</div>
+			<div class="div_input">
+				<input id="nombre_job_hacker" class="input" placeholder="Nombre" />
+
+			</div>
+			<div class="div_input">
+				<input id="cargo_job_hacker" class="input" placeholder="Cargo" />
+
+			</div>
+			<div class="div_input">
+				<input id="empresa_job_hacker" class="input" placeholder="Empresa" />
+
+			</div>
+			<div class="div_input">
+				<div class="titulo_select">
+					Perfil comunicación:
+				</div>
+				<select id="crystal_job_hacker" class="input select" placeholder="Tipo de relación">
+					<option value="nan">No tiene</option>
+					<option value="architect">Architect</option>
+					<option value="captain">Captain</option>
+					<option value="driver">Driver</option>
+					<option value="initiator">Initiator</option>
+					<option value="encourager">Encourager</option>
+					<option value="harmonizer">Harmonizer</option>
+					<option value="influencer">Influencer</option>
+					<option value="motivator">Motivator</option>
+					<option value="analyst">Analyst</option>
+					<option value="editor">Editor</option>
+					<option value="skeptic">Skeptic</option>
+					<option value="questioner">Questioner</option>
+					<option value="counselor">Counselor</option>
+					<option value="planner">Planner</option>
+					<option value="stabilizer">Stabilizer</option>
+					<option value="supporter">Supporter</option>
+
+				</select>
+
+			</div>
+			<div class="div_input">
+				<input id="mail_job_hacker" class="input" placeholder="Mail" />
+
+			</div>
+			<div class="div_input">
+				<input id="telefono_job_hacker" class="input" placeholder="Telefono" />
+
+			</div>
+
+
+		</div>
+
+		<div id="div_crear_contacto" class="div_contenedor_formulario" style="display: none;">
+
+			<div class="div_input id">
+				<input id="id_contacto" class="id" readonly/>
+
+			</div>
+			<div class="div_input">
+				<input id="linkedin_contacto" class="input" placeholder="Linkedin"  onblur="search_inner_profile()"/>
+
+			</div>
+			<div class="div_input">
+				<input id="nombre_contacto" class="input" placeholder="Nombre" />
+
+			</div>
+			<div class="div_input">
+				<input id="cargo_contacto" class="input" placeholder="Cargo" />
+
+			</div>
+			<div class="div_input">
+				<input id="empresa_contacto" class="input" placeholder="Empresa" />
+
+			</div>
+			<div class="div_input" v-show="sesion.data.admin == 1">
+				<div class="titulo_select">
+					Perfil comunicación:
+				</div>
+				<select id="crystal_contacto" class="input select">
+					<option value="nan">No tiene</option>
+					<option value="architect">Architect</option>
+					<option value="captain">Captain</option>
+					<option value="driver">Driver</option>
+					<option value="initiator">Initiator</option>
+					<option value="encourager">Encourager</option>
+					<option value="harmonizer">Harmonizer</option>
+					<option value="influencer">Influencer</option>
+					<option value="motivator">Motivator</option>
+					<option value="analyst">Analyst</option>
+					<option value="editor">Editor</option>
+					<option value="skeptic">Skeptic</option>
+					<option value="questioner">Questioner</option>
+					<option value="counselor">Counselor</option>
+					<option value="planner">Planner</option>
+					<option value="stabilizer">Stabilizer</option>
+					<option value="supporter">Supporter</option>
+
+				</select>
+
+			</div>
+			<div class="div_input">
+				<input id="mail_contacto" class="input" placeholder="Mail" />
+
+			</div>
+			<div class="div_input">
+				<input id="telefono_contacto" class="input" placeholder="Telefono" />
+
+			</div>
+			<div class="div_input">
+				<div class="titulo_select">
+					Tipo de contacto:
+				</div>
+				<select id="tipo_contacto" class="input select" placeholder="Tipo de relación">
+					<option value="1">Desconocido</option>
+					<option value="2">Conocido</option>
+					<option value="3">Confianza</option>
+					<option value="4">Muy cercano</option>
+				</select>
+
+			</div>
+
+			<div class="div_input">
+				<div class="titulo_select">
+					¿Cual de estas descripciones se acopla más a esta persona?
+				</div>
+				<select id="personalidad_contacto" class="input select">
+					<option value="">No se</option>
+					<option value="rojo">Es orientado a los resultados, es directo al comunicarse y le gusta controlar la productividad. </option>
+					<option value="amarillo">Es altamente sociable, es muy bueno motivando y disfruta del trabajo cambiante.</option>
+					<option value="verde">Es muy bueno trabajando en equipo, escuchando a los otros y siendo amigable.</option>
+					<option value="azul">Tiene una comunicación formal, es muy bueno trabajando en la sistematización de procesos y en la atención al detalle.</option>
+				</select>
+
+			</div>
+			<div class="div_input">
+
+				<div class="titulo_select">
+					Quiero que verifique que es mi contacto
+				</div>
+				<input type="checkbox" id="verificacion_contacto">
+				<button class="opcion_input" onclick="show_message_popup(this)">
+					<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+				</button>
+			</div>
+			<div class="div_input">
+
+				<div class="titulo_select">Oculto</div>
+				<input type="checkbox" id="contacto_oculto">
+				<button class="opcion_input" onclick="show_message_popup(this)">
+					<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+				</button>
+			</div>
+			<div class="div_input">
+				<textarea placeholder="Si enviaste la verificación de contacto escribele un mensaje acá o describe la relación que tienen. Esta información es privada para ti." id="obs_contacto"></textarea>
+			</div>
+		</div>
+		<div id="div_crear_contacto_perfil" class="div_contenedor_formulario" style="display: none;">
+
+			<div class="div_input id">
+				<input id="id_contacto_perfil" class="id" readonly/>
+
+			</div>
+			<div class="div_input">
+				<input id="linkedin_contacto_perfil" class="input" placeholder="Linkedin"/>
+
+			</div>
+			<div class="div_input">
+				<input id="mail_contacto_perfil" class="input" placeholder="Mail" />
+
+			</div>
+			<div class="div_input">
+				<input id="telefono_contacto_perfil" class="input" placeholder="Telefono" />
+
+			</div>
+			<div class="div_input">
+				<div class="titulo_select">
+					Tipo de contacto:
+				</div>
+				<select id="tipo_contacto_perfil" class="input select" placeholder="Tipo de relación">
+					<option value="1">Desconocido</option>
+					<option value="2">Conocido</option>
+					<option value="3">Confianza</option>
+					<option value="4">Muy cercano</option>
+				</select>
+
+			</div>
+
+			<div class="div_input">
+				<div class="titulo_select">
+					¿Cual de estas descripciones se acopla más a esta persona?
+				</div>
+				<select id="personalidad_contacto_perfil" class="input select">
+					<option value="">No se</option>
+					<option value="rojo">Es orientado a los resultados, es directo al comunicarse y le gusta controlar la productividad. </option>
+					<option value="amarillo">Es altamente sociable, es muy bueno motivando y disfruta del trabajo cambiante.</option>
+					<option value="verde">Es muy bueno trabajando en equipo, escuchando a los otros y siendo amigable.</option>
+					<option value="azul">Tiene una comunicación formal, es muy bueno trabajando en la sistematización de procesos y en la atención al detalle.</option>
+				</select>
+
+			</div>
+			<div class="div_input">
+
+				<div class="titulo_select">Quiero que verifique que es mi contacto</div>
+				<input type="checkbox" id="verificacion_contacto_perfil">
+				<button class="opcion_input" onclick="show_message_popup(this)">
+					<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+				</button>
+			</div>
+			<div class="div_input">
+
+				<div class="titulo_select">Oculto</div>
+				<input type="checkbox" id="contacto_oculto_perfil">
+				<button class="opcion_input" onclick="show_message_popup(this)">
+					<input type="image" class="img_pass" src="{% static 'imgs/index/ask.png'%}"  />
+				</button>
+			</div>
+			<div class="div_input">
+				<textarea placeholder="Si enviaste la verificación de contacto escribele un mensaje acá o describe la relación que tienen. Esta información es privada para ti." id="obs_contacto_perfil"></textarea>
+			</div>
+		</div>
+		<div id="div_crear_proceso" class="div_contenedor_formulario proceso"  style="display: none;">
+			<div class="div_input id">
+				<input id="id_contacto_proceso" class="id" readonly/><input id="id_vacante_proceso" class="id" readonly/>
+
+			</div>
+
+			<div class="contenedor_datos_proceso left">
+				<div class="titulo_contenedor_datos_proceso">
+					Información de la entrevista
+				</div>
+				<div class="div_input">
+					<div class="recomendaciones">
+						<button :id="'cargo_procesoANDDempresa_contacto_proceso_reco'+i" class="recomendacion" v-for="(o,i) in recomendaciones" onmousedown="select_recom('vacantes',this)">
+							[[o]]
+						</button>
+					</div>
+					<input id="cargo_proceso" onblur="remove_recom('vacantes')" onkeydown="explore_recom(event,'vacantes',this)" oninput="recomendaciones('vacantes',this)" class="input" placeholder="Cargo al que aplicas" />
+
+				</div>
+				<div class="div_input">
+					<input id="empresa_contacto_proceso" class="input" placeholder="Empresa" />
+
+				</div>
+				<div class="div_input" >
+					<div class="titulo_select">
+						Fecha de la entrevista:
+					</div>
+					<input type="datetime-local" id="fecha_proceso">
+				</div>
+				<div class="div_input" v-show="usuario.representaciones != '' && typeof usuario.representaciones != 'undefined'">
+					<div class="titulo_select">
+						¿Quieres ayuda con esta entrevista?
+					</div>
+					<select id="servicio_proceso" class="input select" placeholder="Tipo de proceso">
+
+						<option value="analisis">Si, quiero un análisis del estilo de comunicación</option>
+						<option value="simulacion" v-show="sesion.data.tipo == 5">Si, quiero una simulación de entrevista</option>
+						<option value="no">No</option>
+
+					</select>
+
+				</div>
+				<div class="div_input">
+					<div class="titulo_select">
+						Nivel de avance en el proceso:
+					</div>
+					<select id="tipo_proceso" class="input select" placeholder="Tipo de proceso">
+						<option value="1">Entrevista con equipo de selección</option>
+						<option value="2">Entrevista con gerente de RRHH</option>
+						<option value="3">Entrevista con jefe directo</option>
+						<option value="4">Entrevista con Director, CEO o Gerente general</option>
+						<option value="7">Contratado!</option>
+						<option value="5">Postulación de Séligo</option>
+						<option value="6">Vacante cerrada</option>
+					</select>
+
+				</div>
+				<div class="div_input">
+					<textarea placeholder="¿Tienes alguna observación?" id="obs_proceso"></textarea>
+				</div>
+			</div>
+			<div class="contenedor_datos_proceso">
+				<div class="titulo_contenedor_datos_proceso">
+					Información del entrevistador
+				</div>
+				<div class="div_input">
+					<input id="linkedin_contacto_proceso" class="input" placeholder="Linkedin de contacto u entrevistador" onblur="search_profile('contacto_proceso')"/>
+
+				</div>
+				<div class="div_input">
+					<input id="nombre_contacto_proceso" class="input" placeholder="Nombre de contacto u entrevistador" />
+
+				</div>
+				<div class="div_input">
+					<input id="cargo_contacto_proceso" class="input" placeholder="Cargo de contacto u entrevistador" />
+
+				</div>
+
+				<div class="div_input" v-show="sesion.data.admin == 1">
+					<div class="titulo_select">
+						Perfil de comunicación:
+					</div>
+					<select id="crystal_contacto_proceso" class="input select">
+						<option value="nan">No tiene</option>
+						<option value="architect">Architect</option>
+						<option value="captain">Captain</option>
+						<option value="driver">Driver</option>
+						<option value="initiator">Initiator</option>
+						<option value="encourager">Encourager</option>
+						<option value="harmonizer">Harmonizer</option>
+						<option value="influencer">Influencer</option>
+						<option value="motivator">Motivator</option>
+						<option value="analyst">Analyst</option>
+						<option value="editor">Editor</option>
+						<option value="skeptic">Skeptic</option>
+						<option value="questioner">Questioner</option>
+						<option value="counselor">Counselor</option>
+						<option value="planner">Planner</option>
+						<option value="stabilizer">Stabilizer</option>
+						<option value="supporter">Supporter</option>
+
+					</select>
+
+				</div>
+				<div class="div_input">
+					<input id="mail_contacto_proceso" class="input" placeholder="Mail de contacto u entrevistador" />
+
+				</div>
+				<div class="div_input">
+					<input id="telefono_proceso" class="input" placeholder="Telefono de contacto u entrevistador" />
+
+				</div>
+			</div>
+
+
+
+		</div>
+
+		<button id="boton_call2action" class="boton_call2action" onclick="call2action()" ></button>
+	</div>
+</div>
+
+
+</div>
+
+
+</div>
+<div id="mensaje_flotante" class="mensaje_flotante hide"><h1 id="texto_mensaje_flotante" class=""></h1></div>
+
+
+<!--<div id="banner_opciones_desktop" class="banner_opciones_desktop">
+
+	<button v-show="(sesion.data.admin == 1 && usuario.id != sesion.data.id)"  class="boton_crear_objeto secundario" onclick="crear('sesion')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}"  />Cargar sesion</button>
+	<button  class="boton_crear_objeto secundario" onclick="crear('proceso')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}" />Cargar entrevista</button>
+
+	<button class="boton_crear_objeto secundario" onclick="crear('oportunidad')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}"  />Cargar vacante</button>
+	<button class="boton_crear_objeto secundario" onclick="crear('contacto')"><input type="image" class="opcion_img" src="{% static 'imgs/add.png'%}"  />Cargar persona</button>
+	<div id="opciones_cargar_contacto" class="opciones_cargar_contacto" style="display: none;">
+		<button class="boton_crear_objeto subopcion" onclick="crear('contacto')">Evaluar perfil del contacto</button>
+		<button class="boton_crear_objeto subopcion" onclick="crear('contacto')">Cargue rapido</button>
+		<button class="boton_crear_objeto subopcion" onclick="crear('contacto_masivo')" style="display: none;">Cargue CSV</button>
+	</div>
+</div>-->
+<div id="banner_opciones_mobile" class="banner_opciones mobile" style="display: none">
+	<!--<div id="opciones_cargar" class="opciones_cargar">
+		<button  class="close_corner" onclick="close_opciones_cargar()"><input type="image" class="corner_img" src="{% static 'imgs/cancel_c.png'%}"  /></button>
+		<button class="opcion_cargar" onclick="crear('proceso')"><h1>Crear entrevista</h1></button>
+
+	</div>-->
+	<div class="opcion_banner" onclick="cambiar('menu')">
+		<input type="image" class="menu_img" src="{% static 'imgs/menu.png'%}"  /><div class="texto_opcion_mobile">Menú</div></div>
+
+		<div class="opcion_banner" onclick="cambiar('inicio')">
+			<input type="image" class="menu_img" src="{% static 'imgs/inicio.png'%}"  /><div class="texto_opcion_mobile">
+				Inicio
+			</div></div>
+			<div class="opcion_banner" onclick="cambiar('servicios')">
+				<input type="image" class="menu_img" src="{% static 'imgs/services.png'%}"  /><div class="texto_opcion_mobile">
+				Servicios</div></div>
+
+				<!--<div class="opcion_banner full" onclick="show_opciones_cargar()">...</div>-->
+			</div>
+		</body>
+
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+		<script  src="{% versioned_static 'js/fuzzball_lite.umd.min.js'%}"></script>
+		<script  src="{% versioned_static 'js/global.js'%}"></script>
+
+		<script  src="{% versioned_static 'js/business.js'%}"></script>
+		<script  src="{% versioned_static 'js/graph.js'%}"></script>
+
+		<script src="{% versioned_static 'js/viz.js' %}"></script>
+		<script  src="{% versioned_static 'js/render.js'%}"></script>
+		<script >
+			var getParams = function (url) {
+				var params = {};
+				var parser = document.createElement('a');
+				parser.href = url;
+				var query = parser.search.substring(1);
+				var vars = query.split('&');
+				for (var i = 0; i < vars.length; i++) {
+					var pair = vars[i].split('=');
+					params[pair[0]] = decodeURIComponent(pair[1]);
+				}
+				return params;
+			};
+			trans = getParams(window.location.href);
+			console.log("punto controladoooo....",trans)
+			if(trans.hasOwnProperty("id_vacante")){
+
+				console.log(trans["id_vacante"])
+				share_item_fijo(trans["id_vacante"])
+
+			}
+		</script>
+		</html>

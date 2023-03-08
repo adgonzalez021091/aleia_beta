@@ -1,0 +1,184 @@
+@media only screen and (max-device-width : 450px) {
+	.contenedor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto;
+    width: 100%;
+    /* overflow: auto; */
+}
+.botonera_popup_video{
+        margin-left: 0 !important;
+        width: 100% !important;
+
+    }
+    iframe#player {
+    width: 100% !important;
+    
+    margin-left: 0 !important;
+    margin-top: 15% !important;
+}
+body{
+    overflow: auto;
+}
+.img_index_op {
+    
+    left: 10px;
+    }
+.mensaje_popup_perfil {
+        height: auto;
+        width: 90%;
+    }
+    
+    
+    .form_popup_perfil{
+        height: auto;
+        width: 100%;
+        margin-bottom: 80;
+        
+    }
+    .hasta{
+        margin-right: 0;
+    }
+    .desde{
+        margin-right: 0;
+    }
+    .subtexto {
+    height: 260px;
+    width: 86% !important;
+    margin-bottom: 15;
+    padding-top: 53%;
+    margin: 20 0;
+}
+    .contenedor_popup_perfil {
+        width: 96%;
+        margin: 1%;
+        height: 90%;
+        margin-top: 3%;
+    }
+    .cta_subtexto {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 50;
+}
+    .descripcion_subtexto{
+        position: relative;
+    float: left;
+    width: 100%;
+    height: 150px;
+    }
+button.login {
+    position: relative;
+    top: auto;
+    left: auto;
+    /* margin-top: 15; */
+    /* margin-left: 15; */
+    background: white;
+    width: 45%;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+.contenido{
+    padding-bottom: 40;
+}
+.contenedor_botones {
+       width: 95%;
+    position: fixed;
+    padding-top: 4%;
+    padding-right: 3%;
+}
+.contenedor_vista{
+	    width: 100%;
+    height: auto;
+    margin-top: 20%;
+}
+.contenedor_popup {
+        z-index: 350;
+    margin: 1% !important;
+    width: 96% !important;
+    height: 93% !important;
+}
+.sub_contenedor_popup.botonera{
+    width: 99% !important;
+}
+.sub_contenedor_popup{
+    width: 95% !important;
+        height: auto !important;
+}
+.sub_contenedor_popup.center {
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 97%;
+    height: 90%;
+    padding-top: 13%;
+}
+.subpopup.superior_der {
+    width: 100%;
+}
+.sub_contenedor_popup.detalle {
+    width: 98%;
+    height: 73%;
+    overflow: auto;
+}
+.contenedor_vista.sub {
+    width: 100%;
+}
+.subpopup.superior_izq {
+    display: none;
+}
+.contenedor_popup_pregunta {
+    margin: 2%;
+    width: 86%;
+    height: 52%;
+    padding-top: 23%;
+}
+.div_filtro {
+    display: none;
+}
+.div_buscador {
+    width: 90%;
+    margin-left: 4%;
+}
+.filtros {
+    width: 92%;
+}
+
+.titulo {
+    font-size: 35;
+}
+..div_etiquetas_vacante{
+
+    max-height: 60px;
+
+}
+.contenedor_vista.beta {
+    background: #383838;
+    width: 94%;
+    height: auto;
+    margin: 0px;
+}
+.contenedor_etiqueta {
+    width: 92%;
+    margin-right: 0;
+    min-height: 230;
+}
+#brand {
+    z-index: 100;
+    position: fixed;
+    bottom: 50;
+    left: 75% !important;
+}
+.job_resume {
+        margin-bottom: 20 !important;
+    /* right: 11px !important; */
+    position: fixed !important;
+    /* float: left !important; */
+    /* right: 10 !important; */
+    bottom: 32px !important;
+    width: 85% !important;
+    /* max-width: 90% !important; */
+    /* margin-left: 5% !important;
+}
+}
